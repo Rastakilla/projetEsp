@@ -212,7 +212,7 @@ a.fa.fa-angle-down:hover{
 #team{ margin: 0 auto}
 #team .item{
     padding: 0;
-    margin: 15px;
+    margin: 0px;
     color: #FFF;
     text-align: center;
 }
@@ -229,6 +229,7 @@ img.img-circle.team-img {
 #tf-pic .thumbnail {
 	background: transparent;
 	border: 0;
+	width:50%;
 }
 
 #tf-pic .thumbnail .caption {

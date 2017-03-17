@@ -101,102 +101,58 @@
             <div class="container">
                 <div class="section-title center">
                     <h2>Nos <strong>oeuvres</strong></h2>
+                   			<br> Catégories
                     <div class="line">
                         <hr>
                     </div>
                 </div>
-
-                <div id="team" class="owl-carousel owl-theme row">
-                    <div class="item">
+				<table class='table'>
+                   <th> <div class="item">
                         <div class="thumbnail">
-                            <img src="img/team/01.jpg" alt="..." class="img-circle team-img">
+                            <img src="img/categorie/dessin/dessin0.jpg" alt="..." class="img-circle team-img">
                             <div class="caption">
-                                <h3>Jenn Gwapa</h3>
-                                <p>CEO / Founder</p>
-                                <p>Do not seek to change what has come before. Seek to create that which has not.</p>
+                                <h3>&nbsp;&nbsp;&nbsp;Dessin</h3>
                             </div>
                         </div>
-                    </div>
+                    </div></th>
 
-                    <div class="item">
+                    <th><div class="item">
                         <div class="thumbnail">
-                            <img src="img/team/02.jpg" alt="..." class="img-circle team-img">
+                            <img src="img/categorie/infographie/infographie0.jpg" alt="..." class="img-circle team-img">
                             <div class="caption">
-                                <h3>Jenn Gwapa</h3>
-                                <p>CEO / Founder</p>
-                                <p>Do not seek to change what has come before. Seek to create that which has not.</p>
+                                <h3>Infographie</h3>
                             </div>
                         </div>
-                    </div>
+                    </div></th>
 
-                    <div class="item">
+                   <th> <div class="item">
                         <div class="thumbnail">
-                            <img src="img/team/03.jpg" alt="..." class="img-circle team-img">
+                            <img src="img/categorie/peinture/peinture0.jpg" alt="..." class="img-circle team-img">
                             <div class="caption">
-                                <h3>Jenn Gwapa</h3>
-                                <p>CEO / Founder</p>
-                                <p>Do not seek to change what has come before. Seek to create that which has not.</p>
+                                <h3>&nbsp;&nbsp;Peinture</h3>
                             </div>
                         </div>
-                    </div>
+                    </div></th>
 
-                    <div class="item">
+                   <th> <div class="item">
                         <div class="thumbnail">
-                            <img src="img/team/04.jpg" alt="..." class="img-circle team-img">
+                            <img src="img/categorie/photo/photo0.jpg" alt="..." class="img-circle team-img">
                             <div class="caption">
-                                <h3>Jenn Gwapa</h3>
-                                <p>CEO / Founder</p>
-                                <p>Do not seek to change what has come before. Seek to create that which has not.</p>
+                                <h3>&nbsp;&nbsp;&nbsp;Photo</h3>
                             </div>
                         </div>
-                    </div>
+                    </div></th>
 
-                    <div class="item">
-                        <div class="thumbnail">
-                            <img src="img/team/04.jpg" alt="..." class="img-circle team-img">
-                            <div class="caption">
-                                <h3>Jenn Gwapa</h3>
-                                <p>CEO / Founder</p>
-                                <p>Do not seek to change what has come before. Seek to create that which has not.</p>
+                   <th> <div class="item">
+                         <div class="thumbnail">
+                            <img src="img/categorie/sculture/sculture0.jpg" alt="..." class="img-circle team-img"
+> 							<div class="caption">
+                                <h3>&nbsp;&nbsp;&nbsp;Sculture</h3>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="item">
-                        <div class="thumbnail">
-                            <img src="img/team/01.jpg" alt="..." class="img-circle team-img">
-                            <div class="caption">
-                                <h3>Jenn Gwapa</h3>
-                                <p>CEO / Founder</p>
-                                <p>Do not seek to change what has come before. Seek to create that which has not.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="item">
-                        <div class="thumbnail">
-                            <img src="img/team/02.jpg" alt="..." class="img-circle team-img">
-                            <div class="caption">
-                                <h3>Jenn Gwapa</h3>
-                                <p>CEO / Founder</p>
-                                <p>Do not seek to change what has come before. Seek to create that which has not.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="item">
-                        <div class="thumbnail">
-                            <img src="img/team/03.jpg" alt="..." class="img-circle team-img">
-                            <div class="caption">
-                                <h3>Jenn Gwapa</h3>
-                                <p>CEO / Founder</p>
-                                <p>Do not seek to change what has come before. Seek to create that which has not.</p>
-                            </div>
-                        </div>
-                    </div>
+                    </div></th>
+                    </table>
                 </div>
-                
-            </div>
         </div>
     </div>
 
