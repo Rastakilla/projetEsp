@@ -217,19 +217,20 @@
         <div data-u="loading" class="jssorl-oval" style="position:absolute;top:0px;left:0px;text-align:center;background-color:rgba(0,0,0,0.7);">
             <img style="margin-top:-19.0px;position:relative;top:50%;width:38px;height:38px;" src="img/oval.svg" />
         </div>
-        <div data-u="slides" style="cursor:default;position:relative;top:0px;left:0px;width:1500px;height:600px;overflow:hidden;">
-        
-        <!-- INSERER LES IMAGES PHP ICITE-->
-            <div>
-                <img data-u="image" src="img/com/commanditaire0.jpg" style='width:"50%"; height:"50%";'/>
-               
-            </div>
-            <div>
-                <img data-u="image" src="img/windows.jpg" />  
-            </div>
-            <div>
-                <img data-u="image" src="img/mac.jpg" /> 
-            </div>
+        <div data-u="slides" style="cursor:default;position:relative; top:0px;left:20%;width:900px;height:550px;overflow:hidden;">
+        <?PHP
+		$directory = "img/com";
+		$files = scandir($directory);
+		$num_files = count($files)-2;
+		$cptInit = 0;
+		while ($cptInit < $num_files)
+		{
+			echo '            <div>
+                <img data-u="image" id="imgCom" src="img/com/commanditaire'.$cptInit.'.png"> 
+            </div>';
+			$cptInit++;
+		}
+		?>
         </div>
         <!-- Bullet Navigator -->
         <div data-u="navigator" class="jssorb05" style="bottom:16px;right:16px;" data-autocenter="1">
