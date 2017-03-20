@@ -13,10 +13,7 @@
     
     <!-- Favicons
     ================================================== -->
-    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="img/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="img/apple-touch-icon-114x114.png">
+   <link rel="icon" href="favicon.ico" />
 
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css"  href="css/bootstrap.css">
@@ -96,6 +93,7 @@
 
     <!-- Team Page
     ==========================================-->
+    
     <div id="tf-pic" class="text-center">
         <div class="overlay">
             <div class="container">
@@ -107,50 +105,27 @@
                     </div>
                 </div>
 				<table class='table'>
-                   <th> <div class="item">
+                <?PHP
+				$medium = array();
+				$medium[0] = 'dessin';
+				$medium[1] = 'infographie';
+				$medium[2] = 'peinture';
+				$medium[3] = 'photo';
+				$medium[4] = 'sculture';
+				$cptInit = 0;
+				while ($medium[$cptInit] != NULL)
+				{
+					echo '<th> <div class="item" style="cursor:pointer;" onClick=" window.location.href = \'oeuvres.php?medium='.$medium[$cptInit].'\'" >
                         <div class="thumbnail">
-                            <img src="img/categorie/dessin/dessin0.jpg" alt="..." class="img-circle team-img">
+                            <img src="img/categorie/'.$medium[$cptInit].'/'.$medium[$cptInit].'0.jpg" alt="..." class="img-circle team-img">
                             <div class="caption">
-                                <h3>&nbsp;&nbsp;&nbsp;Dessin</h3>
+                                <h3>'.$medium[$cptInit].'</h3>
                             </div>
                         </div>
-                    </div></th>
-
-                    <th><div class="item">
-                        <div class="thumbnail">
-                            <img src="img/categorie/infographie/infographie0.jpg" alt="..." class="img-circle team-img">
-                            <div class="caption">
-                                <h3>Infographie</h3>
-                            </div>
-                        </div>
-                    </div></th>
-
-                   <th> <div class="item">
-                        <div class="thumbnail">
-                            <img src="img/categorie/peinture/peinture0.jpg" alt="..." class="img-circle team-img">
-                            <div class="caption">
-                                <h3>&nbsp;&nbsp;Peinture</h3>
-                            </div>
-                        </div>
-                    </div></th>
-
-                   <th> <div class="item">
-                        <div class="thumbnail">
-                            <img src="img/categorie/photo/photo0.jpg" alt="..." class="img-circle team-img">
-                            <div class="caption">
-                                <h3>&nbsp;&nbsp;&nbsp;Photo</h3>
-                            </div>
-                        </div>
-                    </div></th>
-
-                   <th> <div class="item">
-                         <div class="thumbnail">
-                            <img src="img/categorie/sculture/sculture0.jpg" alt="..." class="img-circle team-img"
-> 							<div class="caption">
-                                <h3>&nbsp;&nbsp;&nbsp;Sculture</h3>
-                            </div>
-                        </div>
-                    </div></th>
+                    </div></th>';
+					$cptInit++;
+				}
+				?> 
                     </table>
                 </div>
         </div>
