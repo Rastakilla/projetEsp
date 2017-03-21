@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+  <?PHP
+  include('connexionBd.php');
+  ?>
     <!-- Basic Page Needs
     ================================================== -->
     <meta charset="utf-8">
@@ -91,7 +94,7 @@
         </div>
     </div>
 
-    <!-- Team Page
+    <!-- Filtre Page
     ==========================================-->
     
     <div id="tf-pic" class="text-center">
@@ -106,25 +109,36 @@
                 </div>
 				<table class='table'>
                 <?PHP
-				$medium = array();
-				$medium[0] = 'dessin';
-				$medium[1] = 'infographie';
-				$medium[2] = 'peinture';
-				$medium[3] = 'photo';
-				$medium[4] = 'sculture';
-				$cptInit = 0;
-				while ($medium[$cptInit] != NULL)
+				$reponseCategorie = $Cnn->prepare('SELECT * FROM categorie;');
+				$reponseCategorie->execute();
+				$cpt = 0;
+				$Categorie = array();
+				while($infoCategorie = $reponseCategorie->fetch())
 				{
-					echo '<th> <div class="item" style="cursor:pointer;" onClick=" window.location.href = \'oeuvres.php?medium='.$medium[$cptInit].'\'" >
+					$Categorie[$cpt] = $infoCategorie['nomCategorie'];
+					$cpt++;
+				}
+				
+				$cpt = 0;
+				while($Categorie[$cpt] != NULL)
+				{
+					
+					$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre FROM oeuvres inner join categorie on oeuvres.idCategorie = categorie.idcategorie where categorie.nomCategorie = :varCat;');
+					$reponseOeuvres->execute(array("varCat" =>$Categorie[$cpt]));
+					if($donneeOeuvre = $reponseOeuvres->fetch())
+					{
+					echo '<th> <div class="item" style="cursor:pointer;" onClick=" window.location.href = \'oeuvres.php?categorie='.$Categorie[$cpt].'\'" >
                         <div class="thumbnail">
-                            <img src="img/categorie/'.$medium[$cptInit].'/'.$medium[$cptInit].'0.jpg" alt="..." class="img-circle team-img">
+                            <img src="img/categorie/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle team-img">
                             <div class="caption">
-                                <h3>'.$medium[$cptInit].'</h3>
+                                <h3>'.$Categorie[$cpt].'</h3>
                             </div>
                         </div>
                     </div></th>';
-					$cptInit++;
+					}
+					$cpt++;
 				}
+			
 				?> 
                     </table>
                 </div>

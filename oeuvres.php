@@ -32,21 +32,21 @@
   </head>
   <body onload ="menu();">
    <?PHP
-		if (isset($_GET['medium']) && $_GET['medium']!=NULL)
+		if (isset($_GET['categorie']) && $_GET['categorie']!=NULL)
 		{
-			$medium = htmlentities($_GET['medium']);
+			$medium = htmlentities($_GET['categorie']);
 		}
 		else
 		{
 			header('Location: index.php');
 		}
 		?>
-	<?PHP include('includes/Header.php'); ?>
+	<?PHP include('includes/HeaderOeuvres.php'); ?>
 
-    <!-- Team Page
+    <!-- Oeuvres
     ==========================================-->
-    <div id="tf-oeuvres" class="text-center">
-        <div class="overlay">
+    <div id="tf-oeuvres" class="text-center"  style='width:100%';>
+        <div class="overlay"  style='width:100%';>
                 <?PHP
 				$directory = "img/categorie/".$medium;
 				$files = scandir($directory);
