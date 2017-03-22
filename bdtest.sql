@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `bdesp` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `bdesp`;
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: localhost    Database: bdesp
@@ -28,7 +26,7 @@ CREATE TABLE `categorie` (
   `idCategorie` int(11) NOT NULL AUTO_INCREMENT,
   `nomCategorie` varchar(50) NOT NULL,
   PRIMARY KEY (`idCategorie`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +35,7 @@ CREATE TABLE `categorie` (
 
 LOCK TABLES `categorie` WRITE;
 /*!40000 ALTER TABLE `categorie` DISABLE KEYS */;
-INSERT INTO `categorie` VALUES (1,'Dessin'),(2,'Peinture'),(3,'Sculture'),(4,'Infographie'),(5,'Photo');
+INSERT INTO `categorie` VALUES (1,'Acrylique sur bois'),(2,'Acrylique sur toile'),(3,'Acrylique sur metal'),(4,'Aquarelle sur papier'),(5,'Encre sur bois'),(6,'Technique mixtes sur bois'),(7,'Technique mixtes sur metal'),(8,'Photograpgie numerique'),(9,'Infographie'),(10,'Sculture'),(11,'Installation');
 /*!40000 ALTER TABLE `categorie` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,8 +89,32 @@ CREATE TABLE `etat` (
 
 LOCK TABLES `etat` WRITE;
 /*!40000 ALTER TABLE `etat` DISABLE KEYS */;
-INSERT INTO `etat` VALUES (1,'Disponible',1),(2,'Empruntee',0),(3,'Brisee',0),(4,'Statique',0);
+INSERT INTO `etat` VALUES (1,'Disponible',1),(2,'Empruntée',0),(3,'Brisée',0),(4,'Statique',0);
 /*!40000 ALTER TABLE `etat` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `gestionnaire`
+--
+
+DROP TABLE IF EXISTS `gestionnaire`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `gestionnaire` (
+  `idgestionnaire` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(100) NOT NULL,
+  PRIMARY KEY (`idgestionnaire`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `gestionnaire`
+--
+
+LOCK TABLES `gestionnaire` WRITE;
+/*!40000 ALTER TABLE `gestionnaire` DISABLE KEYS */;
+INSERT INTO `gestionnaire` VALUES (1,'cpepin@cegepba.qc.ca'),(2,'cnoel@cegepba.qc.ca');
+/*!40000 ALTER TABLE `gestionnaire` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -116,7 +138,7 @@ CREATE TABLE `oeuvres` (
   KEY `FK_categorieOeuvre` (`idCategorie`),
   CONSTRAINT `FK_categorieOeuvre` FOREIGN KEY (`idCategorie`) REFERENCES `categorie` (`idCategorie`),
   CONSTRAINT `FK_etatOeuvre` FOREIGN KEY (`idEtat`) REFERENCES `etat` (`idetat`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -125,7 +147,7 @@ CREATE TABLE `oeuvres` (
 
 LOCK TABLES `oeuvres` WRITE;
 /*!40000 ALTER TABLE `oeuvres` DISABLE KEYS */;
-INSERT INTO `oeuvres` VALUES (1,'DG_Collection_CBA_09-10.jpg',' Daisy Grenier',' 83x53',' L\'éveil',2010,2,1),(2,'JF_Collection_CBA_09-10.jpg','Jessica Fecteau','101,5x63,5','OGM',2010,2,1),(3,'MCP_Collection_CBA_09-10.jpg','Marie-Claude Poulin','2x127x89','Ce qu\'il lui reste?',2010,5,1),(4,'PHV_Collection_CBA_09-10.jpg','Pierre-Hugues Vachon','75x101','Citation de Serge Lemoyne',2010,2,1),(5,'ANC_Collection_CBA_10-11.jpg','Amelie Nadeau-Caron','61x45','Payage abstrait',2010,2,1),(6,'CMP_Collection_CBA_10-11.jpg','Catherine Messier-Poulin','45x185','Light',2011,1,1),(7,'SC_Collection_CBA_10-11.jpg','Stephanie Cloutier','50x76','Sans Titre',2010,4,1),(8,'FG_Collection_CBA_10-11.jpg','Fanny Gaboury','31x92','Dans les lignes de la main',2011,3,1),(9,'JML_Collection_CBA_10-11.jpg','Jean-Mathieu Lachapelle','153x132','Intercoulouré',2011,2,1),(10,'DD_Collection_CBA_09-10.jpg','Davis Dulac','216x106','Explosion orgasmique du XXIe siècle',2010,2,1);
+INSERT INTO `oeuvres` VALUES (1,'DG_Collection_CBA_09-10.jpg',' Daisy Grenier',' 83x53',' L\'éveil',2010,2,1),(2,'JF_Collection_CBA_09-10.jpg','Jessica Fecteau','101,5x63,5','OGM',2010,2,2),(3,'MCP_Collection_CBA_09-10.jpg','Marie-Claude Poulin','2x127x89','Ce qu\'il lui reste?',2010,5,1),(4,'PHV_Collection_CBA_09-10.jpg','Pierre-Hugues Vachon','75x101','Citation de Serge Lemoyne',2010,2,1),(5,'ANC_Collection_CBA_10-11.jpg','Amelie Nadeau-Caron','61x45','Payage abstrait',2010,2,1),(6,'CMP_Collection_CBA_10-11.jpg','Catherine Messier-Poulin','45x185','Light',2011,1,1),(7,'SC_Collection_CBA_10-11.jpg','Stephanie Cloutier','50x76','Sans Titre',2010,4,1),(8,'FG_Collection_CBA_10-11.jpg','Fanny Gaboury','31x92','Dans les lignes de la main',2011,3,1),(9,'JML_Collection_CBA_10-11.jpg','Jean-Mathieu Lachapelle','153x132','Intercoulouré',2011,2,1),(10,'DD_Collection_CBA_09-10.jpg','Davis Dulac','216x106','Explosion orgasmique du XXIe siècle',2010,2,1);
 /*!40000 ALTER TABLE `oeuvres` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -166,4 +188,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-03-21 11:35:45
+-- Dump completed on 2017-03-22 14:58:51

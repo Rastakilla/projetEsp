@@ -52,11 +52,11 @@
 
     <!-- Oeuvres
     ==========================================-->
-    <div id="tf-oeuvres" class="text-center"  style='width:100%';>
+    <div id="tf-oeuvres" class="text-center">
         <div class="overlay" >
                 <?PHP
-				echo '<h2><strong>'.$categorie.'</strong></h2><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
-				$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre,peuxEtreReserve,Auteur,Dimension,Titre,Annee,NomEtat FROM oeuvres inner join etat on oeuvres.idEtat = etat.idetat inner join categorie on oeuvres.idCategorie = categorie.idcategorie where categorie.nomCategorie = :varCat;');
+				echo '<h2><strong>'.$categorie.'</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
+				$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre,peuxEtreReserve,Auteur,Dimension,Titre,Annee,NomEtat,lieu FROM oeuvres inner join etat on oeuvres.idEtat = etat.idetat inner join categorie on oeuvres.idCategorie = categorie.idcategorie where categorie.nomCategorie = :varCat;');
 					$reponseOeuvres->execute(array("varCat" =>$categorie));
 					echo '<table>';
 					$cpt = 2;
@@ -78,6 +78,7 @@
 					echo '<br>Auteur : '.$infoOeuvres['Auteur'];
 					echo '<br>Dimension : '.$infoOeuvres['Dimension'].' cm';
 					echo '<br>État : '.$infoOeuvres['NomEtat'];
+					echo '<br>Lieu : '.$infoOeuvres['lieu'];
 					echo '</th>';
 					$cpt++;
 				}

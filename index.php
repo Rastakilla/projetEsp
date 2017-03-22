@@ -11,7 +11,7 @@
   {
 	  	  echo '<script>alert("Un message a été envoyé à votre courriel pour la confirmation.");</script>';
   }
-  	  unset($_SESSION['acces']);
+  unset($_SESSION['acces']);
   include('connexionBd.php');
   ?>
     <!-- Basic Page Needs
