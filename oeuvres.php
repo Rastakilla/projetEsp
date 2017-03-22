@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <?PHP
+  include('connexionBd.php');
+  ?>
     <!-- Basic Page Needs
     ================================================== -->
     <meta charset="utf-8">
@@ -23,18 +26,22 @@
     ================================================== -->
     <link rel="stylesheet" type="text/css"  href="css/style.css">
     <link rel="stylesheet" type="text/css" href="css/responsive.css">
+    <link href="lightbox2-master/dist/css/lightbox.css" rel="stylesheet">
 
     <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,700,300,600,800,400' rel='stylesheet' type='text/css'>
 
     <script type="text/javascript" src="js/modernizr.custom.js"></script>
        <script src="js/jssor.slider-22.2.16.min.js" type="text/javascript"></script>
+       <script src="lightbox2-master/dist/js/lightbox.js"></script>
+       <script src="lightbox2-master/dist/js/lightbox-plus-jquery.min.js"></script>
+       
   </head>
-  <body onload ="menu();">
+  <body onload ="menu();" style='height:100vh;'>
    <?PHP
 		if (isset($_GET['categorie']) && $_GET['categorie']!=NULL)
 		{
-			$medium = htmlentities($_GET['categorie']);
+			$categorie = htmlentities($_GET['categorie']);
 		}
 		else
 		{
@@ -46,20 +53,37 @@
     <!-- Oeuvres
     ==========================================-->
     <div id="tf-oeuvres" class="text-center"  style='width:100%';>
-        <div class="overlay"  style='width:100%';>
+        <div class="overlay" >
                 <?PHP
-				$directory = "img/categorie/".$medium;
-				$files = scandir($directory);
-				$num_files = count($files)-2;
-				$cptInit = 0;
-				$contour = '#80f442';//aller chercher dans la bd plus tard
-				echo '<h2><strong>'.$medium.'</strong></h2>';
-				while($cptInit < $num_files)
+				echo '<h2><strong>'.$categorie.'</strong></h2><br><br>';
+				$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre,peuxEtreReserve,Auteur,Dimension,Titre,Annee,NomEtat FROM oeuvres inner join etat on oeuvres.idEtat = etat.idetat inner join categorie on oeuvres.idCategorie = categorie.idcategorie where categorie.nomCategorie = :varCat;');
+					$reponseOeuvres->execute(array("varCat" =>$categorie));
+					echo '<table>';
+					$cpt = 2;
+				while($infoOeuvres = $reponseOeuvres->fetch())
 				{
-					echo '<br><img src="img/categorie/'.$medium.'/'.$medium.$cptInit.'.jpg" width="30%" height="30%" onmouseover="" style="cursor: pointer;	border: 2px solid '.$contour.'" ';		
-					$cptInit++;			
+					$contour = '#ff1111';
+					if($infoOeuvres['peuxEtreReserve'] == 1)
+					{
+						$contour = '#80f442';
+					}
+					if($cpt%2 == 0)
+					{
+						echo '<tr>';						
+					}
+					echo '<th><a href="img/categorie/'.$infoOeuvres['nomOeuvre'].'" data-lightbox="'.$infoOeuvres['nomOeuvre'].'"><img src="img/categorie/'.$infoOeuvres['nomOeuvre'].'" width="50%"onmouseover="" style="cursor: pointer;	border: 2px solid '.$contour.'"></a>';
+					echo '<a href="">  <u><h4>Réserver cette oeuvre</h4></u> </a>';
+					echo '<br>Titre : '.$infoOeuvres['Titre'];
+					echo '<br>Année : '.$infoOeuvres['Annee'];
+					echo '<br>Auteur : '.$infoOeuvres['Auteur'];
+					echo '<br>Dimension : '.$infoOeuvres['Dimension'];
+					echo '<br>État : '.$infoOeuvres['NomEtat'];
+					echo '</th>';
+					$cpt++;
 				}
-				?>    
+				?> 
+                </table><br><br><br><br><br><br>
+                  <?php include('includes/Footer.php');?> 
        </div>             			
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -69,7 +93,6 @@
     <script type="text/javascript" src="js/bootstrap.js"></script>
     <script type="text/javascript" src="js/SmoothScroll.js"></script>
     <script type="text/javascript" src="js/jquery.isotope.js"></script>
-
     <script src="js/owl.carousel.js"></script>
 
     <!-- Javascripts
@@ -81,5 +104,4 @@
 	</script>
 
   </body>
-  <?php include('includes/Footer.php');?>
 </html>
