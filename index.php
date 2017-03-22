@@ -2,6 +2,16 @@
 <html lang="en">
   <head>
   <?PHP
+  session_start();
+  if (isset($_SESSION['acces']) && $_SESSION['acces'] == 'non')
+  {
+	  echo '<script>alert("Accès refusé.");</script>';
+  }
+  else if (isset($_SESSION['acces']) && $_SESSION['acces'] == 'oui')
+  {
+	  	  echo '<script>alert("Un message a été envoyé à votre courriel pour la confirmation.");</script>';
+  }
+  	  unset($_SESSION['acces']);
   include('connexionBd.php');
   ?>
     <!-- Basic Page Needs
@@ -103,7 +113,7 @@
                         <hr>
                     </div>
                 </div>
-				<table class='table'>
+				<table width="100%">
                 <?PHP
 				$reponseCategorie = $Cnn->prepare('SELECT * FROM categorie;');
 				$reponseCategorie->execute();
@@ -116,9 +126,13 @@
 				}
 				
 				$cpt = 0;
+				$cptTable = 4;
 				while($Categorie[$cpt] != NULL)
 				{
-					
+					if($cptTable%4 == 0)
+					{
+						echo '<tr>';						
+					}
 					$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre FROM oeuvres inner join categorie on oeuvres.idCategorie = categorie.idcategorie where categorie.nomCategorie = :varCat;');
 					$reponseOeuvres->execute(array("varCat" =>$Categorie[$cpt]));
 					if($donneeOeuvre = $reponseOeuvres->fetch())
@@ -133,6 +147,7 @@
                     </div></th>';
 					}
 					$cpt++;
+					$cptTable++;
 				}
 			
 				?> 

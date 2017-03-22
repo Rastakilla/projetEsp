@@ -172,6 +172,15 @@ a.fa.fa-angle-down:hover{
 	color: #ffffff;
 	height:100%;
 }
+#tf-verif{
+	background-color:#2E3033;
+	background-size: cover;
+	background-position: center;
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	color: #ffffff;
+	height:100%;
+}
 #tf-oeuvres .overlay{
 	background: -moz-linear-gradient(top,  rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.73) 17%, rgba(0,0,0,0.66) 35%, rgba(0,0,0,0.55) 62%, rgba(0,0,0,0.4) 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.8)), color-stop(17%,rgba(0,0,0,0.73)), color-stop(35%,rgba(0,0,0,0.66)), color-stop(62%,rgba(0,0,0,0.55)), color-stop(100%,rgba(0,0,0,0.4))); /* Chrome,Safari4+ */
@@ -346,7 +355,6 @@ label {
 	-webkit-box-shadow: transparent;
 	box-shadow: transparent;
 }
-
 button.btn.tf-btn.btn-default {
 	float: right;
 	background: #FCAC45;
