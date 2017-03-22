@@ -55,7 +55,7 @@
     <div id="tf-oeuvres" class="text-center"  style='width:100%';>
         <div class="overlay" >
                 <?PHP
-				echo '<h2><strong>'.$categorie.'</strong></h2><br><br>';
+				echo '<h2><strong>'.$categorie.'</strong></h2><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
 				$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre,peuxEtreReserve,Auteur,Dimension,Titre,Annee,NomEtat FROM oeuvres inner join etat on oeuvres.idEtat = etat.idetat inner join categorie on oeuvres.idCategorie = categorie.idcategorie where categorie.nomCategorie = :varCat;');
 					$reponseOeuvres->execute(array("varCat" =>$categorie));
 					echo '<table>';
@@ -71,12 +71,12 @@
 					{
 						echo '<tr>';						
 					}
-					echo '<th><a href="img/categorie/'.$infoOeuvres['nomOeuvre'].'" data-lightbox="'.$infoOeuvres['nomOeuvre'].'"><img src="img/categorie/'.$infoOeuvres['nomOeuvre'].'" width="50%"onmouseover="" style="cursor: pointer;	border: 2px solid '.$contour.'"></a>';
+					echo '<th style="text-align:center;"><a href="img/categorie/'.$infoOeuvres['nomOeuvre'].'" data-lightbox="'.$infoOeuvres['nomOeuvre'].'"><img src="img/categorie/'.$infoOeuvres['nomOeuvre'].'" width="50%"onmouseover="" style="cursor: pointer;	border: 2px solid '.$contour.'"></a>';
 					echo '<a href="">  <u><h4>Réserver cette oeuvre</h4></u> </a>';
 					echo '<br>Titre : '.$infoOeuvres['Titre'];
 					echo '<br>Année : '.$infoOeuvres['Annee'];
 					echo '<br>Auteur : '.$infoOeuvres['Auteur'];
-					echo '<br>Dimension : '.$infoOeuvres['Dimension'];
+					echo '<br>Dimension : '.$infoOeuvres['Dimension'].' cm';
 					echo '<br>État : '.$infoOeuvres['NomEtat'];
 					echo '</th>';
 					$cpt++;
