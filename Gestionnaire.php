@@ -54,9 +54,13 @@ session_start();
         <div class="overlay">
             <div class="content">
             <?PHP
-            if (isset($_GET['email']) && htmlentities($_GET['email']))
+			if (isset($_SESSION['Uploader']) && $_SESSION['Uploader'] == 'True')
 			{
-				$email = htmlentities($_GET['email']);
+	  			  echo '<script>alert("Ajout effectué.");</script>';				
+			}
+            if (isset($_GET['id']) && htmlentities($_GET['id']))
+			{
+				$email = htmlentities($_GET['id']);
 				$verificateur = false;
 				$reponseGestionnaire = $Cnn->prepare('SELECT email from gestionnaire;');
 				$reponseGestionnaire->execute();
@@ -72,13 +76,13 @@ session_start();
 					header('Location : index.php');
 					$_SESSION['acces'] = 'non';
 				}
-				else// TODO:ajouter choix modifier ou ajouter
+				else// TODO:ajouter choix modifier ou ajouter ,puis ajouter categorie, etat style="display:none;"
 				{
 						$reponseEtat = $Cnn->prepare('SELECT NomEtat,idetat from etat;');
 						$reponseEtat->execute();
 						$reponseCategorie = $Cnn->prepare('SELECT nomCategorie,idCategorie from categorie;');
 						$reponseCategorie->execute();
-					echo '<form id="gestionnaire" action="verification.php" method="GET">';
+					echo '<form id="gestionnaire" action="ajoutGestionnaire.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
                     echo ' <div> <label>Auteur</label>
                                     <input class="form-control" id="auteur" name="auteur" placeholder="Entrez le nom de l\'auteur"></input><br></div>';//auteur
 					echo ' <div> <label>Dimensions</label>
@@ -86,13 +90,19 @@ session_start();
 					 echo ' <div> <label>Titre</label>
                                     <input class="form-control" id="titre" name="titre" placeholder="Entrez le titre"></input><br></div>';//titre
 					echo ' <div> <label>Emplacement</label>
-                                    <input class="form-control" id="emplacement" name="emplacement" placeholder="Entrez l\'emplacement(si applicable, local ou endroit)"></input><br></div>';//lieu
+                                    <input class="form-control" id="lieu" name="lieu" placeholder="Entrez l\'emplacement(si applicable, local ou endroit)"></input><br></div>';//lieu
+					 echo ' <div> <label>Année</label>
+                                    <select class="form-control" id="annee" name="annee">';
+									echo '<option id="annee0"></option>';
+									$cpt = 1900;
+									while ($cpt <= date("Y"))
+									{
+										echo '<option id="annee'.$cpt.'">'.$cpt.'</option>';
+										$cpt++;										
+									}
+									echo'</select><br></div>';//annee							
 									
-									
-									
-									
-									
-					echo ' <div> <label>Categorie</label>
+					echo ' <div> <label>Catégorie</label>
                                     <select class="form-control" id="categorie" name="categorie">';
 					echo '<option id="categorie0"></option>';
 						while($infoCategorie = $reponseCategorie->fetch())
@@ -101,10 +111,7 @@ session_start();
 						}
 									
 						echo'</select><br></div>';//Categorie
-									
-									
-									
-									
+				
 					echo ' <div> <label>État</label>
                                     <select class="form-control" id="etat" name="etat">';
 					echo '<option id="etat0"></option>';
@@ -114,12 +121,12 @@ session_start();
 						}
 						
 						echo '</select><br></div>';//etat
+						
+						
+						 echo '<div><label for="image">Image</label><br>
+                     <input type="file" name="image" id="image"></div>';//fichier		
 									
-									
-									
-									
-									
-                   echo' <div><button type="submit" class="btn tf-btn btn-default">Envoyer</button></div>';//button
+                   echo' <div><button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>';//button
                    echo' </form>';//fermeture form
 				}
 			}
@@ -127,7 +134,6 @@ session_start();
             </div>
         </div>
     </div>
-                  	<?PHP include('includes/Footer.php'); ?>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery.1.11.1.js"></script>
@@ -146,22 +152,37 @@ session_start();
     <script>
 $("#gestionnaire").validate(
 	{	rules:
-		{	email: {	required:true,
-				    regex_E: true				
+		{	auteur: {	required:true,			
+					},
+			dimensions: {	required:true,			
+					},
+			titre: {	required:true,			
+					},
+			emplacement: {	required:true,			
+					},
+			annee: {	required:true,			
+					},
+			categorie: {	required:true,			
+					},
+			etat: {	required:true,			
+					},
+			image:{	required:true,			
 					}
 		},
-		messages : { 			 email : {required : 'Le email est obligatoire',
-										regex_E :'Doit etre de format @cegepba.qc.ca',
-								}
+		messages : { 			auteur : {required : 'L\'auteur est obligatoire'},
+								dimensions : {required : 'Les dimensions sont obligatoires'},
+								titre : {required : 'Le titre est obligatoire'},
+								emplacement : {required : 'L\'emplacement est obligatoire'},
+								annee : {required : 'L\'année est obligatoire'},
+								categorie : {required : 'La categorie est obligatoire'},
+								etat : {required : 'L\'etat est obligatoire'},
+								image : {required : 'L\'image est obligatoire'}
 					}
 	}
 );
 
-$.validator.addMethod("regex_E", 
-		function (value, element){
-				return this.optional(element) || /^[a-zA-Z]+@cegepba\.qc\.ca$/.test(value);
-			});
 </script>
 
   </body>
+                    	<?PHP include('includes/Footer.php'); ?>
 </html>

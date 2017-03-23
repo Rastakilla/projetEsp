@@ -50,7 +50,7 @@
     <div id="tf-verif" class="text-center">
         <div class="overlay">
             <div class="content">
-                              <form id="gestionnaire" action="verification.php" method="GET">
+                              <form id="gestionnaire" action="verification.php" method="POST">
                      <div> <label>Email</label>
                                     <input class="form-control" id="email" name="email" placeholder="Entrez votre adresse Email"></input><br></div>
                     <div><button type="submit" class="btn tf-btn btn-default">Envoyer</button></div>

@@ -12,6 +12,11 @@
 	  	  echo '<script>alert("Un message a été envoyé à votre courriel pour la confirmation.");</script>';
   }
   unset($_SESSION['acces']);
+  if (isset($_SESSION['Uploader']) && $_SESSION['Uploader'] == 'False')
+  {
+	  	  echo '<script>alert("Il semble qu\'il y a eu une erreur. Veuillez réesseyer.");</script>';
+  }
+  unset($_SESSION['Uploader']);
   include('connexionBd.php');
   ?>
     <!-- Basic Page Needs
@@ -243,7 +248,7 @@
 
         </div>
     </div>
-<?php include('includes/Footer.php');?>
+<?php include('includes/FooterGestionnaire.php');?>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery.1.11.1.js"></script>
