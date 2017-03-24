@@ -112,8 +112,8 @@
         <div class="overlay">
             <div class="container">
                 <div class="section-title center">
-                    <h2>Nos <strong>oeuvres</strong></h2>
-                   			<br> Catégories
+                    <h2>Nos <strong>Catégories</strong></h2>
+                   			<br> Cliquez pour accéder aux oeuvres de cette catégorie.
                     <div class="line">
                         <hr>
                     </div>
@@ -144,7 +144,7 @@
 					{
 					echo '<th> <div class="item" style="cursor:pointer;" onClick=" window.location.href = \'oeuvres.php?categorie='.$Categorie[$cpt].'\'" >
                         <div class="thumbnail">
-                            <img src="img/categorie/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle team-img">
+                            <img src="img/categorie/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle team-img" width="100%">
                             <div class="caption">
                                 <h3>'.$Categorie[$cpt].'</h3>
                             </div>
