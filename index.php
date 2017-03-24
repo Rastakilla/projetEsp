@@ -142,7 +142,7 @@
 					$reponseOeuvres->execute(array("varCat" =>$Categorie[$cpt]));
 					if($donneeOeuvre = $reponseOeuvres->fetch())
 					{
-					echo '<th> <div class="item" style="cursor:pointer;" onClick=" window.location.href = \'oeuvres.php?categorie='.$Categorie[$cpt].'\'" >
+					echo '<th width="100%"> <div class="item" style="cursor:pointer; width:300px;" onClick=" window.location.href = \'oeuvres.php?categorie='.$Categorie[$cpt].'\'" >
                         <div class="thumbnail">
                             <img src="img/categorie/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle team-img" width="100%">
                             <div class="caption">

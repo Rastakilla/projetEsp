@@ -82,6 +82,12 @@ session_start();
 						$reponseEtat->execute();
 						$reponseCategorie = $Cnn->prepare('SELECT nomCategorie,idCategorie from categorie;');
 						$reponseCategorie->execute();
+					
+					 echo' <div><button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterOeuvres();">Ajouter Oeuvres</button></div>';
+					
+					/*********************************/	
+					/*DEBUT FORM DE L'AJOUT D'OEUVRES*/
+					/*********************************/
 					echo '<form id="gestionnaire" action="ajoutGestionnaire.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
                     echo ' <div> <label>Auteur</label>
                                     <input class="form-control" id="auteur" name="auteur" placeholder="Entrez le nom de l\'auteur"></input><br></div>';//auteur
@@ -129,6 +135,10 @@ session_start();
                    echo' <div><button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>';//button
                    echo' </form>';//fermeture form
 				}
+				
+					 /*******************************/	
+					/*FIN FORM DE L'AJOUT D'OEUVRES*/
+				   /*******************************/
 			}
 			?>               
             </div>
@@ -180,6 +190,11 @@ $("#gestionnaire").validate(
 					}
 	}
 );
+ $('#gestionnaire').css('display', 'none');
+		function ajouterOeuvres() {
+			$('#gestionnaire').slideToggle("slow", function () {
+			});
+		}
 
 </script>
 

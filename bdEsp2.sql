@@ -78,9 +78,9 @@ DROP TABLE IF EXISTS `etat`;
 CREATE TABLE `etat` (
   `idetat` int(11) NOT NULL AUTO_INCREMENT,
   `NomEtat` varchar(25) NOT NULL,
-  `peuxEtreReserve` tinyint(4) NOT NULL,
+  `peuxEtreReserve` int(11) NOT NULL,
   PRIMARY KEY (`idetat`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -89,7 +89,7 @@ CREATE TABLE `etat` (
 
 LOCK TABLES `etat` WRITE;
 /*!40000 ALTER TABLE `etat` DISABLE KEYS */;
-INSERT INTO `etat` VALUES (1,'En réparation',0),(2,'Installation permanente',0),(3,'Disponible',1),(4,'Non Disponible',0),(5,'Oeuvre retirée',0);
+INSERT INTO `etat` VALUES (1,'En réparation',0),(2,'Installation permanente',0),(3,'Disponible',1),(4,'Non Disponible',0),(5,'Oeuvre retirée',0),(6,'Oeuvre empruntée',2);
 /*!40000 ALTER TABLE `etat` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -148,7 +148,7 @@ CREATE TABLE `oeuvres` (
 
 LOCK TABLES `oeuvres` WRITE;
 /*!40000 ALTER TABLE `oeuvres` DISABLE KEYS */;
-INSERT INTO `oeuvres` VALUES (1,'DG_Collection_CBA_09-10.jpg',' Daisy Grenier',' 83x53',' L\'éveil',2010,2,3,NULL),(2,'JF_Collection_CBA_09-10.jpg','Jessica Fecteau','101,5x63,5','OGM',2010,2,2,NULL),(3,'MCP_Collection_CBA_09-10.jpg','Marie-Claude Poulin','2x127x89','Ce qu\'il lui reste?',2010,5,3,'B-504'),(4,'PHV_Collection_CBA_09-10.jpg','Pierre-Hugues Vachon','75x101','Citation de Serge Lemoyne',2010,2,3,'B-438'),(5,'ANC_Collection_CBA_10-11.jpg','Amelie Nadeau-Caron','61x45','Payage abstrait',2010,2,3,'N-222'),(6,'CMP_Collection_CBA_10-11.jpg','Catherine Messier-Poulin','45x185','Light',2011,1,1,NULL),(7,'SC_Collection_CBA_10-11.jpg','Stephanie Cloutier','50x76','Sans Titre',2010,4,2,NULL),(8,'FG_Collection_CBA_10-11.jpg','Fanny Gaboury','31x92','Dans les lignes de la main',2011,3,3,'B-122'),(9,'JML_Collection_CBA_10-11.jpg','Jean-Mathieu Lachapelle','153x132','Intercoulouré',2011,2,4,NULL),(10,'DD_Collection_CBA_09-10.jpg','Davis Dulac','216x106','Explosion orgasmique du XXIe siècle',2010,2,5,NULL);
+INSERT INTO `oeuvres` VALUES (1,'DG_Collection_CBA_09-10.jpg',' Daisy Grenier',' 83x53',' L\'éveil',2010,6,6,NULL),(2,'JF_Collection_CBA_09-10.jpg','Jessica Fecteau','101,5x63,5','OGM',2010,7,2,NULL),(3,'MCP_Collection_CBA_09-10.jpg','Marie-Claude Poulin','2x127x89','Ce qu\'il lui reste?',2010,5,3,'B-504'),(4,'PHV_Collection_CBA_09-10.jpg','Pierre-Hugues Vachon','75x101','Citation de Serge Lemoyne',2010,10,3,'B-438'),(5,'ANC_Collection_CBA_10-11.jpg','Amelie Nadeau-Caron','61x45','Payage abstrait',2010,2,3,'N-222'),(6,'CMP_Collection_CBA_10-11.jpg','Catherine Messier-Poulin','45x185','Light',2011,1,1,NULL),(7,'SC_Collection_CBA_10-11.jpg','Stephanie Cloutier','50x76','Sans Titre',2010,4,2,NULL),(8,'FG_Collection_CBA_10-11.jpg','Fanny Gaboury','31x92','Dans les lignes de la main',2011,3,3,'B-122'),(9,'JML_Collection_CBA_10-11.jpg','Jean-Mathieu Lachapelle','153x132','Intercoulouré',2011,8,4,NULL),(10,'DD_Collection_CBA_09-10.jpg','Davis Dulac','216x106','Explosion orgasmique du XXIe siècle',2010,9,5,NULL);
 /*!40000 ALTER TABLE `oeuvres` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -189,4 +189,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-03-24  8:10:36
+-- Dump completed on 2017-03-24 14:24:06

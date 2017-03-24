@@ -196,12 +196,18 @@ a.fa.fa-angle-down:hover{
 }
 /* Team Section */
 #tf-pic{
+	width:100%;
 	background-color:#5c6066;
 	background-size: cover;
 	background-position: center;
 	background-attachment: fixed;
 	background-repeat: no-repeat;
 	color: #ffffff;
+}
+#tf-pic .item{
+    padding: 0;
+    margin: 0px;
+    text-align: center;
 }
 #tf-pic .overlay{
 	background: -moz-linear-gradient(top,  rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.73) 17%, rgba(0,0,0,0.66) 35%, rgba(0,0,0,0.55) 62%, rgba(0,0,0,0.4) 100%); /* FF3.6+ */
@@ -248,17 +254,18 @@ a.fa.fa-angle-down:hover{
 }
 
 img.img-circle.team-img {
-	width:300px;
+	width:100%;
 	border: 4px solid transparent;
 	transition: all 0.5s;
+	border-radius:50%;
 }
 #tf-pic .item .thumbnail:hover>img.img-circle.team-img{
 	border: 4px solid #FCAC45;
+	border-radius:5%;
 }
 #tf-pic .thumbnail {
 	background: transparent;
 	border: 0;
-	width:50%;
 }
 
 #tf-pic .thumbnail .caption {
@@ -363,7 +370,14 @@ button.btn.tf-btn.btn-default {
 	color: #ffffff;
 	text-transform: uppercase;
 }
-
+button.btn.tf-btn.btn-notdefault {
+	background: #FCAC45;
+	border: 0;
+	border-radius: 0;
+	padding: 10px 40px;
+	color: #ffffff;
+	text-transform: uppercase;
+}
 .btn:active, .btn.active {
 	background-image: none;
 	outline: 0;

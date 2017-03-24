@@ -67,6 +67,10 @@
 					{
 						$contour = '#80f442';
 					}
+					else if ($infoOeuvres['peuxEtreReserve'] == 2)
+					{
+						$contour = '#fff600';
+					}
 					if($cpt%2 == 0)
 					{
 						echo '<tr>';						
@@ -78,7 +82,10 @@
 					echo '<br>Auteur : '.$infoOeuvres['Auteur'];
 					echo '<br>Dimension : '.$infoOeuvres['Dimension'].' cm';
 					echo '<br>État : '.$infoOeuvres['NomEtat'];
-					echo '<br>Lieu : '.$infoOeuvres['lieu'];
+					if ($infoOeuvres['lieu'] != '')
+					{
+						echo '<br>Lieu : '.$infoOeuvres['lieu'];						
+					}
 					echo '</th>';
 					$cpt++;
 				}
