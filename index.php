@@ -132,7 +132,7 @@
 				
 				$cpt = 0;
 				$cptTable = 4;
-				while($Categorie[$cpt] != NULL)
+				while(isset($Categorie[$cpt]))
 				{
 					if($cptTable%4 == 0)
 					{
