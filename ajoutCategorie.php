@@ -1,10 +1,10 @@
 <?php
 session_start();
 include('connexionBd.php');
-if (isset($_POST['mail']) && htmlentities($_POST['mail'])&&isset($_GET['email']) && htmlentities($_GET['email']))
+if (isset($_POST['categorie']) && htmlentities($_POST['categorie'])&&isset($_GET['email']) && htmlentities($_GET['email']))
 {
-		 $ajouterGestionnaire = $Cnn->prepare('insert into gestionnaire (email) VALUES ("'.$_POST['mail'].'");');
-		 $ajouterGestionnaire->execute();
+		 $ajouterCategorie = $Cnn->prepare('insert into categorie (nomCategorie) VALUES ("'.$_POST['mail'].'");');
+		 $ajouterCategorie->execute();
 		 	
 		$_SESSION['Uploader'] = 'True';	
 		
@@ -16,7 +16,7 @@ if (isset($_POST['mail']) && htmlentities($_POST['mail'])&&isset($_GET['email'])
 }
 else if(isset($_GET['email']) && htmlentities($_GET['email']))
 {
-       	$_SESSION['Uploader'] = 'Erreur pendant l\'ajout du gestionnaire';	
+       	$_SESSION['Uploader'] = 'Erreur pendant l\'ajout de la categorie';	
 		$uniqId = uniqid();
 		$ajoutUniqId = $Cnn->prepare('update gestionnaire set uniqId = "'.$uniqId.'" where email = "'.$_GET['email'].'" ');
 		$ajoutUniqId->execute();

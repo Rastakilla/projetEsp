@@ -75,8 +75,19 @@
 					{
 						echo '<tr>';						
 					}
-					echo '<th style="text-align:center;"><a href="img/categorie/'.$infoOeuvres['nomOeuvre'].'" data-lightbox="'.$infoOeuvres['nomOeuvre'].'"><img src="img/categorie/'.$infoOeuvres['nomOeuvre'].'" width="50%"onmouseover="" style="cursor: pointer;	border: 2px solid '.$contour.'"></a>';
-					echo '<a href="">  <u><h4>Réserver cette oeuvre</h4></u> </a>';
+					echo '<th style="text-align:center;" ><a href="img/categorie/'.$infoOeuvres['nomOeuvre'].'" data-lightbox="'.$infoOeuvres['nomOeuvre'].'"><img src="img/categorie/'.$infoOeuvres['nomOeuvre'].'"style="cursor: pointer;	max-width:500px; margin-left:25px; border: 2px solid '.$contour.'"></a>';
+					if($infoOeuvres['peuxEtreReserve'] == 1)
+					{
+						echo '<a href="">  <u><h4>Emprunter cette oeuvre</h4></u> </a>';			
+					}
+					else if($infoOeuvres['peuxEtreReserve'] == 2)
+					{
+						echo '<a href="">  <u><h4>Réserver cette oeuvre</h4></u> </a>';			
+					}
+					else
+					{
+						echo '<br>';
+					}
 					echo '<br>Titre : '.$infoOeuvres['Titre'];
 					echo '<br>Année : '.$infoOeuvres['Annee'];
 					echo '<br>Auteur : '.$infoOeuvres['Auteur'];
@@ -87,6 +98,10 @@
 						echo '<br>Lieu : '.$infoOeuvres['lieu'];						
 					}
 					echo '</th>';
+					if($cpt%2 == 0)
+					{
+						echo '<tr>';						
+					}
 					$cpt++;
 				}
 				?> 

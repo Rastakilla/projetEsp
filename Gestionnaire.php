@@ -52,19 +52,30 @@ session_start();
     ==========================================-->
     <div id="tf-verif" class="text-center">
         <div class="overlay">
-            <div class="content">
+            <div class="content" style='top:-150px;' >
             <?PHP
-			if (isset($_SESSION['Uploader']) && $_SESSION['Uploader'] == 'True')
+            if (isset($_GET['id']) && htmlentities($_GET['id']) && isset($_GET['email']) && htmlentities($_GET['email']))
 			{
-	  			  echo '<script>alert("Ajout effectué.");</script>';				
-			}
-            if (isset($_GET['id']) && htmlentities($_GET['id']))
-			{
-				$email = htmlentities($_GET['id']);
+				if (isset($_SESSION['Uploader']))
+				{
+					if ($_SESSION['Uploader'] == 'True')
+					{
+						 echo '<script>alert("Ajout effectué.");</script>';
+					}
+					else
+					{
+						 echo '<script>alert("ERREUR :'.$_SESSION['Uploader'].'.");</script>';
+					}
+					unset($_SESSION['Uploader']);
+				}
+				
+				
+				$email = htmlentities($_GET['email']);
+				$uniqId = htmlentities($_GET['id']);
 				$verificateur = false;
-				$reponseGestionnaire = $Cnn->prepare('SELECT email from gestionnaire;');
+				$reponseGestionnaire = $Cnn->prepare('SELECT email from gestionnaire where uniqId = "'.$uniqId.'";');
 				$reponseGestionnaire->execute();
-				while($infoGestionnaire = $reponseGestionnaire->fetch())
+				if($infoGestionnaire = $reponseGestionnaire->fetch())
 				{
 					if ($email == $infoGestionnaire['email'])
 					{
@@ -82,21 +93,44 @@ session_start();
 						$reponseEtat->execute();
 						$reponseCategorie = $Cnn->prepare('SELECT nomCategorie,idCategorie from categorie;');
 						$reponseCategorie->execute();
+					echo '<div>';
+					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterGestionnaire();">Ajouter Gestionnaire</button>&nbsp;&nbsp;&nbsp;';
+					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterOeuvre();">Ajouter Oeuvre</button>&nbsp;&nbsp;&nbsp;';
+					echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterEtat();">Ajouter État</button>&nbsp;&nbsp;&nbsp;';
+					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterCategorie();">Ajouter Catégorie</button>';
+					 echo '</div>';
 					
-					 echo' <div><button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterOeuvres();">Ajouter Oeuvres</button></div>';
+					 /***************************************/	
+					/*DEBUT FORM DE L'AJOUT DE GESTIONNAIRE*/
+				   /***************************************/
+					echo '<form id="formGestionnaire" style="display:none;" action="ajoutGestionnaire.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
+                    echo ' <div> <label>Email</label>
+                                    <input class="form-control" id="mail" name="mail" placeholder="Entrez le email du gestionnaire"></input><br></div>';//email
+									
+                   echo' <div><button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>';//button
+                   echo' </form>';//fermeture form
+				   	 /*************************************/	
+					/*FIN FORM DE L'AJOUT DE GESTIONNAIRE*/
+				   /*************************************/
+					
+					
 					
 					/*********************************/	
 					/*DEBUT FORM DE L'AJOUT D'OEUVRES*/
 					/*********************************/
-					echo '<form id="gestionnaire" action="ajoutGestionnaire.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
+					echo '<form id="formOeuvre" style="display:none;"  action="ajoutOeuvre.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
                     echo ' <div> <label>Auteur</label>
-                                    <input class="form-control" id="auteur" name="auteur" placeholder="Entrez le nom de l\'auteur"></input><br></div>';//auteur
-					echo ' <div> <label>Dimensions</label>
-                                    <input class="form-control" id="dimensions" name="dimensions" placeholder="Entrez les dimensions en centimètre"></input><br></div>';//dimensions
+                                    <input class="form-control" id="auteur" name="auteur" placeholder="Entrez le nom de l\'auteur"></input></div>';//auteur
 					 echo ' <div> <label>Titre</label>
-                                    <input class="form-control" id="titre" name="titre" placeholder="Entrez le titre"></input><br></div>';//titre
+                                    <input class="form-control" id="titre" name="titre" placeholder="Entrez le titre"></input></div>';//titre
+					echo ' <div> <label>Hauteur</label>
+                                    <input class="form-control" id="hauteur" name="hauteur" placeholder="Entrez la hauteur en centimètre"></input></div>';//Hauteur
+					echo ' <div> <label>Largeur</label>
+                                    <input class="form-control" id="largeur" name="largeur" placeholder="Entrez la hauteur en centimètre"></input></div>';//Largeur
+					echo ' <div> <label>Profondeur</label>
+                                    <input class="form-control" id="profondeur" name="profondeur" placeholder="Entrez la profondeur en centimètre"></input></div>';//Profondeur
 					echo ' <div> <label>Emplacement</label>
-                                    <input class="form-control" id="lieu" name="lieu" placeholder="Entrez l\'emplacement(si applicable, local ou endroit)"></input><br></div>';//lieu
+                                    <input class="form-control" id="lieu" name="lieu" placeholder="Entrez l\'emplacement(si applicable, local ou endroit)"></input></div>';//lieu
 					 echo ' <div> <label>Année</label>
                                     <select class="form-control" id="annee" name="annee">';
 									echo '<option id="annee0"></option>';
@@ -106,7 +140,7 @@ session_start();
 										echo '<option id="annee'.$cpt.'">'.$cpt.'</option>';
 										$cpt++;										
 									}
-									echo'</select><br></div>';//annee							
+									echo'</select></div>';//annee							
 									
 					echo ' <div> <label>Catégorie</label>
                                     <select class="form-control" id="categorie" name="categorie">';
@@ -116,7 +150,7 @@ session_start();
 							echo '<option id="categorie'.$infoCategorie['idCategorie'].'">'.$infoCategorie['nomCategorie'].'</option>';
 						}
 									
-						echo'</select><br></div>';//Categorie
+						echo'</select></div>';//Categorie
 				
 					echo ' <div> <label>État</label>
                                     <select class="form-control" id="etat" name="etat">';
@@ -129,16 +163,48 @@ session_start();
 						echo '</select><br></div>';//etat
 						
 						
-						 echo '<div><label for="image">Image</label><br>
+						 echo '<div><label for="image">Image</label>
                      <input type="file" name="image" id="image"></div>';//fichier		
 									
                    echo' <div><button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>';//button
                    echo' </form>';//fermeture form
-				}
-				
-					 /*******************************/	
+				   	 /*******************************/	
 					/*FIN FORM DE L'AJOUT D'OEUVRES*/
 				   /*******************************/
+				   
+				   
+				  	 /******************************/	
+					/*DEBUT FORM DE L'AJOUT D'ÉTAT*/
+				   /******************************/
+					echo '<form id="formEtat" style="display:none;"  action="ajoutEtat.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
+                    echo ' <div> <label>État</label>
+                                    <input class="form-control" id="etat" name="etat" placeholder="Entrez l\'état"></input><br></div>';//etat
+									
+				 echo ' <div> <label>Réservation</label> <b><i>Indiquez si cette état permet la réservation.</i></b> <select class="form-control" id="reservation" name="reservation"><br></div>';
+					 echo '<option id="blind"></option>';
+						echo '<option id="oui">Oui</option>';
+						echo '<option id="non">Non</option>';
+				 echo '</select><br></div>';//reservation
+									
+                   echo' <div><button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>';//button
+                   echo' </form>';//fermeture form
+				   	 /****************************/	
+					/*FIN FORM DE L'AJOUT D'ÉTAT*/
+				   /****************************/
+				   
+				   	 /************************************/	
+					/*DEBUT FORM DE L'AJOUT DE CATÉGORIE*/
+				   /************************************/
+					echo '<form id="formCategorie" style="display:none;"  action="ajoutCategorie.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
+                    echo ' <div> <label>Catégorie</label>
+                                    <input class="form-control" id="categorie" name="categorie" placeholder="Entrez la catérogie"></input><br></div>';//categorie
+									
+                   echo' <div><button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>';//button
+                   echo' </form>';//fermeture form
+				   	 /**********************************/	
+					/*FIN FORM DE L'AJOUT DE CATÉGORIE*/
+				   /**********************************/
+				}
 			}
 			?>               
             </div>
@@ -160,11 +226,32 @@ session_start();
 <script type="text/javascript" src="jquery-validation-1.15.0/dist/jquery.validate.min.js"></script>
 <script type="text/javascript" src="jquery-validation-1.15.0/dist/localization/messages_fr.js"></script>
     <script>
-$("#gestionnaire").validate(
+$("#formGestionnaire").validate(
+	{	rules:
+		{	mail: {	required:true,	
+						regex_E:true
+					}
+		},
+		messages : { 			mail : {required : 'Le email est obligatoire',
+										regex_E :'Doit etre de format @cegepba.qc.ca',
+								}
+					}
+					
+	}
+);
+$.validator.addMethod("regex_E", 
+		function (value, element){
+				return this.optional(element) || /^[a-zA-Z]+@cegepba\.qc\.ca$/.test(value);
+			});
+$("#formOeuvre").validate(
 	{	rules:
 		{	auteur: {	required:true,			
 					},
-			dimensions: {	required:true,			
+			hauteur: {	required:true,			
+					},
+			largeur: {	required:true,			
+					},
+			profondeur: {	required:true,			
 					},
 			titre: {	required:true,			
 					},
@@ -180,7 +267,9 @@ $("#gestionnaire").validate(
 					}
 		},
 		messages : { 			auteur : {required : 'L\'auteur est obligatoire'},
-								dimensions : {required : 'Les dimensions sont obligatoires'},
+								hauteur : {required : 'La hauteur est obligatoire'},
+								largeur : {required : 'La largeur est obligatoire'},
+								profondeur : {required : 'La profondeur est obligatoire'},
 								titre : {required : 'Le titre est obligatoire'},
 								emplacement : {required : 'L\'emplacement est obligatoire'},
 								annee : {required : 'L\'année est obligatoire'},
@@ -190,10 +279,57 @@ $("#gestionnaire").validate(
 					}
 	}
 );
- $('#gestionnaire').css('display', 'none');
-		function ajouterOeuvres() {
-			$('#gestionnaire').slideToggle("slow", function () {
+$("#formEtat").validate(
+	{	rules:
+		{	etat: {	required:true
+					},
+			reservation:{	required:true
+					}
+		},
+		messages : { 			etat : {required : 'L\'état est obligatoire'},
+								reservation : {required : 'La possibilité de réservation est obligatoire'}
+					}
+					
+	}
+);
+$("#formCategorie").validate(
+	{	rules:
+		{	categorie: {	required:true
+					}
+		},
+		messages : { 			categorie : {required : 'La catégorie est obligatoire'}
+					}
+					
+	}
+);
+		function ajouterGestionnaire() {
+			$('#formGestionnaire').slideToggle("slow", function () {
 			});
+			 $('#formOeuvre').css('display', 'none');
+			 $('#formEtat').css('display', 'none');
+			 $('#formCategorie').css('display', 'none');
+
+		}
+		function ajouterOeuvre() {
+			$('#formOeuvre').slideToggle("slow", function () {
+			});
+			 $('#formGestionnaire').css('display', 'none');
+			 $('#formEtat').css('display', 'none');
+			 $('#formCategorie').css('display', 'none');
+		}
+		function ajouterEtat() {
+			$('#formEtat').slideToggle("slow", function () {
+			});
+			$('#formCategorie').css('display', 'none');
+			$('#formGestionnaire').css('display', 'none');
+			 $('#formOeuvre').css('display', 'none');
+		}
+		function ajouterCategorie() {
+			$('#formCategorie').slideToggle("slow", function () {
+			});
+			$('#formGestionnaire').css('display', 'none');
+			$('#formOeuvre').css('display', 'none');
+			$('#formEtat').css('display', 'none');
 		}
 
 </script>

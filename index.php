@@ -12,11 +12,6 @@
 	  	  echo '<script>alert("Un message a été envoyé à votre courriel pour la confirmation.");</script>';
   }
   unset($_SESSION['acces']);
-  if (isset($_SESSION['Uploader']) && $_SESSION['Uploader'] == 'False')
-  {
-	  	  echo '<script>alert("Il semble qu\'il y a eu une erreur. Veuillez réesseyer.");</script>';
-  }
-  unset($_SESSION['Uploader']);
   include('connexionBd.php');
   ?>
     <!-- Basic Page Needs
@@ -111,16 +106,77 @@
     <div id="tf-pic" class="text-center">
         <div class="overlay">
             <div class="container">
-                <div class="section-title center">
-                    <h2>Nos <strong>Catégories</strong></h2>
-                   			<br> Cliquez pour accéder aux oeuvres de cette catégorie.
+            <div>
+           		 <h2><i>Type de recherche :</i></h2><br>	
+					 <button type="button" class="btn tf-btn btn-notdefault" onclick="Etats();">États</button>&nbsp;&nbsp;&nbsp;
+					 <button type="button" class="btn tf-btn btn-notdefault" onclick="Mediums();">Médiums</button>&nbsp;&nbsp;&nbsp;
+					<button type="button" class="btn tf-btn btn-notdefault" onclick="Dimensions();">Dimensions</button>&nbsp;&nbsp;&nbsp;
+					<button type="button" class="btn tf-btn btn-notdefault" onclick="Annees();">Années</button>
+		   </div>
+           
+           
+           <form id='formEtat' style='display:none;'>
+           <div class="section-title center">
+                    <h2>Nos <strong>États</strong></h2>
+                   			<br> Cliquez pour accéder aux oeuvres de cette état.
                     <div class="line">
                         <hr>
                     </div>
                 </div>
 				<table width="100%">
                 <?PHP
-				$reponseCategorie = $Cnn->prepare('SELECT * FROM categorie;');
+				$reponseEtat = $Cnn->prepare('SELECT nomEtat FROM etat;');
+				$reponseEtat->execute();
+				$cpt = 0;
+				$Etat = array();
+				while($infoEtat = $reponseEtat->fetch())
+				{
+					$Etat[$cpt] = $infoEtat['nomEtat'];
+					$cpt++;
+				}
+				
+				$cpt = 0;
+				$cptTable = 4;
+				while(isset($Etat[$cpt]))
+				{
+					if($cptTable%4 == 0)
+					{
+						echo '<tr>';						
+					}
+					$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre FROM oeuvres inner join etat on oeuvres.idEtat = etat.idEtat where etat.nomEtat = :varEtat;');
+					$reponseOeuvres->execute(array("varEtat" =>$Etat[$cpt]));
+					if($donneeOeuvre = $reponseOeuvres->fetch())
+					{
+
+					echo '<th width="100%"> <div class="item" style="cursor:pointer; width:300px;" onClick=" window.location.href = \'oeuvres.php?etat='.$Etat[$cpt].'\'" >
+                        <div class="thumbnail">
+                            <img src="img/categorie/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle team-img" width="100%">
+                            <div class="caption">
+                                <h3>'.$Etat[$cpt].'</h3>
+                            </div>
+                        </div>
+                    </div></th>';
+					}
+					$cpt++;
+					$cptTable++;
+				}
+			
+				?> 
+                    </table>
+           </form>
+           
+           
+              <form id='formMedium' style='display:block;'>
+                <div class="section-title center">
+                    <h2>Nos <strong>Médiums</strong></h2>
+                   			<br> Cliquez pour accéder aux oeuvres de ce médium.
+                    <div class="line">
+                        <hr>
+                    </div>
+                </div>
+				<table width="100%">
+                <?PHP
+				$reponseCategorie = $Cnn->prepare('SELECT nomCategorie FROM categorie;');
 				$reponseCategorie->execute();
 				$cpt = 0;
 				$Categorie = array();
@@ -157,7 +213,106 @@
 			
 				?> 
                     </table>
+               </form>
+               
+               <form id='formDimensions' style='display:none;'>
+                                         <div class="section-title center">
+                    <h2>Nos <strong>Dimensions</strong></h2>
+                   			<br> Cliquez pour accéder aux oeuvres de cette catégorie de dimensions.
+                    <div class="line">
+                        <hr>
+                    </div>
                 </div>
+				<table width="100%">
+                <?PHP
+				$Annee = array();
+					$Dimension[0] = 'Hauteur';
+					$Dimension[1] = 'Largeur';
+					$Dimension[2] = 'Profondeur';
+				
+				$cpt = 0;
+				$cptTable = 4;
+				while(isset($Dimension[$cpt]))
+				{
+					if($cptTable%4 == 0)
+					{
+						echo '<tr>';						
+					}
+					$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre FROM oeuvres where '.$Dimension[$cpt].' = (select max('.$Dimension[$cpt].') from oeuvres)' );
+					$reponseOeuvres->execute();
+					if($donneeOeuvre = $reponseOeuvres->fetch())
+					{
+						$width = '100%';
+						if ($cpt == 0)
+						{
+							$width = '50%';
+						}
+					echo '<th width="'.$width.'"> <div class="item" style="cursor:pointer; width:300px;" onClick=" window.location.href = \'oeuvres.php?etat='.$Etat[$cpt].'\'" >
+                        <div class="thumbnail">
+                            <img src="img/categorie/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle team-img" width="100%">
+                            <div class="caption">
+                                <h3>'.$Dimension[$cpt].'</h3>
+                            </div>
+                        </div>
+                    </div></th>';
+					}
+					$cpt++;
+					$cptTable++;
+				}
+			
+				?> 
+                    </table>
+         	   </form>
+          		 
+          	   <form id='formAnnees' style='display:none;'>
+                          <div class="section-title center">
+                    <h2>Nos <strong>Années</strong></h2>
+                   			<br> Cliquez pour accéder aux oeuvres de cette année.
+                    <div class="line">
+                        <hr>
+                    </div>
+                </div>
+				<table width="100%">
+                <?PHP
+				$reponseAnnee = $Cnn->prepare('SELECT DISTINCT Annee FROM Oeuvres;');
+				$reponseAnnee->execute();
+				$cpt = 0;
+				$Annee = array();
+				while($infoAnnee = $reponseAnnee->fetch())
+				{
+					$Annee[$cpt] = $infoAnnee['Annee'];
+					$cpt++;
+				}
+				
+				$cpt = 0;
+				$cptTable = 4;
+				while(isset($Annee[$cpt]))
+				{
+					if($cptTable%4 == 0)
+					{
+						echo '<tr>';						
+					}
+					$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre FROM oeuvres where Annee = :varAnnee;');
+					$reponseOeuvres->execute(array("varAnnee" =>$Annee[$cpt]));
+					if($donneeOeuvre = $reponseOeuvres->fetch())
+					{
+					echo '<th width="100%"> <div class="item" style="cursor:pointer; width:300px;" onClick=" window.location.href = \'oeuvres.php?etat='.$Etat[$cpt].'\'" >
+                        <div class="thumbnail">
+                            <img src="img/categorie/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle team-img" width="100%">
+                            <div class="caption">
+                                <h3>'.$Annee[$cpt].'</h3>
+                            </div>
+                        </div>
+                    </div></th>';
+					}
+					$cpt++;
+					$cptTable++;
+				}
+			
+				?> 
+                    </table>
+         	   </form>
+            </div>
         </div>
     </div>
 
@@ -223,21 +378,21 @@
                             <hr>
                         </div>
                         <div class="clearfix"></div>
-                        <small><em>Pour plus de renseignements, n'hésitez pas à nous contacter!.</em></small>            
+                        <small><em>Pour plus de renseignements, n'hésitez pas à nous contacter!</em></small>            
                     </div>
 
-                    <form>
+                    <form  name="frm_contact" id = "frm_contact" method="POST" action='sendEmail.php'>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Adresse Email</label>
-                                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Entrez votre adresse Email">
+                                    <input type="email" class="form-control" id="vMail" placeholder="Entrez votre adresse Email" required>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Message</label>
-                            <textarea class="form-control" rows="3" placeholder="Entrez votre Message"></textarea>
+                            <textarea class="form-control" rows="3" placeholder="Entrez votre Message" id="vMessage" required></textarea>
                         </div>
                         
                         <button type="submit" class="btn tf-btn btn-default">Envoyer</button>
@@ -262,6 +417,49 @@
     <!-- Javascripts
     ================================================== -->
     <script type="text/javascript" src="js/main.js"></script>
+    
+    	<script>
+		var mail = false;
+		<?PHP if (isset($_GET['mail']) && $_GET['mail'] != NULL)
+		{ ?>
+		 var mail = <?PHP echo $_GET['mail'];?>;
+		<?PHP
+		}
+		?>
+	if (mail == true)
+	{
+		alert('Votre message a été envoyé.');
+	}
+        function Etats() {
+			$('#formEtat').slideToggle("slow", function () {});
+			 $('#formMedium').css('display', 'none');
+			 $('#formDimensions').css('display', 'none');
+			 $('#formAnnees').css('display', 'none');
+
+		}
+	   function Mediums() {
+			$('#formMedium').slideToggle("slow", function () {});
+			 $('#formEtat').css('display', 'none');
+			 $('#formDimensions').css('display', 'none');
+			 $('#formAnnees').css('display', 'none');
+
+		}
+		 function Dimensions() {
+			$('#formDimensions').slideToggle("slow", function () {});
+			 $('#formEtat').css('display', 'none');
+			 $('#formMedium').css('display', 'none');
+			 $('#formAnnees').css('display', 'none');
+
+		}
+		 function Annees() {
+			$('#formAnnees').slideToggle("slow", function () {});
+			 $('#formEtat').css('display', 'none');
+			 $('#formDimensions').css('display', 'none');
+			 $('#formMedium').css('display', 'none');
+
+		}
+	   
+	</script>
 
   </body>
 </html>

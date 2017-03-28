@@ -25,8 +25,11 @@ else if(htmlentities($_POST['email']))
 	else
 	{
 		$_SESSION['acces'] = 'oui';
-		//mail('cednoel@live.ca','Verification de Gestionnaire','Cliquez sur le lien pour aller dans l\'interface du gestionnaire : Gestionnaire.php?id='.$email.' ');
-	header('Location: Gestionnaire.php?id='.$email);
+		$uniqId = uniqid();
+		$ajoutUniqId = $Cnn->prepare('update gestionnaire set uniqId = "'.$uniqId.'" where email = "'.$email.'" ');
+		$ajoutUniqId->execute();
+		//mail('cednoel@live.ca','Verification de Gestionnaire','Cliquez sur le lien pour aller dans l\'interface du gestionnaire : Gestionnaire.php?id='.$uniqId.'&email='.$email);
+	header('Location: Gestionnaire.php?id='.$uniqId.'&email='.$email);
 	}
 }
 //header('Location: index.php');
