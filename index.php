@@ -214,56 +214,7 @@
 				?> 
                     </table>
                </form>
-               
-               <form id='formDimensions' style='display:none;'>
-                                         <div class="section-title center">
-                    <h2>Nos <strong>Dimensions</strong></h2>
-                   			<br> Cliquez pour accéder aux oeuvres de cette catégorie de dimensions.
-                    <div class="line">
-                        <hr>
-                    </div>
-                </div>
-				<table width="100%">
-                <?PHP
-				$Annee = array();
-					$Dimension[0] = 'Hauteur';
-					$Dimension[1] = 'Largeur';
-					$Dimension[2] = 'Profondeur';
-				
-				$cpt = 0;
-				$cptTable = 4;
-				while(isset($Dimension[$cpt]))
-				{
-					if($cptTable%4 == 0)
-					{
-						echo '<tr>';						
-					}
-					$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre FROM oeuvres where '.$Dimension[$cpt].' = (select max('.$Dimension[$cpt].') from oeuvres)' );
-					$reponseOeuvres->execute();
-					if($donneeOeuvre = $reponseOeuvres->fetch())
-					{
-						$width = '100%';
-						if ($cpt == 0)
-						{
-							$width = '50%';
-						}
-					echo '<th width="'.$width.'"> <div class="item" style="cursor:pointer; width:300px;" onClick=" window.location.href = \'oeuvres.php?etat='.$Etat[$cpt].'\'" >
-                        <div class="thumbnail">
-                            <img src="img/categorie/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle team-img" width="100%">
-                            <div class="caption">
-                                <h3>'.$Dimension[$cpt].'</h3>
-                            </div>
-                        </div>
-                    </div></th>';
-					}
-					$cpt++;
-					$cptTable++;
-				}
-			
-				?> 
-                    </table>
-         	   </form>
-          		 
+ 
           	   <form id='formAnnees' style='display:none;'>
                           <div class="section-title center">
                     <h2>Nos <strong>Années</strong></h2>
@@ -296,7 +247,7 @@
 					$reponseOeuvres->execute(array("varAnnee" =>$Annee[$cpt]));
 					if($donneeOeuvre = $reponseOeuvres->fetch())
 					{
-					echo '<th width="100%"> <div class="item" style="cursor:pointer; width:300px;" onClick=" window.location.href = \'oeuvres.php?etat='.$Etat[$cpt].'\'" >
+					echo '<th width="100%"> <div class="item" style="cursor:pointer; width:300px;" onClick=" window.location.href = \'oeuvres.php?annee='.$Annee[$cpt].'\'" >
                         <div class="thumbnail">
                             <img src="img/categorie/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle team-img" width="100%">
                             <div class="caption">
@@ -373,7 +324,7 @@
                 <div class="col-md-8 col-md-offset-2">
 
                     <div class="section-title center">
-                        <h2><strong>Contactez nous</strong></h2>
+                        <h2>Contactez-<strong>nous</strong></h2>
                         <div class="line">
                             <hr>
                         </div>
@@ -433,28 +384,21 @@
         function Etats() {
 			$('#formEtat').slideToggle("slow", function () {});
 			 $('#formMedium').css('display', 'none');
-			 $('#formDimensions').css('display', 'none');
 			 $('#formAnnees').css('display', 'none');
 
 		}
 	   function Mediums() {
 			$('#formMedium').slideToggle("slow", function () {});
 			 $('#formEtat').css('display', 'none');
-			 $('#formDimensions').css('display', 'none');
 			 $('#formAnnees').css('display', 'none');
 
 		}
-		 function Dimensions() {
-			$('#formDimensions').slideToggle("slow", function () {});
-			 $('#formEtat').css('display', 'none');
-			 $('#formMedium').css('display', 'none');
-			 $('#formAnnees').css('display', 'none');
-
+		function Dimensions(){
+			document.location.href="oeuvres.php?dimensions=true";	
 		}
 		 function Annees() {
 			$('#formAnnees').slideToggle("slow", function () {});
 			 $('#formEtat').css('display', 'none');
-			 $('#formDimensions').css('display', 'none');
 			 $('#formMedium').css('display', 'none');
 
 		}

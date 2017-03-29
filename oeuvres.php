@@ -7,7 +7,7 @@
     <!-- Basic Page Needs
     ================================================== -->
     <meta charset="utf-8">
-    [if IE]><meta http-equiv="x-ua-compatible" content="IE=9" />[endif]
+    <meta http-equiv="x-ua-compatible" content="IE=9" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Galerie des Arts Visuels</title>
     <!-- Favicons
@@ -39,9 +39,33 @@
   </head>
   <body onload ="menu();" style='height:100vh;'>
    <?PHP
-		if (isset($_GET['categorie']) && $_GET['categorie']!=NULL)
+   		if (isset($_GET['etat']) && $_GET['etat']!=NULL)
 		{
-			$categorie = htmlentities($_GET['categorie']);
+			$etat = $_GET['etat'];
+		}
+		else if (isset($_GET['categorie']) && $_GET['categorie']!=NULL)
+		{
+			$categorie = ($_GET['categorie']);
+		}
+		else if (isset($_GET['dimensions']) && $_GET['dimensions']!=NULL)
+		{
+			$dimensions = 'Dimensions';
+			if (isset($_GET['Hauteur']) && $_GET['Hauteur'] != '')
+			{
+				$Hauteur = $_GET['Hauteur'];
+			}
+			if (isset($_GET['Largeur']) && $_GET['Largeur'] != '')
+			{
+				$Largeur = $_GET['Largeur'];
+			}
+			if (isset($_GET['Profondeur']) && $_GET['Profondeur'] != '')
+			{
+				$Profondeur = $_GET['Profondeur'];
+			}
+		}
+		else if (isset($_GET['annee']) && $_GET['annee']!=NULL)
+		{
+			$annee = htmlentities($_GET['annee']);
 		}
 		else
 		{
@@ -55,58 +79,141 @@
     <div id="tf-oeuvres" class="text-center">
         <div class="overlay" >
                 <?PHP
-				echo '<h2><strong>'.$categorie.'</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
-				$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre,peuxEtreReserve,Auteur,Dimension,Titre,Annee,NomEtat,lieu FROM oeuvres inner join etat on oeuvres.idEtat = etat.idetat inner join categorie on oeuvres.idCategorie = categorie.idcategorie where categorie.nomCategorie = :varCat;');
-					$reponseOeuvres->execute(array("varCat" =>$categorie));
-					echo '<table>';
-					$cpt = 2;
-				while($infoOeuvres = $reponseOeuvres->fetch())
+				$Medium = true;
+				if (isset($etat))
 				{
-					$contour = '#ff1111';
-					if($infoOeuvres['peuxEtreReserve'] == 1)
-					{
-						$contour = '#80f442';
-					}
-					else if ($infoOeuvres['peuxEtreReserve'] == 2)
-					{
-						$contour = '#fff600';
-					}
-					if($cpt%2 == 0)
-					{
-						echo '<tr>';						
-					}
-					echo '<th style="text-align:center;" ><a href="img/categorie/'.$infoOeuvres['nomOeuvre'].'" data-lightbox="'.$infoOeuvres['nomOeuvre'].'"><img src="img/categorie/'.$infoOeuvres['nomOeuvre'].'"style="cursor: pointer;	max-width:500px; margin-left:25px; border: 2px solid '.$contour.'"></a>';
-					if($infoOeuvres['peuxEtreReserve'] == 1)
-					{
-						echo '<a href="">  <u><h4>Emprunter cette oeuvre</h4></u> </a>';			
-					}
-					else if($infoOeuvres['peuxEtreReserve'] == 2)
-					{
-						echo '<a href="">  <u><h4>Réserver cette oeuvre</h4></u> </a>';			
-					}
-					else
-					{
-						echo '<br>';
-					}
-					echo '<br>Titre : '.$infoOeuvres['Titre'];
-					echo '<br>Année : '.$infoOeuvres['Annee'];
-					echo '<br>Auteur : '.$infoOeuvres['Auteur'];
-					echo '<br>Dimension : '.$infoOeuvres['Dimension'].' cm';
-					echo '<br>État : '.$infoOeuvres['NomEtat'];
-					if ($infoOeuvres['lieu'] != '')
-					{
-						echo '<br>Lieu : '.$infoOeuvres['lieu'];						
-					}
-					echo '</th>';
-					if($cpt%2 == 0)
-					{
-						echo '<tr>';						
-					}
-					$cpt++;
+					echo '<h2><strong>'.$etat.'</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
+					$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre,peuxEtreReserve,Auteur,Hauteur,Largeur,Profondeur,Titre,Annee,NomEtat,lieu,description,nomCategorie FROM oeuvres inner join etat on oeuvres.idEtat = etat.idetat inner join categorie on oeuvres.idCategorie = categorie.idcategorie where etat.NomEtat = :varEtat;');
+						$reponseOeuvres->execute(array("varEtat" =>$etat));	
 				}
-				?> 
-                </table><br><br><br><br><br><br>
-                  <?php include('includes/Footer.php');?> 
+				else if (isset($categorie))
+				{
+					$Medium = false;
+					echo '<h2><strong>'.$categorie.'</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
+					$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre,peuxEtreReserve,Auteur,Hauteur,Largeur,Profondeur,Titre,Annee,NomEtat,lieu,description FROM oeuvres inner join etat on oeuvres.idEtat = etat.idetat inner join categorie on oeuvres.idCategorie = categorie.idcategorie where categorie.nomCategorie = :varCat;');
+						$reponseOeuvres->execute(array("varCat" =>$categorie));
+                 }
+				 else if(isset($dimensions))
+				 {
+				    echo '<h2><strong>'.$dimensions.'</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
+					 echo ' <div align="center">
+                                    <input class="form-control-little" id="hauteur" name="hauteur" placeholder="Hauteur(cm)"></input>
+                                    <input class="form-control-little" id="largeur" name="largeur" placeholder="Largeur(cm)"></input>
+                                    <input class="form-control-little" id="profondeur" name="profondeur" placeholder="Profondeur(cm)"></input><br></div>';
+					echo '<button type="button" class="btn tf-btn btn-notdefault" onclick="Rechercher();">Rechercher</button><br><br>';
+					$where = '';
+					$prefixH = '';
+					$prefixL = '';
+					$prefixP = '';
+					if (isset($Hauteur))
+					{
+						$where = ' where ';
+						$prefixH = 'Hauteur <='.$Hauteur;
+					}
+					if (isset($Largeur))
+					{
+						$where = ' where ';
+						$prefixL = 'Largeur <='.$Largeur;
+					}
+					if (isset($Profondeur))
+					{
+						$where = ' where ';
+						$prefixP = 'Profondeur <='.$Profondeur;
+					}
+					if (isset($Hauteur) && isset($Largeur))
+					{
+						$where = ' where ';
+						$prefixH = 'Hauteur <='.$Hauteur;
+						$prefixL = ' AND Largeur <='.$Largeur;
+					}
+					if (isset($Hauteur) && isset($Profondeur))
+					{
+						$where = ' where ';
+						$prefixH = 'Hauteur <='.$Hauteur;
+						$prefixP =  ' AND Profondeur <='.$Profondeur;
+					}
+					if (isset($Largeur) && isset($Profondeur))
+					{
+						$where = ' where ';
+						$prefixL = 'Largeur <='.$Largeur;
+						$prefixP = ' AND Profondeur <='.$Profondeur;
+					}
+					if (isset($Hauteur) && isset($Largeur) && isset($Profondeur))
+					{
+						$where = ' where ';
+						$prefixH = 'Hauteur <='.$Hauteur;
+						$prefixL = ' AND Largeur <='.$Largeur;
+						$prefixP = ' AND Profondeur <='.$Profondeur;
+					}
+
+						$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre,peuxEtreReserve,Auteur,Hauteur,Largeur,Profondeur,Titre,Annee,NomEtat,lieu,description,nomCategorie FROM oeuvres inner join etat on oeuvres.idEtat = etat.idetat inner join categorie on oeuvres.idCategorie = categorie.idcategorie '.$where.$prefixH.$prefixL.$prefixP.';');
+						$reponseOeuvres->execute();
+				 }
+				 else if(isset($annee))
+				 {
+					 					
+					echo '<h2><strong>'.$annee.'</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
+					$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre,peuxEtreReserve,Auteur,Hauteur,Largeur,Profondeur,Titre,Annee,NomEtat,lieu,description,nomCategorie FROM oeuvres inner join etat on oeuvres.idEtat = etat.idetat inner join categorie on oeuvres.idCategorie = categorie.idcategorie where Annee = :varAnnee');
+						$reponseOeuvres->execute(array("varAnnee" =>$annee));	
+				 }
+				 echo '<table>';
+						$cpt = 2;
+					while($infoOeuvres = $reponseOeuvres->fetch())
+					{
+						$contour = '#ff1111';
+						if($infoOeuvres['peuxEtreReserve'] == 1)
+						{
+							$contour = '#80f442';
+						}
+						else if ($infoOeuvres['peuxEtreReserve'] == 2)
+						{
+							$contour = '#fff600';
+						}
+						if($cpt%2 == 0)
+						{
+							echo '<tr>';						
+						}
+						echo '<th style="text-align:center;" ><a href="img/categorie/'.$infoOeuvres['nomOeuvre'].'" data-lightbox="'.$infoOeuvres['nomOeuvre'].'"><img src="img/categorie/'.$infoOeuvres['nomOeuvre'].'"style="cursor: pointer;	margin-right:50px; max-width:500px; margin-left:50px; border: 3px solid '.$contour.'"></a>';
+						if($infoOeuvres['peuxEtreReserve'] == 1)
+						{
+							echo '<a href="">  <u><h4>Emprunter cette oeuvre</h4></u> </a>';			
+						}
+						else if($infoOeuvres['peuxEtreReserve'] == 2)
+						{
+							echo '<a href="">  <u><h4>Réserver cette oeuvre</h4></u> </a>';			
+						}
+						else
+						{
+							echo '<br>';
+						}
+						echo '<br>Titre : '.$infoOeuvres['Titre'];
+						echo '<br>Année : '.$infoOeuvres['Annee'];
+						echo '<br>Auteur : '.$infoOeuvres['Auteur'];
+						$profondeur = '';
+						if ($infoOeuvres['Profondeur'] != NULL)
+						{
+							$profondeur = 'x'.$infoOeuvres['Profondeur'];
+						}
+						echo '<br>Dimension : '.$infoOeuvres['Hauteur'].'x'.$infoOeuvres['Largeur'].$profondeur.' cm';
+						echo '<br>État : '.$infoOeuvres['NomEtat'];
+						if ($infoOeuvres['lieu'] != '')
+						{
+							echo '<br>Lieu : '.$infoOeuvres['lieu'];						
+						}
+						if ($infoOeuvres['description'] != '')
+						{
+							echo '<br>Description : '.$infoOeuvres['description'];						
+						}
+						if(isset($Medium) && $Medium == true)
+						{
+							echo '<br>Médium : '.$infoOeuvres['nomCategorie'];
+						}
+						echo '</th>';
+						$cpt++;
+					}
+					
+					echo'</table><br><br><br><br><br><br>';
+                   include('includes/Footer.php');?> 
        </div>             			
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -123,6 +230,10 @@
     <script>
 	function menu(){
 	 $('.navbar-default').addClass('on');
+	}
+	function Rechercher(){
+		alert("oeuvres.php?dimensions=true&Hauteur="+document.getElementById('hauteur').value+"&Largeur="+document.getElementById('largeur').value+"&Profondeur="+document.getElementById('profondeur').value);
+	document.location.href="oeuvres.php?dimensions=true&Hauteur="+document.getElementById('hauteur').value+"&Largeur="+document.getElementById('largeur').value+"&Profondeur="+document.getElementById('profondeur').value;
 	}
 	</script>
 
