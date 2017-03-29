@@ -103,6 +103,7 @@ DROP TABLE IF EXISTS `gestionnaire`;
 CREATE TABLE `gestionnaire` (
   `idgestionnaire` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(100) NOT NULL,
+  `uniqId` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`idgestionnaire`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -113,7 +114,7 @@ CREATE TABLE `gestionnaire` (
 
 LOCK TABLES `gestionnaire` WRITE;
 /*!40000 ALTER TABLE `gestionnaire` DISABLE KEYS */;
-INSERT INTO `gestionnaire` VALUES (1,'cpepin@cegepba.qc.ca'),(2,'cnoel@cegepba.qc.ca');
+INSERT INTO `gestionnaire` VALUES (1,'cpepin@cegepba.qc.ca',NULL),(2,'cnoel@cegepba.qc.ca','58da73e03d40b');
 /*!40000 ALTER TABLE `gestionnaire` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -128,12 +129,15 @@ CREATE TABLE `oeuvres` (
   `idOeuvres` int(11) NOT NULL AUTO_INCREMENT,
   `nomOeuvre` varchar(50) NOT NULL,
   `Auteur` varchar(100) NOT NULL,
-  `Dimension` varchar(25) NOT NULL,
+  `Hauteur` int(11) NOT NULL,
+  `Largeur` int(11) NOT NULL,
+  `Profondeur` int(11) DEFAULT NULL,
   `Titre` varchar(100) NOT NULL,
   `Annee` year(4) NOT NULL,
   `idCategorie` int(11) NOT NULL,
   `idEtat` int(11) NOT NULL,
   `lieu` varchar(45) DEFAULT NULL,
+  `description` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`idOeuvres`),
   KEY `FK_etatOeuvre` (`idEtat`),
   KEY `FK_categorieOeuvre` (`idCategorie`),
@@ -148,7 +152,7 @@ CREATE TABLE `oeuvres` (
 
 LOCK TABLES `oeuvres` WRITE;
 /*!40000 ALTER TABLE `oeuvres` DISABLE KEYS */;
-INSERT INTO `oeuvres` VALUES (1,'DG_Collection_CBA_09-10.jpg',' Daisy Grenier',' 83x53',' L\'éveil',2010,6,6,NULL),(2,'JF_Collection_CBA_09-10.jpg','Jessica Fecteau','101,5x63,5','OGM',2010,7,2,NULL),(3,'MCP_Collection_CBA_09-10.jpg','Marie-Claude Poulin','2x127x89','Ce qu\'il lui reste?',2010,5,3,'B-504'),(4,'PHV_Collection_CBA_09-10.jpg','Pierre-Hugues Vachon','75x101','Citation de Serge Lemoyne',2010,10,3,'B-438'),(5,'ANC_Collection_CBA_10-11.jpg','Amelie Nadeau-Caron','61x45','Payage abstrait',2010,2,3,'N-222'),(6,'CMP_Collection_CBA_10-11.jpg','Catherine Messier-Poulin','45x185','Light',2011,1,1,NULL),(7,'SC_Collection_CBA_10-11.jpg','Stephanie Cloutier','50x76','Sans Titre',2010,4,2,NULL),(8,'FG_Collection_CBA_10-11.jpg','Fanny Gaboury','31x92','Dans les lignes de la main',2011,3,3,'B-122'),(9,'JML_Collection_CBA_10-11.jpg','Jean-Mathieu Lachapelle','153x132','Intercoulouré',2011,8,4,NULL),(10,'DD_Collection_CBA_09-10.jpg','Davis Dulac','216x106','Explosion orgasmique du XXIe siècle',2010,9,5,NULL);
+INSERT INTO `oeuvres` VALUES (1,'DG_Collection_CBA_09-10.jpg',' Daisy Grenier',83,53,NULL,' L\'éveil',2010,6,6,NULL,'OH MY GASH'),(2,'JF_Collection_CBA_09-10.jpg','Jessica Fecteau',102,64,NULL,'OGM',2010,7,2,NULL,NULL),(3,'MCP_Collection_CBA_09-10.jpg','Marie-Claude Poulin',127,89,2,'Ce qu\'il lui reste?',2010,5,3,'B-504',NULL),(4,'PHV_Collection_CBA_09-10.jpg','Pierre-Hugues Vachon',75,101,NULL,'Citation de Serge Lemoyne',2010,10,3,'B-438',NULL),(5,'ANC_Collection_CBA_10-11.jpg','Amelie Nadeau-Caron',61,45,NULL,'Payage abstrait',2010,2,3,'N-222',NULL),(6,'CMP_Collection_CBA_10-11.jpg','Catherine Messier-Poulin',45,185,NULL,'Light',2011,1,1,NULL,NULL),(7,'SC_Collection_CBA_10-11.jpg','Stephanie Cloutier',50,76,NULL,'Sans Titre',2010,4,2,NULL,NULL),(8,'FG_Collection_CBA_10-11.jpg','Fanny Gaboury',31,92,NULL,'Dans les lignes de la main',2011,3,3,'B-122',NULL),(9,'JML_Collection_CBA_10-11.jpg','Jean-Mathieu Lachapelle',153,132,NULL,'Intercoulouré',2011,8,4,NULL,NULL),(10,'DD_Collection_CBA_09-10.jpg','Davis Dulac',216,106,NULL,'Explosion orgasmique du XXIe siècle',2010,9,5,NULL,NULL);
 /*!40000 ALTER TABLE `oeuvres` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -189,4 +193,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-03-24 14:24:06
+-- Dump completed on 2017-03-29 10:51:00

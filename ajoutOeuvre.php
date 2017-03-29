@@ -33,7 +33,7 @@ include('connexionBd.php');
 		 
 		 
 		 
-		 $ajoutOeuvre = $Cnn->prepare("insert into oeuvres (nomOeuvre,Auteur,Dimension,Titre,Annee,idCategorie,idEtat,lieu) VALUES ('".$file_name."','".$_POST['auteur']."','".$_POST['dimensions']."','".$_POST['titre']."','".$_POST['annee']."','".$idCategorie."','".$idEtat."','".$_POST['lieu']."')");
+		 $ajoutOeuvre = $Cnn->prepare("insert into oeuvres (nomOeuvre,Auteur,Hauteur,Largeur,Profondeur,Titre,Annee,idCategorie,idEtat,lieu,description) VALUES ('".$file_name."','".$_POST['auteur']."','".$_POST['hauteur']."','".$_POST['largeur']."','".$_POST['profondeur']."','".$_POST['titre']."','".$_POST['annee']."','".$idCategorie."','".$idEtat."','".$_POST['lieu']."','".$_POST['description']."')");
 		$ajoutOeuvre->execute();	
 		$_SESSION['Uploader'] = 'True';	
 		
