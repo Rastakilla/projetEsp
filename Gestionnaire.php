@@ -94,12 +94,27 @@ session_start();
 						$reponseCategorie = $Cnn->prepare('SELECT nomCategorie,idCategorie from categorie;');
 						$reponseCategorie->execute();
 					echo '<div>';
+					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterCommanditaire();">Ajouter Commanditaire</button>&nbsp;&nbsp;&nbsp;';
 					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterGestionnaire();">Ajouter Gestionnaire</button>&nbsp;&nbsp;&nbsp;';
 					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterOeuvre();">Ajouter Oeuvre</button>&nbsp;&nbsp;&nbsp;';
 					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="afficherTitre();">Modifier Oeuvre</button>&nbsp;&nbsp;&nbsp;';
 					echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterEtat();">Ajouter État</button>&nbsp;&nbsp;&nbsp;';
 					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterCategorie();">Ajouter Catégorie</button>';
 					 echo '</div>';
+					
+					
+					 /****************************************/	
+					/*DEBUT FORM DE L'AJOUT DE COMMANDITAIRE*/
+				   /****************************************/
+					echo '<form id="formCommanditaire" style="display:none;" action="ajoutCommanditaire.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
+                     echo '<div><br><label for="image">Image</label>
+                     <input type="file" name="image" id="image"></div>';//imageCommanditaire
+									
+                   echo' <div><button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>';//button
+                   echo' </form>';//fermeture form
+				   	 /**************************************/	
+					/*FIN FORM DE L'AJOUT DE COMMANDITAIRE*/
+				   /**************************************/
 					
 					 /***************************************/	
 					/*DEBUT FORM DE L'AJOUT DE GESTIONNAIRE*/
@@ -417,9 +432,20 @@ $("#formCategorie").validate(
 					
 	}
 );
+	function ajouterCommanditaire() {
+			$('#formCommanditaire').slideToggle("slow", function () {
+			});
+			$('#formGestionnaire').css('display', 'none');
+			 $('#formAjouterOeuvre').css('display', 'none');
+			 $('#formEtat').css('display', 'none');
+			 $('#formCategorie').css('display', 'none');
+			 $('#formModifierOeuvre').css('display', 'none');
+			 $('#formAllTitre').css('display', 'none');
+		}
 		function ajouterGestionnaire() {
 			$('#formGestionnaire').slideToggle("slow", function () {
 			});
+			$('#formCommanditaire').css('display', 'none');
 			 $('#formAjouterOeuvre').css('display', 'none');
 			 $('#formEtat').css('display', 'none');
 			 $('#formCategorie').css('display', 'none');
@@ -429,6 +455,7 @@ $("#formCategorie").validate(
 		function ajouterOeuvre() {
 			$('#formAjouterOeuvre').slideToggle("slow", function () {
 			});
+			$('#formCommanditaire').css('display', 'none');
 			 $('#formGestionnaire').css('display', 'none');
 			 $('#formEtat').css('display', 'none');
 			 $('#formCategorie').css('display', 'none');
@@ -438,6 +465,7 @@ $("#formCategorie").validate(
 		function afficherTitre() {
 			$('#formAllTitre').slideToggle("slow", function () {
 			});
+			$('#formCommanditaire').css('display', 'none');
 			 $('#formGestionnaire').css('display', 'none');
 			 $('#formEtat').css('display', 'none');
 			 $('#formCategorie').css('display', 'none');
@@ -447,6 +475,7 @@ $("#formCategorie").validate(
 		function modifierOeuvre() {
 			$('#formModifierOeuvre').slideToggle("slow", function () {
 			});
+			$('#formCommanditaire').css('display', 'none');
 			 $('#formGestionnaire').css('display', 'none');
 			 $('#formEtat').css('display', 'none');
 			 $('#formCategorie').css('display', 'none');
@@ -456,6 +485,7 @@ $("#formCategorie").validate(
 		function ajouterEtat() {
 			$('#formEtat').slideToggle("slow", function () {
 			});
+			$('#formCommanditaire').css('display', 'none');
 			$('#formCategorie').css('display', 'none');
 			$('#formGestionnaire').css('display', 'none');
 			 $('#formAjouterOeuvre').css('display', 'none');
@@ -465,6 +495,7 @@ $("#formCategorie").validate(
 		function ajouterCategorie() {
 			$('#formCategorie').slideToggle("slow", function () {
 			});
+			$('#formCommanditaire').css('display', 'none');
 			$('#formGestionnaire').css('display', 'none');
 			$('#formAjouterOeuvre').css('display', 'none');
 			$('#formEtat').css('display', 'none');
