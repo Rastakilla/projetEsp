@@ -19,6 +19,7 @@ if (isset($_POST['selectedIndex']) && $_POST['selectedIndex'] != '')
 		$arrayOeuvres['description'] = $oeuvre['description'];
 		$arrayOeuvres['nomCategorie'] = $oeuvre['nomCategorie'];
 		$arrayOeuvres['NomEtat'] = $oeuvre['NomEtat'];
+		$arrayOeuvres['nomOeuvre'] = $oeuvre['nomOeuvre'];
 		echo json_encode($arrayOeuvres);
 	}
 }

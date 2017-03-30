@@ -47,7 +47,7 @@
 		{
 			$categorie = ($_GET['categorie']);
 		}
-		else if (isset($_GET['dimensions']) && $_GET['dimensions']!=NULL)
+		else if (isset($_GET['dimensions']) && $_GET['dimensions']!=NULL && $_GET['dimensions']==true)
 		{
 			$dimensions = 'Dimensions';
 			if (isset($_GET['Hauteur']) && $_GET['Hauteur'] != '')
@@ -67,6 +67,14 @@
 		{
 			$annee = htmlentities($_GET['annee']);
 		}
+		else if(isset($_GET['motcle']) && $_GET['motcle']!=NULL && $_GET['motcle']==true)
+		{
+			$motcle = 'Mot Clé';
+			if (isset($_GET['infoMotCle']) && $_GET['infoMotCle']!= '')
+			{
+				$infoMotCle = $_GET['infoMotCle'];
+			}
+		}
 		else
 		{
 			header('Location: index.php');
@@ -82,25 +90,38 @@
 				$Medium = true;
 				if (isset($etat))
 				{
+					$Medium = true;
 					echo '<h2><strong>'.$etat.'</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
-					$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre,peuxEtreReserve,Auteur,Hauteur,Largeur,Profondeur,Titre,Annee,NomEtat,lieu,description,nomCategorie FROM oeuvres inner join etat on oeuvres.idEtat = etat.idetat inner join categorie on oeuvres.idCategorie = categorie.idcategorie where etat.NomEtat = :varEtat;');
-						$reponseOeuvres->execute(array("varEtat" =>$etat));	
+					$whereGlobal = ' where etat.NomEtat ="'.$etat.'";';	
 				}
 				else if (isset($categorie))
 				{
 					$Medium = false;
 					echo '<h2><strong>'.$categorie.'</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
-					$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre,peuxEtreReserve,Auteur,Hauteur,Largeur,Profondeur,Titre,Annee,NomEtat,lieu,description FROM oeuvres inner join etat on oeuvres.idEtat = etat.idetat inner join categorie on oeuvres.idCategorie = categorie.idcategorie where categorie.nomCategorie = :varCat;');
-						$reponseOeuvres->execute(array("varCat" =>$categorie));
+					$whereGlobal =  ' where categorie.nomCategorie = "'.$categorie.'";';
+                 }
+				 else if (isset($motcle))
+				{
+					$Medium = true;
+					$whereGlobal = '';
+					if (isset($infoMotCle))
+					{
+						$whereGlobal = " where description like '%".$infoMotCle."%';";
+					}
+					echo '<h2><strong>'.$motcle.'</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
+					 echo ' <div align="center">
+                                    <input class="form-control-little" id="infoMotCle" name="infoMotCle" placeholder="Mot Clé"></input></div>';
+					echo '<button type="button" class="btn tf-btn btn-notdefault" onclick="RechercherMotCle();">Rechercher</button><br><br>';
                  }
 				 else if(isset($dimensions))
 				 {
+					 $Medium = true;
 				    echo '<h2><strong>'.$dimensions.'</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
 					 echo ' <div align="center">
                                     <input class="form-control-little" id="hauteur" name="hauteur" placeholder="Hauteur(cm)"></input>
                                     <input class="form-control-little" id="largeur" name="largeur" placeholder="Largeur(cm)"></input>
                                     <input class="form-control-little" id="profondeur" name="profondeur" placeholder="Profondeur(cm)"></input><br></div>';
-					echo '<button type="button" class="btn tf-btn btn-notdefault" onclick="Rechercher();">Rechercher</button><br><br>';
+					echo '<button type="button" class="btn tf-btn btn-notdefault" onclick="RechercherDimensions();">Rechercher</button><br><br>';
 					$where = '';
 					$prefixH = '';
 					$prefixL = '';
@@ -145,17 +166,16 @@
 						$prefixL = ' AND Largeur <='.$Largeur;
 						$prefixP = ' AND Profondeur <='.$Profondeur;
 					}
-
-						$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre,peuxEtreReserve,Auteur,Hauteur,Largeur,Profondeur,Titre,Annee,NomEtat,lieu,description,nomCategorie FROM oeuvres inner join etat on oeuvres.idEtat = etat.idetat inner join categorie on oeuvres.idCategorie = categorie.idcategorie '.$where.$prefixH.$prefixL.$prefixP.';');
-						$reponseOeuvres->execute();
+						$whereGlobal = $where.$prefixH.$prefixL.$prefixP;
 				 }
 				 else if(isset($annee))
 				 {
-					 					
+					$Medium = true; 					
 					echo '<h2><strong>'.$annee.'</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
-					$reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre,peuxEtreReserve,Auteur,Hauteur,Largeur,Profondeur,Titre,Annee,NomEtat,lieu,description,nomCategorie FROM oeuvres inner join etat on oeuvres.idEtat = etat.idetat inner join categorie on oeuvres.idCategorie = categorie.idcategorie where Annee = :varAnnee');
-						$reponseOeuvres->execute(array("varAnnee" =>$annee));	
+					$whereGlobal = ' where Annee = '.$annee;	
 				 }
+				 $reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre,peuxEtreReserve,Auteur,Hauteur,Largeur,Profondeur,Titre,Annee,NomEtat,lieu,description,nomCategorie FROM oeuvres inner join etat on oeuvres.idEtat = etat.idetat inner join categorie on oeuvres.idCategorie = categorie.idcategorie'.$whereGlobal);
+						$reponseOeuvres->execute();
 				 echo '<table>';
 						$cpt = 2;
 					while($infoOeuvres = $reponseOeuvres->fetch())
@@ -231,9 +251,11 @@
 	function menu(){
 	 $('.navbar-default').addClass('on');
 	}
-	function Rechercher(){
-		alert("oeuvres.php?dimensions=true&Hauteur="+document.getElementById('hauteur').value+"&Largeur="+document.getElementById('largeur').value+"&Profondeur="+document.getElementById('profondeur').value);
+	function RechercherDimensions(){
 	document.location.href="oeuvres.php?dimensions=true&Hauteur="+document.getElementById('hauteur').value+"&Largeur="+document.getElementById('largeur').value+"&Profondeur="+document.getElementById('profondeur').value;
+	}
+	function RechercherMotCle(){
+		document.location.href="oeuvres.php?motcle=true&infoMotCle="+document.getElementById('infoMotCle').value;
 	}
 	</script>
 

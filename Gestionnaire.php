@@ -60,7 +60,7 @@ session_start();
 				{
 					if ($_SESSION['Uploader'] == 'True')
 					{
-						 echo '<script>alert("Ajout effectué.");</script>';
+						 echo '<script>alert("Ajout/Modification effectué.");</script>';
 					}
 					else
 					{
@@ -194,8 +194,8 @@ session_start();
 					}
 					echo'</select></div>';//Tous les Titres	
 					echo '</form>';
-					echo '<input type="hidden" id="oeuvreId"></input>';
 					echo '<form id="formModifierOeuvre" style="display:none;"  action="modifierOeuvre.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
+					echo "<br> <a id ='oeuvreImage' data-lightbox='Oeuvre'><p class = 'color'><b><u>VOIR L'OEUVRE</u></b></p></a>";
                     echo ' <div> <label>Auteur</label>
                                     <input class="form-control" id="auteurM" name="auteurM" placeholder="Entrez le nom de l\'auteur"></input></div>';//auteur
 					 echo ' <div> <label>Titre</label>
@@ -240,7 +240,7 @@ session_start();
 						}
 						
 						echo '</select><br></div>';//etat	
-									
+					echo '<input type="hidden" id="idOeuvre" name="idOeuvre">';
                    echo' <div><button type="submit" class="btn tf-btn btn-default">Modifier</button></div>';//button
                    echo' </form>';//fermeture form
 				   	 /***************************/	
@@ -420,7 +420,7 @@ $("#formCategorie").validate(
 		function ajouterGestionnaire() {
 			$('#formGestionnaire').slideToggle("slow", function () {
 			});
-			 $('#formOeuvre').css('display', 'none');
+			 $('#formAjouterOeuvre').css('display', 'none');
 			 $('#formEtat').css('display', 'none');
 			 $('#formCategorie').css('display', 'none');
 			 $('#formModifierOeuvre').css('display', 'none');
@@ -458,7 +458,7 @@ $("#formCategorie").validate(
 			});
 			$('#formCategorie').css('display', 'none');
 			$('#formGestionnaire').css('display', 'none');
-			 $('#formOeuvre').css('display', 'none');
+			 $('#formAjouterOeuvre').css('display', 'none');
 			 $('#formModifierOeuvre').css('display', 'none');
 			 $('#formAllTitre').css('display', 'none');
 		}
@@ -466,7 +466,7 @@ $("#formCategorie").validate(
 			$('#formCategorie').slideToggle("slow", function () {
 			});
 			$('#formGestionnaire').css('display', 'none');
-			$('#formOeuvre').css('display', 'none');
+			$('#formAjouterOeuvre').css('display', 'none');
 			$('#formEtat').css('display', 'none');
 			$('#formModifierOeuvre').css('display', 'none');
 			$('#formAllTitre').css('display', 'none');
@@ -494,7 +494,8 @@ $("#formCategorie").validate(
 					   document.getElementById('anneeM').value = infos.Annee;
 					   document.getElementById('categorieM').value = infos.nomCategorie;
 					   document.getElementById('etatM').value = infos.NomEtat;
-					   document.getElementById('oeuvreId').value = infos.idOeuvres;
+					   document.getElementById('idOeuvre').value = infos.idOeuvres;
+					   document.getElementById('oeuvreImage').href = 'img/categorie/'+infos.nomOeuvre;
 					   modifierOeuvre();
 			       }
 				});

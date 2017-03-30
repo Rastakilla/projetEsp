@@ -110,8 +110,9 @@
            		 <h2><i>Type de recherche :</i></h2><br>	
 					 <button type="button" class="btn tf-btn btn-notdefault" onclick="Etats();">États</button>&nbsp;&nbsp;&nbsp;
 					 <button type="button" class="btn tf-btn btn-notdefault" onclick="Mediums();">Médiums</button>&nbsp;&nbsp;&nbsp;
+                     					<button type="button" class="btn tf-btn btn-notdefault" onclick="Annees();">Années</button>&nbsp;&nbsp;&nbsp;
 					<button type="button" class="btn tf-btn btn-notdefault" onclick="Dimensions();">Dimensions</button>&nbsp;&nbsp;&nbsp;
-					<button type="button" class="btn tf-btn btn-notdefault" onclick="Annees();">Années</button>
+					<button type="button" class="btn tf-btn btn-notdefault" onclick="MotCle();">Mot Clé</button>
 		   </div>
            
            
@@ -225,7 +226,7 @@
                 </div>
 				<table width="100%">
                 <?PHP
-				$reponseAnnee = $Cnn->prepare('SELECT DISTINCT Annee FROM Oeuvres;');
+				$reponseAnnee = $Cnn->prepare('SELECT DISTINCT Annee FROM Oeuvres order by Annee;');
 				$reponseAnnee->execute();
 				$cpt = 0;
 				$Annee = array();
@@ -393,14 +394,16 @@
 			 $('#formAnnees').css('display', 'none');
 
 		}
-		function Dimensions(){
-			document.location.href="oeuvres.php?dimensions=true";	
-		}
 		 function Annees() {
 			$('#formAnnees').slideToggle("slow", function () {});
 			 $('#formEtat').css('display', 'none');
 			 $('#formMedium').css('display', 'none');
-
+		}
+		function Dimensions(){
+			document.location.href="oeuvres.php?dimensions=true";	
+		}
+		function MotCle(){
+			document.location.href="oeuvres.php?motcle=true";	
 		}
 	   
 	</script>
