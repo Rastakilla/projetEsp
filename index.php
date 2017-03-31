@@ -287,14 +287,13 @@
         </div>
         <div data-u="slides" style="cursor:default;position:relative; top:0px;left:20%;width:900px;height:550px;overflow:hidden;">
         <?PHP
-		$directory = "img/com";
-		$files = scandir($directory);
-		$num_files = count($files)-2;
-		$cptInit = 0;
-		while ($cptInit < $num_files)
+		$sql = 'select idCommanditaire,nomCommanditaire,pathCommanditaire from commanditaire';
+		$infoCommanditaires =$Cnn->prepare($sql);
+		$infoCommanditaires->execute();
+		while ($infoCom = $infoCommanditaires->fetch())
 		{
-			echo '            <div>
-                <img data-u="image" id="imgCom" src="img/com/commanditaire'.$cptInit.'.png"> 
+			echo '  <div>
+                <img data-u="image" id="'.$infoCom["idCommanditaire"].'" src="img/com/'.$infoCom["pathCommanditaire"].'" title="'.$infoCom["nomCommanditaire"].'"> 
             </div>';
 			$cptInit++;
 		}

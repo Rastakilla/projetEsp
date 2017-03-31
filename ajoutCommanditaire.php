@@ -1,7 +1,8 @@
 <?php
 session_start();
 include('connexionBd.php');
-   if(isset($_FILES['image'])){
+   if(isset($_FILES['image']) && isset($_POST['commanditaire']))
+   {
       $errors= array();
       $file_name = $_FILES['image']['name'];
       $file_size =$_FILES['image']['size'];
@@ -17,11 +18,10 @@ include('connexionBd.php');
 	        
       if(empty($errors)==true){
          move_uploaded_file($file_tmp,"img/com/".$file_name);
-		 $directory = "img/com";
-		$files = scandir($directory);
-		$num_files = count($files)-2;
 	
-		rename("img/com/".$file_name,"img/com/commanditaire".($num_files-1).".png");
+		$sql = 'insert into commanditaire (nomCommanditaire,pathCommanditaire) VALUES ("'.$_POST['commanditaire'].'","'.$file_name.'");';
+		$mettreCommanditaire = $Cnn->prepare($sql);
+		$mettreCommanditaire->execute();
 		$_SESSION['Uploader'] = 'True';	
 		
 		$uniqId = uniqid();

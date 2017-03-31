@@ -95,6 +95,7 @@ session_start();
 						$reponseCategorie->execute();
 					echo '<div>';
 					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterCommanditaire();">Ajouter Commanditaire</button>&nbsp;&nbsp;&nbsp;';
+					  echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="sprmCommanditaire();">Supprimer Commanditaire</button>&nbsp;&nbsp;&nbsp;';
 					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterGestionnaire();">Ajouter Gestionnaire</button>&nbsp;&nbsp;&nbsp;';
 					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterOeuvre();">Ajouter Oeuvre</button>&nbsp;&nbsp;&nbsp;';
 					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="afficherTitre();">Modifier Oeuvre</button>&nbsp;&nbsp;&nbsp;';
@@ -106,7 +107,9 @@ session_start();
 					 /****************************************/	
 					/*DEBUT FORM DE L'AJOUT DE COMMANDITAIRE*/
 				   /****************************************/
-					echo '<form id="formCommanditaire" style="display:none;" action="ajoutCommanditaire.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
+					echo '<form id="formAjoutCommanditaire" style="display:none;" action="ajoutCommanditaire.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
+				 echo ' <div> <br><label>Nom du commanditaire</label>
+                       <input class="form-control" id="commanditaire" name="commanditaire" placeholder="Entrez le nom du commanditaire"></input></div>';//nomCommanditaire
                      echo '<div><br><label for="image">Image</label>
                      <input type="file" name="image" id="image"></div>';//imageCommanditaire
 									
@@ -115,6 +118,26 @@ session_start();
 				   	 /**************************************/	
 					/*FIN FORM DE L'AJOUT DE COMMANDITAIRE*/
 				   /**************************************/
+				     /***************************************/	
+					/*DEBUT FORM DE DELETE DE COMMANDITAIRE*/
+				   /***************************************/
+				$reponseCommanditaire = $Cnn->prepare('Select nomCommanditaire,idCommanditaire from commanditaire;');
+						$reponseCommanditaire->execute();
+					echo '<form id="formSprmCommanditaire" style="display:none;" action="supprimerCommanditaire.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
+									 echo ' <div> <label>Nom du commanditaire</label>
+                                    <select class="form-control" id="sprmCom" name="sprmCom">';
+									echo '<option id="sprmCom0"></option>';
+									while($infoCommanditaire = $reponseCommanditaire->fetch())
+									{
+										echo '<option id="com'.$infoCommanditaire['idCommanditaire'].'">'.$infoCommanditaire['nomCommanditaire'].'</option>';
+									}
+									echo'</select></div><br>';//com
+									
+                   echo' <div><button type="submit" class="btn tf-btn btn-default">Supprimer</button></div>';//button
+                   echo' </form>';//fermeture form
+				   	 /*************************************/	
+					/*FIN FORM DE DELETE DE COMMANDITAIRE*/
+				   /*************************************/
 					
 					 /***************************************/	
 					/*DEBUT FORM DE L'AJOUT DE GESTIONNAIRE*/
@@ -432,8 +455,31 @@ $("#formCategorie").validate(
 					
 	}
 );
+$("#formAjoutCommanditaire").validate(
+	{	rules:
+		{	commanditaire: {	required:true
+					},
+			image: {	required:true
+					}
+		},
+		messages : { 			commanditaire : {required : 'Le nom du commanditaire est obligatoire'},
+								image:  {required : 'L\'image du commanditaire est obligatoire'}
+					}
+					
+	}
+);
+$("#formSprmCommanditaire").validate(
+	{	rules:
+		{	commanditaire: {	required:true
+					}
+		},
+		messages : { 			commanditaire : {required : 'Le nom du commanditaire est obligatoire'},
+					}
+					
+	}
+);
 	function ajouterCommanditaire() {
-			$('#formCommanditaire').slideToggle("slow", function () {
+			$('#formAjoutCommanditaire').slideToggle("slow", function () {
 			});
 			$('#formGestionnaire').css('display', 'none');
 			 $('#formAjouterOeuvre').css('display', 'none');
@@ -441,66 +487,84 @@ $("#formCategorie").validate(
 			 $('#formCategorie').css('display', 'none');
 			 $('#formModifierOeuvre').css('display', 'none');
 			 $('#formAllTitre').css('display', 'none');
+			 $('#formSprmCommanditaire').css('display', 'none');
 		}
 		function ajouterGestionnaire() {
 			$('#formGestionnaire').slideToggle("slow", function () {
 			});
-			$('#formCommanditaire').css('display', 'none');
+			$('#formAjoutCommanditaire').css('display', 'none');
 			 $('#formAjouterOeuvre').css('display', 'none');
 			 $('#formEtat').css('display', 'none');
 			 $('#formCategorie').css('display', 'none');
 			 $('#formModifierOeuvre').css('display', 'none');
 			 $('#formAllTitre').css('display', 'none');
+			 $('#formSprmCommanditaire').css('display', 'none');
 		}
 		function ajouterOeuvre() {
 			$('#formAjouterOeuvre').slideToggle("slow", function () {
 			});
-			$('#formCommanditaire').css('display', 'none');
+			$('#formAjoutCommanditaire').css('display', 'none');
 			 $('#formGestionnaire').css('display', 'none');
 			 $('#formEtat').css('display', 'none');
 			 $('#formCategorie').css('display', 'none');
 			 $('#formModifierOeuvre').css('display', 'none');
 			 $('#formAllTitre').css('display', 'none');
+			 $('#formSprmCommanditaire').css('display', 'none');
 		}
 		function afficherTitre() {
 			$('#formAllTitre').slideToggle("slow", function () {
 			});
-			$('#formCommanditaire').css('display', 'none');
+			$('#formAjoutCommanditaire').css('display', 'none');
 			 $('#formGestionnaire').css('display', 'none');
 			 $('#formEtat').css('display', 'none');
 			 $('#formCategorie').css('display', 'none');
 			  $('#formAjouterOeuvre').css('display', 'none');
 			  $('#formModifierOeuvre').css('display', 'none');
+			  $('#formSprmCommanditaire').css('display', 'none');
 		}
 		function modifierOeuvre() {
 			$('#formModifierOeuvre').slideToggle("slow", function () {
 			});
-			$('#formCommanditaire').css('display', 'none');
+			$('#formAjoutCommanditaire').css('display', 'none');
 			 $('#formGestionnaire').css('display', 'none');
 			 $('#formEtat').css('display', 'none');
 			 $('#formCategorie').css('display', 'none');
 			  $('#formAjouterOeuvre').css('display', 'none');
 			  $('#formAllTitre').css('display', 'none');
+			  $('#formSprmCommanditaire').css('display', 'none');
 		}
 		function ajouterEtat() {
 			$('#formEtat').slideToggle("slow", function () {
 			});
-			$('#formCommanditaire').css('display', 'none');
+			$('#formAjoutCommanditaire').css('display', 'none');
 			$('#formCategorie').css('display', 'none');
 			$('#formGestionnaire').css('display', 'none');
 			 $('#formAjouterOeuvre').css('display', 'none');
 			 $('#formModifierOeuvre').css('display', 'none');
 			 $('#formAllTitre').css('display', 'none');
+			 $('#formSprmCommanditaire').css('display', 'none');
 		}
 		function ajouterCategorie() {
 			$('#formCategorie').slideToggle("slow", function () {
 			});
-			$('#formCommanditaire').css('display', 'none');
+			$('#formAjoutCommanditaire').css('display', 'none');
 			$('#formGestionnaire').css('display', 'none');
 			$('#formAjouterOeuvre').css('display', 'none');
 			$('#formEtat').css('display', 'none');
 			$('#formModifierOeuvre').css('display', 'none');
 			$('#formAllTitre').css('display', 'none');
+			$('#formSprmCommanditaire').css('display', 'none');
+		}
+		function sprmCommanditaire(){
+				$('#formSprmCommanditaire').slideToggle("slow", function () {
+			});
+			$('#formAjoutCommanditaire').css('display', 'none');
+			$('#formGestionnaire').css('display', 'none');
+			 $('#formAjouterOeuvre').css('display', 'none');
+			 $('#formEtat').css('display', 'none');
+			 $('#formCategorie').css('display', 'none');
+			 $('#formModifierOeuvre').css('display', 'none');
+			 $('#formAllTitre').css('display', 'none');
 		}
 		
 	function ajaxModifierOeuvre()
