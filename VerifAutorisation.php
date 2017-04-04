@@ -43,7 +43,7 @@
        
   </head>
   <body style='height:92.3vh;'>
-	<?PHP include('includes/HeaderOeuvres.php'); ?>
+	<?PHP include_once('includes/HeaderOeuvres.php'); ?>
 
     <!-- Oeuvres
     ==========================================-->

@@ -2,6 +2,13 @@
 session_start();
 include('connexionBd.php');
    if(isset($_POST['sprmCom'])){
+	   $sql = 'select pathCommanditaire from commanditaire where nomCommanditaire = "'.$_POST["sprmCom"].'";';
+	   $infoCommanditaire = $Cnn->prepare($sql);
+	   $infoCommanditaire->execute();
+	   if ($pathCommanditaire = $infoCommanditaire->fetch())
+	   {
+		   		unlink('img/com/'.$pathCommanditaire["pathCommanditaire"]);
+	   }
 		$sql = 'delete from commanditaire where nomCommanditaire="'.$_POST["sprmCom"].'";';
 		$mettreCommanditaire = $Cnn->prepare($sql);
 		$mettreCommanditaire->execute();

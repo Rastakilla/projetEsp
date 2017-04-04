@@ -75,6 +75,22 @@
 				$infoMotCle = $_GET['infoMotCle'];
 			}
 		}
+		else if (isset($_GET['idOeuvre']) && $_GET['idOeuvre']!=NULL)
+		{
+			$idOeuvre = htmlentities($_GET['idOeuvre']);
+			if (isset($_GET['emprunter'])  && $_GET['emprunter'] != NULL)
+			{
+				$emprunter = 'Emprunter';
+			}
+			else if (isset($_GET['reserver'])  && $_GET['reserver'] != NULL)
+			{
+				$reserver = 'Réserver';
+			}
+			else
+			{
+				header('Location: index.php');
+			}
+		}
 		else
 		{
 			header('Location: index.php');
@@ -88,6 +104,25 @@
         <div class="overlay" >
                 <?PHP
 				$Medium = true;
+				if (isset($idOeuvre))
+				{
+					$Medium = true;
+					$whereGlobal = ' where oeuvres.idOeuvres ="'.$idOeuvre.'";';	
+					if (isset($emprunter))
+					{
+						$Medium = true;
+						echo '<h2><strong>'.$emprunter.' une oeuvre</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
+					}
+					else if (isset($reserver))
+					{
+						$Medium = true;
+						echo '<h2><strong>'.$reserver.' une oeuvre</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
+					}
+					else
+					{
+						header('Location: index.php');
+					}
+				}
 				if (isset($etat))
 				{
 					$Medium = true;
@@ -174,10 +209,13 @@
 					echo '<h2><strong>'.$annee.'</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
 					$whereGlobal = ' where Annee = '.$annee;	
 				 }
-				 $reponseOeuvres = $Cnn->prepare('SELECT nomOeuvre,peuxEtreReserve,Auteur,Hauteur,Largeur,Profondeur,Titre,Annee,NomEtat,lieu,description,nomCategorie FROM oeuvres inner join etat on oeuvres.idEtat = etat.idetat inner join categorie on oeuvres.idCategorie = categorie.idcategorie'.$whereGlobal);
+				 $reponseOeuvres = $Cnn->prepare('SELECT idOeuvres,nomOeuvre,peuxEtreReserve,Auteur,Hauteur,Largeur,Profondeur,Titre,Annee,NomEtat,lieu,description,nomCategorie FROM oeuvres inner join etat on oeuvres.idEtat = etat.idetat inner join categorie on oeuvres.idCategorie = categorie.idcategorie'.$whereGlobal);
 						$reponseOeuvres->execute();
-				 echo '<table>';
-						$cpt = 2;
+						if(!isset($idOeuvre))
+						{
+							 echo '<table>';
+									$cpt = 2;
+						}
 					while($infoOeuvres = $reponseOeuvres->fetch())
 					{
 						$contour = '#ff1111';
@@ -189,22 +227,28 @@
 						{
 							$contour = '#fff600';
 						}
-						if($cpt%2 == 0)
+						if(!isset($idOeuvre))
 						{
-							echo '<tr>';						
+						if($cpt%2 == 0)
+							{
+								echo '<tr>';						
+							}
 						}
 						echo '<th style="text-align:center;" ><a href="img/categorie/'.$infoOeuvres['nomOeuvre'].'" data-lightbox="'.$infoOeuvres['nomOeuvre'].'"><img src="img/categorie/'.$infoOeuvres['nomOeuvre'].'"style="cursor: pointer;	margin-right:50px; max-width:500px; margin-left:50px; border: 3px solid '.$contour.'"></a>';
-						if($infoOeuvres['peuxEtreReserve'] == 1)
+						if(!isset($idOeuvre))
 						{
-							echo '<a href="">  <u><h4>Emprunter cette oeuvre</h4></u> </a>';			
-						}
-						else if($infoOeuvres['peuxEtreReserve'] == 2)
-						{
-							echo '<a href="">  <u><h4>Réserver cette oeuvre</h4></u> </a>';			
-						}
-						else
-						{
-							echo '<br>';
+							if($infoOeuvres['peuxEtreReserve'] == 1)
+							{
+								echo '<a href="oeuvres.php?emprunter=true&idOeuvre='.$infoOeuvres["idOeuvres"].'">  <u><h4>Emprunter cette oeuvre</h4></u> </a>';			
+							}
+							else if($infoOeuvres['peuxEtreReserve'] == 2)
+							{
+								echo '<a href="oeuvres.php?reserver=true&idOeuvre='.$infoOeuvres["idOeuvres"].'">  <u><h4>Réserver cette oeuvre</h4></u> </a>';			
+							}
+							else
+							{
+								echo '<br>';
+							}
 						}
 						echo '<br>Titre : '.$infoOeuvres['Titre'];
 						echo '<br>Année : '.$infoOeuvres['Annee'];
@@ -232,8 +276,37 @@
 						$cpt++;
 					}
 					
-					echo'</table><br><br><br><br><br><br>';
-                   include('includes/Footer.php');?> 
+					if(!isset($idOeuvre))
+					{
+						echo'</table>';
+					}
+					else
+					{
+						$bouton = NULL;
+						if (isset($emprunter))
+						{
+							$bouton = $emprunter;
+						}
+						else if(isset($reserver))
+						{
+							$bouton = $reserver;
+						}
+						?>
+					<form id="infoClient" action="verificationClient.php?type=<?PHP echo $bouton;?>" method="POST">
+                     <div> 
+                      <label>Prenom</label>
+                                    <input class="form-control" id="prenomClient" name="prenomClient" placeholder="Entrez votre prenom"></input>
+                      <label>Nom</label>
+                                    <input class="form-control" id="nomClient" name="nomClient" placeholder="Entrez votre nom"></input>
+                     <label>Local</label>
+                                    <input class="form-control" id="localClient" name="localClient" placeholder="Entrez votre local"></input>               
+                     <label>Email</label>
+                                    <input class="form-control" id="emailClient" name="emailClient" placeholder="Entrez votre adresse Email"></input><br></div>
+                    <div><button type="submit" class="btn tf-btn btn-default"> <?PHP echo $bouton;?></button></div>
+                    </form>
+					<?PHP }
+						echo '<br><br><br><br><br><br>';
+                   include_once('includes/Footer.php');?> 
        </div>             			
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -257,6 +330,23 @@
 	function RechercherMotCle(){
 		document.location.href="oeuvres.php?motcle=true&infoMotCle="+document.getElementById('infoMotCle').value;
 	}
+	$("#infoClient").validate(
+	{	rules:
+		{	emailClient: {	required:true,
+				    regex_E: true				
+					}
+		},
+		messages : { 			 email : {required : 'Le email est obligatoire',
+										regex_E :'Doit etre de format @cegepba.qc.ca',
+								}
+					}
+	}
+);
+
+$.validator.addMethod("regex_E", 
+		function (value, element){
+				return this.optional(element) || /^[a-zA-Z]+@cegepba\.qc\.ca$/.test(value);
+			});
 	</script>
 
   </body>
