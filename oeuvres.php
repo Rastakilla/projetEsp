@@ -4,6 +4,11 @@
     <?PHP
   include('connexionBd.php');
   ?>
+    <style>
+  label.error{
+	color: red;
+}
+</style>
     <!-- Basic Page Needs
     ================================================== -->
     <meta charset="utf-8">
@@ -292,7 +297,7 @@
 							$bouton = $reserver;
 						}
 						?>
-					<form id="infoClient" action="verificationClient.php?type=<?PHP echo $bouton;?>" method="POST">
+					<form id="infoClient" action="verificationClient.php?type=<?PHP echo $bouton;?>&idOeuvre=<?PHP echo $_GET['idOeuvre'];?>" method="POST">
                      <div> 
                       <label>Prenom</label>
                                     <input class="form-control" id="prenomClient" name="prenomClient" placeholder="Entrez votre prenom"></input>
@@ -306,7 +311,8 @@
                     </form>
 					<?PHP }
 						echo '<br><br><br><br><br><br>';
-                   include_once('includes/Footer.php');?> 
+                   include_once('includes/Footer.php');						
+					?> 
        </div>             			
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -317,7 +323,9 @@
     <script type="text/javascript" src="js/SmoothScroll.js"></script>
     <script type="text/javascript" src="js/jquery.isotope.js"></script>
     <script src="js/owl.carousel.js"></script>
-
+	<script type="text/javascript" src="jquery-validation-1.15.0/lib/jquery-1.11.1.js"></script>
+	<script type="text/javascript" src="jquery-validation-1.15.0/dist/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="jquery-validation-1.15.0/dist/localization/messages_fr.js"></script>
     <!-- Javascripts
     ================================================== -->
     <script>
@@ -332,13 +340,24 @@
 	}
 	$("#infoClient").validate(
 	{	rules:
-		{	emailClient: {	required:true,
-				    regex_E: true				
+		{	prenomClient: {	required:true			
+					},
+			nomClient: {	required:true			
+					},
+			localClient: {	required:true,
+							regex_L:true		
+					},
+			emailClient: {	required:true,
+				   			 regex_E: true				
 					}
 		},
-		messages : { 			 email : {required : 'Le email est obligatoire',
+		messages : { 			 emailClient : {required : 'Le email est obligatoire',
 										regex_E :'Doit etre de format @cegepba.qc.ca',
-								}
+								},
+								nomClient :{ required : 'Le nom est obligatoire'},
+								prenomClient :{ required : 'Le prenom est obligatoire'},
+								localClient :{ required : 'Le local est obligatoire',
+												regex_L: 'Doit être de format A-000'}
 					}
 	}
 );
@@ -346,6 +365,10 @@
 $.validator.addMethod("regex_E", 
 		function (value, element){
 				return this.optional(element) || /^[a-zA-Z]+@cegepba\.qc\.ca$/.test(value);
+			});
+$.validator.addMethod("regex_L", 
+		function (value, element){
+				return this.optional(element) || /^[A-Z,a-z]-[0-9]{3}$/.test(value);
 			});
 	</script>
 

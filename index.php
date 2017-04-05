@@ -11,7 +11,12 @@
   {
 	  	  echo '<script>alert("Un message a été envoyé à votre courriel pour la confirmation.");</script>';
   }
+  else if(isset($_SESSION['type']) && $_SESSION['type'] != '')
+  {
+	  	  echo '<script>alert("Vous avez bien '. $_SESSION['type'].' cette oeuvre.");</script>';
+  }
   unset($_SESSION['acces']);
+   unset($_SESSION['type']);
   include('connexionBd.php');
   ?>
     <!-- Basic Page Needs
