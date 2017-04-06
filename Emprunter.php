@@ -11,12 +11,16 @@ if (isset($_GET['mail']) && isset($_GET['nom']) && isset($_GET['prenom']) && iss
 	$sql = 'update oeuvres set idEtat = 6 where idOeuvres ='.$idOeuvre;
 	$updateOeuvre = $Cnn->prepare($sql);
 	$updateOeuvre->execute();
-	$sql = 'insert into emprunt (Date,NomPersonneEmprunt,PrenomPersonneEmprunt,MailPersonneEmprunt,Local,idOeuvre) VALUES("'.date("Y-m-d H:i:s").'","'.$nom.'","'.$prenom.'","'.$mail.'","'.$local.'","'.$idOeuvre.'")';
-	$_SESSION['type'] = $_GET['type'];	
+	$sql = 'insert into emprunt (Date,NomPersonneEmprunt,PrenomPersonneEmprunt,MailPersonneEmprunt,Local,idOeuvre) VALUES(NOW(),"'.$nom.'","'.$prenom.'","'.$mail.'","'.$local.'","'.$idOeuvre.'")';
+	$insertEmprunt = $Cnn->prepare($sql);
+	$insertEmprunt->execute();
+	$_SESSION['type'] = $_GET['type'];
+	/* TODO */
+	//Faire l'envoie de mail automatique ici si le gars veut qu'un mail soit envoyer automatiquement à l'autre.
 }
 else
 {
 	$_SESSION['acces'] = 'non';
 }
-//header('location:index.php');
+header('location:index.php');
 ?>

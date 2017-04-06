@@ -11,9 +11,17 @@
   {
 	  	  echo '<script>alert("Un message a été envoyé à votre courriel pour la confirmation.");</script>';
   }
-  else if(isset($_SESSION['type']) && $_SESSION['type'] != '')
+  if(isset($_SESSION['type']) && $_SESSION['type'] != '')
   {
-	  	  echo '<script>alert("Vous avez bien '. $_SESSION['type'].' cette oeuvre.");</script>';
+	  if ($_SESSION['type'] == 'Emprunter')
+	  {
+		  $type = 'Emprunt';
+	  }
+	  else if ($_SESSION['type'] == 'Reserver')
+	  {
+		  $type = 'Réservation';
+	  }
+	  	  echo '<script>alert("'.$type.' effectué.");</script>';
   }
   unset($_SESSION['acces']);
    unset($_SESSION['type']);
