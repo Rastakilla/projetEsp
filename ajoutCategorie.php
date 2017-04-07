@@ -3,7 +3,7 @@ session_start();
 include('connexionBd.php');
 if (isset($_POST['categorie']) && htmlentities($_POST['categorie'])&&isset($_GET['email']) && htmlentities($_GET['email']))
 {
-		 $ajouterCategorie = $Cnn->prepare('insert into categorie (nomCategorie) VALUES ("'.$_POST['mail'].'");');
+		 $ajouterCategorie = $Cnn->prepare('insert into categorie (nomCategorie) VALUES ("'.$_POST['categorie'].'");');
 		 $ajouterCategorie->execute();
 		 	
 		$_SESSION['Uploader'] = 'True';	

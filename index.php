@@ -220,9 +220,9 @@
                             </div>
                         </div>
                     </div></th>';
+					$cptTable++;
 					}
 					$cpt++;
-					$cptTable++;
 				}
 			
 				?> 
