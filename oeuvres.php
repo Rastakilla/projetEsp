@@ -3,6 +3,7 @@
   <head>
     <?PHP
   include('connexionBd.php');
+ $cpt = 0;
   ?>
     <style>
   label.error{
@@ -108,7 +109,6 @@
     <div id="tf-oeuvres" class="text-center">
         <div class="overlay" >
                 <?PHP
-				$cpt;
 				$Medium = true;
 				if (isset($idOeuvre))
 				{
