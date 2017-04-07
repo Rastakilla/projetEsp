@@ -108,6 +108,7 @@
     <div id="tf-oeuvres" class="text-center">
         <div class="overlay" >
                 <?PHP
+				$cpt;
 				$Medium = true;
 				if (isset($idOeuvre))
 				{
@@ -216,7 +217,6 @@
 				 }
 				 $reponseOeuvres = $Cnn->prepare('SELECT idOeuvres,nomOeuvre,peuxEtreReserve,Auteur,Hauteur,Largeur,Profondeur,Titre,Annee,NomEtat,lieu,description,nomCategorie FROM oeuvres inner join etat on oeuvres.idEtat = etat.idetat inner join categorie on oeuvres.idCategorie = categorie.idcategorie'.$whereGlobal);
 						$reponseOeuvres->execute();
-						$cpt;
 						if(!isset($idOeuvre))
 						{
 							 echo '<table>';
