@@ -308,7 +308,6 @@
 			echo '  <div>
                 <img data-u="image" id="'.$infoCom["idCommanditaire"].'" src="img/com/'.$infoCom["pathCommanditaire"].'" title="'.$infoCom["nomCommanditaire"].'"> 
             </div>';
-			$cptInit++;
 		}
 		?>
         </div>
