@@ -8,10 +8,17 @@ if (isset($_GET['mail']) && isset($_GET['nom']) && isset($_GET['prenom']) && iss
 	$prenom = $_GET['prenom'];
 	$local = $_GET['local'];
 	$idOeuvre = $_GET['idOeuvre'];
-	$sql = 'update oeuvres set idEtat = 6 where idOeuvres ='.$idOeuvre;
-	$updateOeuvre = $Cnn->prepare($sql);
-	$updateOeuvre->execute();
-	$sql = 'insert into emprunt (Date,NomPersonneEmprunt,PrenomPersonneEmprunt,MailPersonneEmprunt,Local,idOeuvre) VALUES(NOW(),"'.$nom.'","'.$prenom.'","'.$mail.'","'.$local.'","'.$idOeuvre.'")';
+	$sql = 'select idReservation from reservation where idOeuvre ='.$idOeuvre;
+	$infoReserv = $Cnn->prepare($sql);
+	$infoReserv->execute();
+	$nb = 0;
+	while ($nbOeuvre = $infoReserv->fetch())
+	{
+		$nb+=1;
+	}
+	$nb+=1;
+	echo $nb;
+	$sql = 'insert into reservation (Date,NomPersonneReserve,PrenomPersonneReserve,MailPersonneReserve,Local,idOeuvre,nombreReservation) VALUES(NOW(),"'.$nom.'","'.$prenom.'","'.$mail.'","'.$local.'","'.$idOeuvre.'","'.$nb.'")';
 	$insertEmprunt = $Cnn->prepare($sql);
 	$insertEmprunt->execute();
 	$_SESSION['type'] = $_GET['type'];
@@ -22,5 +29,5 @@ else
 {
 	$_SESSION['acces'] = 'non';
 }
-header('location:index.php');
+//header('location:index.php');
 ?>

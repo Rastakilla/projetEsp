@@ -89,7 +89,7 @@
 			}
 			else if (isset($_GET['reserver'])  && $_GET['reserver'] != NULL)
 			{
-				$reserver = 'Réserver';
+				$reserver = 'Reserver';
 			}
 			else
 			{
@@ -216,6 +216,7 @@
 				 }
 				 $reponseOeuvres = $Cnn->prepare('SELECT idOeuvres,nomOeuvre,peuxEtreReserve,Auteur,Hauteur,Largeur,Profondeur,Titre,Annee,NomEtat,lieu,description,nomCategorie FROM oeuvres inner join etat on oeuvres.idEtat = etat.idetat inner join categorie on oeuvres.idCategorie = categorie.idcategorie'.$whereGlobal);
 						$reponseOeuvres->execute();
+						$cpt;
 						if(!isset($idOeuvre))
 						{
 							 echo '<table>';

@@ -51,7 +51,7 @@ CREATE TABLE `commanditaire` (
   `nomCommanditaire` varchar(100) NOT NULL,
   `pathCommanditaire` varchar(100) NOT NULL,
   PRIMARY KEY (`idCommanditaire`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -60,6 +60,7 @@ CREATE TABLE `commanditaire` (
 
 LOCK TABLES `commanditaire` WRITE;
 /*!40000 ALTER TABLE `commanditaire` DISABLE KEYS */;
+INSERT INTO `commanditaire` VALUES (1,'McDonald','commanditaire3.png');
 /*!40000 ALTER TABLE `commanditaire` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -71,8 +72,8 @@ DROP TABLE IF EXISTS `emprunt`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `emprunt` (
-  `idEmprunt` int(11) NOT NULL,
-  `Date` date NOT NULL,
+  `idEmprunt` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `Date` datetime NOT NULL,
   `NomPersonneEmprunt` varchar(45) NOT NULL,
   `PrenomPersonneEmprunt` varchar(45) NOT NULL,
   `MailPersonneEmprunt` varchar(100) NOT NULL,
@@ -80,7 +81,7 @@ CREATE TABLE `emprunt` (
   `idOeuvre` int(11) NOT NULL,
   PRIMARY KEY (`idEmprunt`),
   UNIQUE KEY `idOeuvre_UNIQUE` (`idOeuvre`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -89,6 +90,7 @@ CREATE TABLE `emprunt` (
 
 LOCK TABLES `emprunt` WRITE;
 /*!40000 ALTER TABLE `emprunt` DISABLE KEYS */;
+INSERT INTO `emprunt` VALUES (7,'2017-04-06 14:04:53','sss','d','cednoel@cegepba.qc.ca','d-123',3),(8,'2017-04-06 14:08:26','d','d','cednoel@cegepba.qc.ca','s-123',8);
 /*!40000 ALTER TABLE `emprunt` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -138,7 +140,7 @@ CREATE TABLE `gestionnaire` (
 
 LOCK TABLES `gestionnaire` WRITE;
 /*!40000 ALTER TABLE `gestionnaire` DISABLE KEYS */;
-INSERT INTO `gestionnaire` VALUES (1,'cpepin@cegepba.qc.ca',NULL),(2,'cnoel@cegepba.qc.ca','58e40a5a808a0');
+INSERT INTO `gestionnaire` VALUES (1,'cpepin@cegepba.qc.ca',NULL),(2,'cnoel@cegepba.qc.ca','58e780b45ca6a');
 /*!40000 ALTER TABLE `gestionnaire` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -176,7 +178,7 @@ CREATE TABLE `oeuvres` (
 
 LOCK TABLES `oeuvres` WRITE;
 /*!40000 ALTER TABLE `oeuvres` DISABLE KEYS */;
-INSERT INTO `oeuvres` VALUES (1,'DG_Collection_CBA_09-10.jpg','Daisy Grenier',83,53,NULL,' L\'éveil',2009,6,6,'','OH MY GASH'),(2,'JF_Collection_CBA_09-10.jpg','Jessica Fecteau',102,64,12,'OGMM',2000,3,1,'as','as'),(3,'MCP_Collection_CBA_09-10.jpg','Marie-Claude Poulin',127,89,2,'Ce qu\'il lui reste?',2010,5,6,'B-504',NULL),(4,'PHV_Collection_CBA_09-10.jpg','Pierre-Hugues Vachon',75,101,NULL,'Citation de Serge Lemoyne',2010,10,3,'B-438',NULL),(5,'ANC_Collection_CBA_10-11.jpg','Amelie Nadeau-Caron',61,45,NULL,'Payage abstrait',2010,2,3,'N-222',NULL),(6,'CMP_Collection_CBA_10-11.jpg','Catherine Messier-Poulin',45,185,NULL,'Light',2011,1,1,NULL,NULL),(7,'SC_Collection_CBA_10-11.jpg','Stephanie Cloutier',50,76,NULL,'Sans Titre',2010,4,2,NULL,NULL),(8,'FG_Collection_CBA_10-11.jpg','Fanny Gaboury',31,92,NULL,'Dans les lignes de la main',2011,3,3,'B-122',NULL),(9,'JML_Collection_CBA_10-11.jpg','Jean-Mathieu Lachapelle',153,132,NULL,'Intercoulouré',2011,8,4,NULL,NULL),(10,'DD_Collection_CBA_09-10.jpg','Davis Dulac',216,106,NULL,'Explosion orgasmique du XXIe siècle',2010,9,5,NULL,NULL);
+INSERT INTO `oeuvres` VALUES (1,'DG_Collection_CBA_09-10.jpg','Daisy Grenier',83,53,NULL,' L\'éveil',2009,6,3,'','OH MY GASH'),(2,'JF_Collection_CBA_09-10.jpg','Jessica Fecteau',102,64,12,'OGMM',2000,3,1,'as','as'),(3,'MCP_Collection_CBA_09-10.jpg','Marie-Claude Poulin',127,89,2,'Ce qu\'il lui reste?',2010,5,6,'B-504',NULL),(4,'PHV_Collection_CBA_09-10.jpg','Pierre-Hugues Vachon',75,101,NULL,'Citation de Serge Lemoyne',2010,10,3,'B-438',NULL),(5,'ANC_Collection_CBA_10-11.jpg','Amelie Nadeau-Caron',61,45,NULL,'Payage abstrait',2010,2,3,'N-222',NULL),(6,'CMP_Collection_CBA_10-11.jpg','Catherine Messier-Poulin',45,185,NULL,'Light',2011,1,1,NULL,NULL),(7,'SC_Collection_CBA_10-11.jpg','Stephanie Cloutier',50,76,NULL,'Sans Titre',2010,4,2,NULL,NULL),(8,'FG_Collection_CBA_10-11.jpg','Fanny Gaboury',31,92,NULL,'Dans les lignes de la main',2011,3,6,'B-122',NULL),(9,'JML_Collection_CBA_10-11.jpg','Jean-Mathieu Lachapelle',153,132,NULL,'Intercoulouré',2011,8,4,NULL,NULL),(10,'DD_Collection_CBA_09-10.jpg','Davis Dulac',216,106,NULL,'Explosion orgasmique du XXIe siècle',2010,9,5,NULL,NULL);
 /*!40000 ALTER TABLE `oeuvres` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -195,6 +197,7 @@ CREATE TABLE `reservation` (
   `MailPersonneReserve` varchar(100) NOT NULL,
   `Local` varchar(250) NOT NULL,
   `idOeuvre` int(11) NOT NULL,
+  `nombreReservation` int(11) NOT NULL,
   PRIMARY KEY (`idReservation`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -217,4 +220,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-04-06 10:24:08
+-- Dump completed on 2017-04-07  8:36:41
