@@ -349,13 +349,13 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Adresse Email</label>
-                                    <input type="email" class="form-control" id="vMail" placeholder="Entrez votre adresse Email" required>
+                                    <input type="email" class="form-control" id="vMail" name="vMail" placeholder="Entrez votre adresse Email" required>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Message</label>
-                            <textarea class="form-control" rows="3" placeholder="Entrez votre Message" id="vMessage" required></textarea>
+                            <textarea class="form-control" rows="3" placeholder="Entrez votre Message" id="vMessage" name="vMessage" required></textarea>
                         </div>
                         
                         <button type="submit" class="btn tf-btn btn-default">Envoyer</button>

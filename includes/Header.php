@@ -19,7 +19,7 @@
             <li><a href="#tf-home" class="page-scroll">Accueil</a></li>
             <li><a href="#tf-pic" class="page-scroll">Emprunter</a></li>
             <li><a href="#tf-commanditaire" class="page-scroll">Commanditaires</a></li>
-            <li><a href="#tf-contact" class="page-scroll">Contactez nous</a></li>
+            <li><a href="#tf-contact" class="page-scroll">Contactez-nous</a></li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->

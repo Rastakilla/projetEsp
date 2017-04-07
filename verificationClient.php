@@ -1,5 +1,6 @@
 <?PHP
 session_start();
+require '/PHPMailer/PHPMailerAutoload.php';
 include('connexionBd.php');
 if(!isset($_GET['type']) || !isset($_POST['emailClient']) )
 {
