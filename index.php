@@ -102,17 +102,6 @@
   </head>
   <body>
 	<?PHP include('includes/Header.php'); ?>
-    <!-- Home Page
-    ==========================================-->
-    <div id="tf-home" class="text-center">
-        <div class="overlay">
-            <div class="content">
-                <h1>Galerie des  <strong><span class="color">arts</span></strong> visuels</h1>
-                <a href="#tf-pic" class="fa fa-angle-down page-scroll">Emprunter</a>
-            </div>
-        </div>
-    </div>
-
     <!-- Filtre Page
     ==========================================-->
     
@@ -132,7 +121,7 @@
            <form id='formEtat' style='display:none;'>
            <div class="section-title center">
                     <h2>Nos <strong>États</strong></h2>
-                   			<br> Cliquez pour accéder aux oeuvres de cette état.
+                   			<br> Cliquez pour accéder aux oeuvres de cet état.
                     <div class="line">
                         <hr>
                     </div>
@@ -214,7 +203,7 @@
 					{
 					echo '<th width="100%"> <div class="item" style="cursor:pointer; width:300px;" onClick=" window.location.href = \'oeuvres.php?categorie='.$Categorie[$cpt].'\'" >
                         <div class="thumbnail">
-                            <img src="img/categorie/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle team-img" width="100%">
+                            <img src="img/medium/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle team-img" width="100%">
                             <div class="caption">
                                 <h3>'.$Categorie[$cpt].'</h3>
                             </div>

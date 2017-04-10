@@ -45,7 +45,7 @@ session_start();
        <script src="lightbox2-master/dist/js/lightbox-plus-jquery.min.js"></script>
        
   </head>
-  <body style='height:92.3vh;overflow:hidden;'>
+  <body style='height:92.3vh;'>
 	<?PHP include('includes/HeaderOeuvres.php'); ?>
 
     <!-- Oeuvres
@@ -94,11 +94,11 @@ session_start();
 						$reponseCategorie = $Cnn->prepare('SELECT nomCategorie,idCategorie from categorie;');
 						$reponseCategorie->execute();
 						echo '<div>';
-					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="commanditaire();">Commanditaire</button>&nbsp;&nbsp;&nbsp;';
-					  echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="gestionnaire();">Gestionnaire</button>&nbsp;&nbsp;&nbsp;';
 					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="oeuvre();">Oeuvre</button>&nbsp;&nbsp;&nbsp;';
-					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="etat();">États</button>&nbsp;&nbsp;&nbsp;';
-					echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="categorie();">Catégorie</button>&nbsp;&nbsp;&nbsp;';
+					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="etat();">État</button>&nbsp;&nbsp;&nbsp;';
+					echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="categorie();">Médium</button>&nbsp;&nbsp;&nbsp;';
+					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="gestionnaire();">Gestionnaire</button>&nbsp;&nbsp;&nbsp;';
+					echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="commanditaire();">Commanditaire</button>&nbsp;&nbsp;&nbsp;';
 					 echo '</div>';
 						
 						
@@ -205,7 +205,7 @@ session_start();
 									}
 									echo'</select></div>';//annee							
 									
-					echo ' <div> <label>Catégorie</label>
+					echo ' <div> <label>Médium</label>
                                     <select class="form-control" id="categorie" name="categorie">';
 					echo '<option id="categorie0"></option>';
 						while($infoCategorie = $reponseCategorie->fetch())

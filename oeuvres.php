@@ -158,13 +158,13 @@
 				 {
 					 $Medium = true;
 				    echo '<h2><strong>'.$dimensions.'</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
-					echo '<form id="divDim">';
-					 echo ' <div align="center">
-                                    <input class="form-control-little" id="hauteur" name="hauteur" placeholder="Hauteur(cm)"></input>
-                                    <input class="form-control-little" id="largeur" name="largeur" placeholder="Largeur(cm)"></input>
-                                    <input class="form-control-little" id="profondeur" name="profondeur" placeholder="Profondeur(cm)"></input><br></div>';
-					echo '<button type="button" class="btn tf-btn btn-notdefault" onclick="RechercherDimensions();">Rechercher</button><br><br>';
-					echo '</form>';
+					echo '
+					<div align="center">
+					 Hauteur
+                                    <input type="number" class="form-control-little" id="hauteur" name="hauteur" placeholder="Hauteur(cm)"></input>Largeur
+                                    <input  type="number" class="form-control-little" id="largeur" name="largeur" placeholder="Largeur(cm)"></input>Profondeur
+                                    <input  type="number" class="form-control-little" id="profondeur" name="profondeur" placeholder="Profondeur(cm)"></input><br>';
+					echo '<button type="button" class="btn tf-btn btn-notdefault" onclick="RechercherDimensions();">Rechercher</button></div><br><br>';
 					$where = '';
 					$prefixH = '';
 					$prefixL = '';
@@ -364,18 +364,7 @@
 					}
 	}
 );
-	$("#divDim").validate(
-	{	rules:
-		{	hauteur: {	number:true			
-					},
-			largeur: {	number:true			
-					},
-			profondeur: { number:true	
-					}
-		},
-	}
-);
-
+	
 
 $.validator.addMethod("regex_E", 
 		function (value, element){
@@ -384,6 +373,10 @@ $.validator.addMethod("regex_E",
 $.validator.addMethod("regex_L", 
 		function (value, element){
 				return this.optional(element) || /^[A-Z,a-z]-[0-9]{3}$/.test(value);
+			});
+			$.validator.addMethod("regex_N", 
+		function (value, element){
+				return this.optional(element) || /^[0-9]$/.test(value);
 			});
 	</script>
 
