@@ -158,11 +158,13 @@
 				 {
 					 $Medium = true;
 				    echo '<h2><strong>'.$dimensions.'</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
+					echo '<form id="divDim">';
 					 echo ' <div align="center">
                                     <input class="form-control-little" id="hauteur" name="hauteur" placeholder="Hauteur(cm)"></input>
                                     <input class="form-control-little" id="largeur" name="largeur" placeholder="Largeur(cm)"></input>
                                     <input class="form-control-little" id="profondeur" name="profondeur" placeholder="Profondeur(cm)"></input><br></div>';
 					echo '<button type="button" class="btn tf-btn btn-notdefault" onclick="RechercherDimensions();">Rechercher</button><br><br>';
+					echo '</form>';
 					$where = '';
 					$prefixH = '';
 					$prefixL = '';
@@ -362,6 +364,18 @@
 					}
 	}
 );
+	$("#divDim").validate(
+	{	rules:
+		{	hauteur: {	number:true			
+					},
+			largeur: {	number:true			
+					},
+			profondeur: { number:true	
+					}
+		},
+	}
+);
+
 
 $.validator.addMethod("regex_E", 
 		function (value, element){

@@ -30,7 +30,6 @@ else
 		$ajoutUniqId = $Cnn->prepare('update gestionnaire set uniqId = "'.$uniqId.'" where email = "'.$email.'" ');
 		$ajoutUniqId->execute();
 		/*ENVOIE DU MAIL*/
-	$message = 'Cliquez sur le lien pour aller dans l\'interface du gestionnaire : <a href="localhost/Gestionnaire.php?id='.$uniqId.'&email='.$email.'">Gestionnaire Site Web</a>'; 
 	
 		$mail = new PHPMailer;
 			
@@ -41,10 +40,11 @@ else
 		$mail->Password = '$CBA436$';
 		$mail->SMTPSecure = 'ssl';
 		$mail->Port = 465;
-		$mail->addAddress('cednoel@live.ca',$email);	
+		$mail->setFrom('infogalerievirtuellecba@gmail.com', 'Gestionnaire GV');
+		$mail->addAddress('cednoel@live.ca');	
 		$mail->isHTML(true);
 		$mail->Subject = 'Partie Gestionnaire - Galerie des Arts Visuels';
-		$mail->Body = $message;
+		$mail->Body = 'Cliquez sur le lien pour aller dans l\'interface du gestionnaire : <p><u><a href="localhost/Gestionnaire.php?id='.$uniqId.'&email='.$email.'">Gestionnaire Site Web</a></u></p>';
 		if(!$mail->send()) 
 		{
 			echo 'Message n\'a pas été envoyé.';

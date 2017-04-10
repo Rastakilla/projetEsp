@@ -93,13 +93,35 @@ session_start();
 						$reponseEtat->execute();
 						$reponseCategorie = $Cnn->prepare('SELECT nomCategorie,idCategorie from categorie;');
 						$reponseCategorie->execute();
-					echo '<div>';
+						echo '<div>';
+					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="commanditaire();">Commanditaire</button>&nbsp;&nbsp;&nbsp;';
+					  echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="gestionnaire();">Gestionnaire</button>&nbsp;&nbsp;&nbsp;';
+					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="oeuvre();">Oeuvre</button>&nbsp;&nbsp;&nbsp;';
+					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="etat();">États</button>&nbsp;&nbsp;&nbsp;';
+					echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="categorie();">Catégorie</button>&nbsp;&nbsp;&nbsp;';
+					 echo '</div>';
+						
+						
+						
+					echo '<div id="divCom" style="display:none"><br>';
 					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterCommanditaire();">Ajouter Commanditaire</button>&nbsp;&nbsp;&nbsp;';
 					  echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="sprmCommanditaire();">Supprimer Commanditaire</button>&nbsp;&nbsp;&nbsp;';
+					  echo '</div>';
+					  				
+					  echo '<div id="divGes" style="display:none"><br>';
 					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterGestionnaire();">Ajouter Gestionnaire</button>&nbsp;&nbsp;&nbsp;';
+					 echo '</div>';
+					 
+					  echo '<div id="divOv" style="display:none"><br>';
 					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterOeuvre();">Ajouter Oeuvre</button>&nbsp;&nbsp;&nbsp;';
 					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="afficherTitre();">Modifier Oeuvre</button>&nbsp;&nbsp;&nbsp;';
+					  echo '</div>';
+					  
+					   echo '<div id="divEtat" style="display:none"><br>';
 					echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterEtat();">Ajouter État</button>&nbsp;&nbsp;&nbsp;';
+					 echo '</div>';
+					 
+					  echo '<div id="divCat" style="display:none"><br>';
 					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterCategorie();">Ajouter Catégorie</button>';
 					 echo '</div>';
 					
@@ -478,6 +500,49 @@ $("#formSprmCommanditaire").validate(
 					
 	}
 );
+
+	function commanditaire() {
+			$('#divCom').slideToggle("slow", function () {
+			});
+			$('#divGes').css('display', 'none');
+			 $('#divOv').css('display', 'none');
+			 $('#divEtat').css('display', 'none');
+			 $('#divCat').css('display', 'none');
+		}	
+		function gestionnaire() {
+			$('#divGes').slideToggle("slow", function () {
+			});
+			$('#divCom').css('display', 'none');
+			 $('#divOv').css('display', 'none');
+			 $('#divEtat').css('display', 'none');
+			 $('#divCat').css('display', 'none');
+		}
+			function oeuvre() {
+			$('#divOv').slideToggle("slow", function () {
+			});
+			$('#divGes').css('display', 'none');
+			 $('#divCom').css('display', 'none');
+			 $('#divEtat').css('display', 'none');
+			 $('#divCat').css('display', 'none');
+		}
+		function etat() {
+			$('#divEtat').slideToggle("slow", function () {
+			});
+			$('#divGes').css('display', 'none');
+			 $('#divOv').css('display', 'none');
+			 $('#divCom').css('display', 'none');
+			 $('#divCat').css('display', 'none');
+		}
+		function categorie() {
+			$('#divCat').slideToggle("slow", function () {
+			});
+			$('#divGes').css('display', 'none');
+			 $('#divOv').css('display', 'none');
+			 $('#divEtat').css('display', 'none');
+			 $('#divCom').css('display', 'none');
+		}
+
+
 	function ajouterCommanditaire() {
 			$('#formAjoutCommanditaire').slideToggle("slow", function () {
 			});
