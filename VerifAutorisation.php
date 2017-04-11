@@ -51,9 +51,12 @@
         <div class="overlay">
             <div class="content">
                               <form id="gestionnaire" action="verification.php" method="POST">
-                     <div> <label>Email</label>
-                                    <input class="form-control" id="email" name="email" placeholder="Entrez votre adresse Email"></input><br></div>
-                    <div><button type="submit" class="btn tf-btn btn-default">Envoyer</button></div>
+                     <div align="center"> Email
+                                    <input class="form-control-little" id="email" name="email" placeholder="Entrez votre adresse Email"></input><br>
+                                     Mot de Passe
+                                    <input class="form-control-little" id="mdp" name="mdp" placeholder="Entrez votre mot de passe"></input><br>
+                   		 <button type="submit" class="btn tf-btn btn-notdefault">Envoyer</button>
+                    </div>
                     </form>
             </div>
         </div>
@@ -79,11 +82,14 @@ $("#gestionnaire").validate(
 	{	rules:
 		{	email: {	required:true,
 				    regex_E: true				
+					},
+		mdp: {	required:true			
 					}
 		},
 		messages : { 			 email : {required : 'Le email est obligatoire',
 										regex_E :'Doit etre de format @cegepba.qc.ca',
-								}
+								},
+								mdp:{required:'Le mot de passe est obligatoire'}
 					}
 	}
 );

@@ -20,6 +20,7 @@ if (isset($_POST['vMail']) && isset($_POST['vMessage']))
 	//$mail->setFrom(cpepin@cegepba.qc.ca, cpepin@cegepba.qc.ca);
 	$mail->addAddress('cednoel@live.ca','cednoel@live.ca');	
 	$mail->isHTML(true);
+	$mail->CharSet = 'UTF-8';
 	$mail->Subject = 'Question section contactez-nous - Galerie des Arts Visuels';
 	$mail->Body = $message;
 	if(!$mail->send()) 

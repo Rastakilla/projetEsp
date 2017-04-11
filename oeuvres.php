@@ -147,7 +147,7 @@
 					$whereGlobal = '';
 					if (isset($infoMotCle))
 					{
-						$whereGlobal = " where description like '%".$infoMotCle."%';";
+						$whereGlobal = " where description like '%".$infoMotCle."%' or Titre like '%".$infoMotCle."%';";
 					}
 					echo '<h2><strong>'.$motcle.'</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
 					 echo ' <div align="center">
@@ -221,7 +221,7 @@
 						$reponseOeuvres->execute();
 						if(!isset($idOeuvre))
 						{
-							 echo '<table>';
+							 echo '<table  style="margin-left:2%;">';
 									$cpt = 2;
 						}
 					while($infoOeuvres = $reponseOeuvres->fetch())

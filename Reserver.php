@@ -11,14 +11,7 @@ if (isset($_GET['mail']) && isset($_GET['nom']) && isset($_GET['prenom']) && iss
 	$sql = 'select idReservation from reservation where idOeuvre ='.$idOeuvre;
 	$infoReserv = $Cnn->prepare($sql);
 	$infoReserv->execute();
-	$nb = 0;
-	while ($nbOeuvre = $infoReserv->fetch())
-	{
-		$nb+=1;
-	}
-	$nb+=1;
-	echo $nb;
-	$sql = 'insert into reservation (Date,NomPersonneReserve,PrenomPersonneReserve,MailPersonneReserve,Local,idOeuvre,nombreReservation) VALUES(NOW(),"'.$nom.'","'.$prenom.'","'.$mail.'","'.$local.'","'.$idOeuvre.'","'.$nb.'")';
+	$sql = 'insert into reservation (Date,NomPersonneReserve,PrenomPersonneReserve,MailPersonneReserve,Local,idOeuvre) VALUES(NOW(),"'.$nom.'","'.$prenom.'","'.$mail.'","'.$local.'","'.$idOeuvre.'")';
 	$insertEmprunt = $Cnn->prepare($sql);
 	$insertEmprunt->execute();
 	$_SESSION['type'] = $_GET['type'];

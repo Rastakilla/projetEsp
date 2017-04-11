@@ -3,6 +3,8 @@
   <head>
   <?PHP
   session_start();
+  unset($_SESSION['email']);
+  unset($_SESSION['mdp']);
   if (isset($_SESSION['acces']) && $_SESSION['acces'] == 'non')
   {
 	  echo '<script>alert("Accès refusé.");</script>';
@@ -10,6 +12,10 @@
   else if (isset($_SESSION['acces']) && $_SESSION['acces'] == 'oui')
   {
 	  	  echo '<script>alert("Un message a été envoyé à votre courriel pour la confirmation.");</script>';
+  }
+    else if (isset($_SESSION['max']) && $_SESSION['max'] != '')
+  {
+	  	  echo '<script>alert("'.$_SESSION["max"].'.");</script>';
   }
   if(isset($_SESSION['type']) && $_SESSION['type'] != '')
   {
@@ -25,6 +31,7 @@
   }
   unset($_SESSION['acces']);
    unset($_SESSION['type']);
+    unset($_SESSION['max']);
   include('connexionBd.php');
   ?>
     <!-- Basic Page Needs
@@ -126,7 +133,7 @@
                         <hr>
                     </div>
                 </div>
-				<table width="100%">
+				<table width="100%" style='margin-left:-2%;'>
                 <?PHP
 				$reponseEtat = $Cnn->prepare('SELECT nomEtat FROM etat;');
 				$reponseEtat->execute();
@@ -177,7 +184,7 @@
                         <hr>
                     </div>
                 </div>
-				<table width="100%">
+				<table width="100%"  style='margin-left:-2%;' >
                 <?PHP
 				$reponseCategorie = $Cnn->prepare('SELECT nomCategorie FROM categorie;');
 				$reponseCategorie->execute();
@@ -203,7 +210,7 @@
 					{
 					echo '<th width="100%"> <div class="item" style="cursor:pointer; width:300px;" onClick=" window.location.href = \'oeuvres.php?categorie='.$Categorie[$cpt].'\'" >
                         <div class="thumbnail">
-                            <img src="img/medium/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle team-img" width="100%">
+                            <img src="img/categorie/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle team-img" width="100%">
                             <div class="caption">
                                 <h3>'.$Categorie[$cpt].'</h3>
                             </div>
@@ -226,7 +233,7 @@
                         <hr>
                     </div>
                 </div>
-				<table width="100%">
+				<table width="100%" style='margin-left:-2%;'>
                 <?PHP
 				$reponseAnnee = $Cnn->prepare('SELECT DISTINCT Annee FROM Oeuvres order by Annee;');
 				$reponseAnnee->execute();

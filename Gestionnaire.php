@@ -46,7 +46,7 @@ session_start();
        
   </head>
   <body style='height:92.3vh;'>
-	<?PHP include('includes/HeaderOeuvres.php'); ?>
+	<?PHP include('includes/HeaderGestionnaire.php'); ?>
 
     <!-- Oeuvres
     ==========================================-->
@@ -54,33 +54,23 @@ session_start();
         <div class="overlay">
             <div class="content" style='top:-150px;' >
             <?PHP
-            if (isset($_GET['id']) && htmlentities($_GET['id']) && isset($_GET['email']) && htmlentities($_GET['email']))
+            if (isset($_SESSION['email']) && htmlentities($_SESSION['email']) && isset($_SESSION['mdp']) && htmlentities($_SESSION['mdp']))
 			{
-				if (isset($_SESSION['Uploader']))
-				{
-					if ($_SESSION['Uploader'] == 'True')
+					if (isset($_SESSION['Uploader']) && $_SESSION['Uploader'] != '' && $_SESSION['Uploader'] !=NULL)
 					{
-						 echo '<script>alert("Ajout/Modification effectué.");</script>';
+						 echo '<script>alert("'.$_SESSION['Uploader'].'");</script>';
+						 unset($_SESSION['Uploader']);
 					}
-					else
-					{
-						 echo '<script>alert("ERREUR :'.$_SESSION['Uploader'].'.");</script>';
-					}
-					unset($_SESSION['Uploader']);
-				}
 				
 				
-				$email = htmlentities($_GET['email']);
-				$uniqId = htmlentities($_GET['id']);
+				$email = htmlentities($_SESSION['email']);
+				$mdp = htmlentities($_SESSION['mdp']);
 				$verificateur = false;
-				$reponseGestionnaire = $Cnn->prepare('SELECT email from gestionnaire where uniqId = "'.$uniqId.'";');
+				$reponseGestionnaire = $Cnn->prepare('SELECT email from gestionnaire where email = "'.$email.'" and mdp = "'.$mdp.'";');
 				$reponseGestionnaire->execute();
-				if($infoGestionnaire = $reponseGestionnaire->fetch())
+				if($reponseGestionnaire->fetch() == true)
 				{
-					if ($email == $infoGestionnaire['email'])
-					{
-						$verificateur = true;
-					}
+					$verificateur = true;
 				}
 				if ($verificateur == false)
 				{
@@ -93,37 +83,101 @@ session_start();
 						$reponseEtat->execute();
 						$reponseCategorie = $Cnn->prepare('SELECT nomCategorie,idCategorie from categorie;');
 						$reponseCategorie->execute();
-						echo '<div>';
-					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="oeuvre();">Oeuvre</button>&nbsp;&nbsp;&nbsp;';
-					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="etat();">État</button>&nbsp;&nbsp;&nbsp;';
-					echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="categorie();">Médium</button>&nbsp;&nbsp;&nbsp;';
-					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="gestionnaire();">Gestionnaire</button>&nbsp;&nbsp;&nbsp;';
-					echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="commanditaire();">Commanditaire</button>&nbsp;&nbsp;&nbsp;';
-					 echo '</div>';
+						?>
+						 <div>
+					<button type="button" class="btn tf-btn btn-notdefault" onclick="oeuvre();">Oeuvre</button>&nbsp;&nbsp;&nbsp;
+					 <button type="button" class="btn tf-btn btn-notdefault" onclick="etat();">État</button>&nbsp;&nbsp;&nbsp;
+					<button type="button" class="btn tf-btn btn-notdefault" onclick="categorie();">Médium</button>&nbsp;&nbsp;&nbsp;					
+                    <button type="button" class="btn tf-btn btn-notdefault" onclick="reservation();">Réservation</button>&nbsp;&nbsp;&nbsp;
+					 <button type="button" class="btn tf-btn btn-notdefault" onclick="gestionnaire();">Gestionnaire</button>&nbsp;&nbsp;&nbsp;
+					<button type="button" class="btn tf-btn btn-notdefault" onclick="commanditaire();">Commanditaire</button>&nbsp;&nbsp;&nbsp;
+
+					</div>
 						
 						
 						
-					echo '<div id="divCom" style="display:none"><br>';
-					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterCommanditaire();">Ajouter Commanditaire</button>&nbsp;&nbsp;&nbsp;';
-					  echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="sprmCommanditaire();">Supprimer Commanditaire</button>&nbsp;&nbsp;&nbsp;';
-					  echo '</div>';
+					<div id="divCom" style="display:none"><br>
+					<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterCommanditaire();">Ajouter Commanditaire</button>&nbsp;&nbsp;&nbsp;
+					<button type="button" class="btn tf-btn btn-notdefault" onclick="sprmCommanditaire();">Supprimer Commanditaire</button>&nbsp;&nbsp;&nbsp;
+					 </div>
 					  				
-					  echo '<div id="divGes" style="display:none"><br>';
-					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterGestionnaire();">Ajouter Gestionnaire</button>&nbsp;&nbsp;&nbsp;';
-					 echo '</div>';
+					  <div id="divGes" style="display:none"><br>
+					<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterGestionnaire();">Ajouter Gestionnaire</button>&nbsp;&nbsp;&nbsp;
+					 <button type="button" class="btn tf-btn btn-notdefault" onclick="sprmGestionnaire();">Supprimer Gestionnaire</button>&nbsp;&nbsp;&nbsp;
+					 </div>
 					 
-					  echo '<div id="divOv" style="display:none"><br>';
-					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterOeuvre();">Ajouter Oeuvre</button>&nbsp;&nbsp;&nbsp;';
-					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="afficherTitre();">Modifier Oeuvre</button>&nbsp;&nbsp;&nbsp;';
-					  echo '</div>';
+					 <div id="divOv" style="display:none"><br>
+					<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterOeuvre();">Ajouter Oeuvre</button>&nbsp;&nbsp;&nbsp;
+					 <button type="button" class="btn tf-btn btn-notdefault" onclick="afficherTitre();">Modifier Oeuvre</button>&nbsp;&nbsp;&nbsp;
+					  </div>
 					  
-					   echo '<div id="divEtat" style="display:none"><br>';
-					echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterEtat();">Ajouter État</button>&nbsp;&nbsp;&nbsp;';
-					 echo '</div>';
+					  <div id="divEtat" style="display:none"><br>
+					<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterEtat();">Ajouter État</button>&nbsp;&nbsp;&nbsp;
+					<button type="button" class="btn tf-btn btn-notdefault" onclick="afficherEtat();">Modifier État</button>&nbsp;&nbsp;&nbsp;
+					</div>
 					 
-					  echo '<div id="divCat" style="display:none"><br>';
-					 echo'<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterCategorie();">Ajouter Catégorie</button>';
-					 echo '</div>';
+					<div id="divCat" style="display:none"><br>
+					<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterCategorie();">Ajouter Médium</button>&nbsp;&nbsp;&nbsp;
+					<button type="button" class="btn tf-btn btn-notdefault" onclick="afficherMedium();">Modifier Médium</button>&nbsp;&nbsp;&nbsp;
+					</div>
+                    
+                    	<div id="divRes" style="display:none"><br>
+					<button type="button" class="btn tf-btn btn-notdefault" onclick="voirReservation();">Voir Réservations</button>&nbsp;&nbsp;&nbsp;
+					</div>
+                    <style>
+                    table, th, td {
+						border: 1px solid white;
+						border-collapse: collapse;
+					}
+					</style>
+					<?PHP
+					
+					 /**********************************/	
+					/*DEBUT FORM POUR VOIR RESERVATION*/
+				   /**********************************/
+				   		$reponseReservation = $Cnn->prepare('Select * from reservation order by date;');
+						$reponseReservation->execute();
+				   
+				echo '  <form id="formReservation" style="display:none;" enctype="multipart/form-data">';
+				echo ' <div> <br>
+						<table style="width:95%; margin-left:5%;">
+						  <tr>
+						  	<th>Oeuvre</th>
+							<th>Nom</th> 
+							<th>Prenom</th>
+							<th>Mail</th>
+							<th>Local</th>
+							<th>Date</th>
+							<th>Supprimer</th>
+						  </tr>';
+						  $path = '';
+						  $titre = '';
+						while ($infoReservation = $reponseReservation->fetch())
+						{
+							$reponseOeuvre = $Cnn->prepare('Select Titre,nomOeuvre from oeuvres where idOeuvres = '.$infoReservation["idOeuvre"].';');
+							$reponseOeuvre->execute();
+							if ($oeuvre = $reponseOeuvre->fetch())
+							{
+								$path = $oeuvre["nomOeuvre"];
+								$titre = $oeuvre["Titre"];
+							}
+						echo ' <tr>
+						  	<th>'.$titre.'</th>
+							<th>'.$infoReservation["NomPersonneReserve"].'</th>
+							<th>'.$infoReservation["PrenomPersonneReserve"].'</th>
+							<th>'.$infoReservation["MailPersonneReserve"].'</th>
+							<th>'.$infoReservation["Local"].'</th>
+							<th>'.$infoReservation["Date"].'</th>
+							 <th><img src=img/trash.png style="width:30%; cursor:pointer;" onClick="supprimer('.$infoReservation["idReservation"].','.$infoReservation["idOeuvre"].')"></th>
+						  </tr>';
+						} 
+					 
+                    echo '</table></div></form>';//fermeture form
+				   	 /*********************************/	
+					/*FIN  FORM POUR VOIR RESERVATION*/
+				   /*********************************/
+					
+					
 					
 					
 					 /****************************************/	
@@ -173,8 +227,39 @@ session_start();
 				   	 /*************************************/	
 					/*FIN FORM DE L'AJOUT DE GESTIONNAIRE*/
 				   /*************************************/
+				   
+				   
+				   	/*************************************/	
+					/*DEBUT FORM DE SPRM DE GESTIONNAIRE*/
+				   /************************************/
+					echo '<form id="formGestionnaire" style="display:none;" action="ajoutGestionnaire.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
+                    echo ' <div> <label>Email</label>
+                                    <input class="form-control" id="mail" name="mail" placeholder="Entrez le email du gestionnaire"></input><br></div>';//email
+									
+                   echo' <div><button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>';//button
+                   echo' </form>';//fermeture form
+				   	 /**********************************/	
+					/*FIN FORM DE SPRM DE GESTIONNAIRE*/
+				   /**********************************/
+				   $sql = 'select * from gestionnaire';
+				   $reponseSprmGestionnaire = $Cnn->prepare($sql);
+				   $reponseSprmGestionnaire->execute();
+				   
+				   					echo '<form id="formSprmGestionnaire" style="display:none;" action="sprmGestionnaire.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
 					
-					
+							echo ' <div> <label>Email</label>
+                                    <select class="form-control" id="sprmEmail" name="sprmEmail">';
+					echo '<option id="sprmEmail0"></option>';
+						while($infoSprmGestionnaire = $reponseSprmGestionnaire->fetch())
+						{
+							echo '<option id="etat'.$infoSprmGestionnaire['idgestionnaire'].'">'.$infoSprmGestionnaire['email'].'</option>';
+						}
+						
+						echo '</select><br></div>';//etat
+						
+						echo' <div><button type="submit" class="btn tf-btn btn-default">Supprimer</button></div>';//button
+						
+						  echo' </form>';//fermeture form
 					
 					/*********************************/	
 					/*DEBUT FORM DE L'AJOUT D'OEUVRES*/
@@ -197,11 +282,12 @@ session_start();
 					 echo ' <div> <label>Année</label>
                                     <select class="form-control" id="annee" name="annee">';
 									echo '<option id="annee0"></option>';
-									$cpt = 1900;
-									while ($cpt <= date("Y"))
+									$cpt =  date("Y");
+									$cpt2 =  date("Y")-100;
+									while ($cpt >= $cpt2)
 									{
 										echo '<option id="annee'.$cpt.'">'.$cpt.'</option>';
-										$cpt++;										
+										$cpt--;										
 									}
 									echo'</select></div>';//annee							
 									
@@ -273,11 +359,12 @@ session_start();
 					 echo ' <div> <label>Année</label>
                                     <select class="form-control" id="anneeM" name="anneeM">';
 									echo '<option id="anneeM0"></option>';
-									$cpt = 1900;
-									while ($cpt <= date("Y"))
+									$cpt = date("Y");
+									$cpt2 = date("Y") - 100;
+									while ($cpt >=$cpt2)
 									{
 										echo '<option id="anneeM'.$cpt.'">'.$cpt.'</option>';
-										$cpt++;										
+										$cpt--;										
 									}
 									echo'</select></div>';//annee							
 									
@@ -318,8 +405,9 @@ session_start();
 									
 				 echo ' <div> <label>Réservation</label> <b><i>Indiquez si cette état permet la réservation.</i></b> <select class="form-control" id="reservation" name="reservation"><br></div>';
 					 echo '<option id="blind"></option>';
-						echo '<option id="oui">Oui</option>';
-						echo '<option id="non">Non</option>';
+						echo '<option id="0">Ne peux être reservée ou empruntée</option>';
+						echo '<option id="1">Peux être empruntée</option>';
+						echo '<option id="2">Peux être reservée</option>';
 				 echo '</select><br></div>';//reservation
 									
                    echo' <div><button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>';//button
@@ -328,18 +416,86 @@ session_start();
 					/*FIN FORM DE L'AJOUT D'ÉTAT*/
 				   /****************************/
 				   
+				   
+				   	 /****************************/	
+					/*DEBUT FORM DE MODIF D'ÉTAT*/
+				   /****************************/
+				   
+				   
+				   	$reponseEtat = $Cnn->prepare('SELECT NomEtat,idetat from etat;');
+					$reponseEtat->execute();
+					echo '<form id="formAllEtat" style="display:none;" method="POST" enctype="multipart/form-data">';
+                   	echo ' <div> <label>Tous les états</label>
+                                    <select class="form-control" id="AllEtat" name="AllEtat" onchange="ajaxModifierEtat();">';
+					echo '<option id="allEtat0"></option>';
+						while($infoEtat = $reponseEtat->fetch())
+						{
+							echo '<option id="allEtat'.$infoEtat['idetat'].'">'.$infoEtat['NomEtat'].'</option>';
+						}
+						
+						echo '</select><br></div>';//etat	
+									
+                   echo' </form>';//fermeture form
+				  
+				  
+				   echo '<form id="formModifierEtat" style="display:none;"  action="modifierEtat.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
+				   	echo ' <div> <label>État</label>
+					<input class="form-control" id="EtatModif" name="EtatModif" placeholder="Entrez l\'état"></input></div>';//Etat
+				   	 echo ' <div> <label>Réservation</label> <b><i>Indiquez si cette état permet la réservation.</i></b> <select class="form-control" id="reservationModif" name="reservationModif"><br></div>';
+						echo '<option id="0">Ne peux être reservée ou empruntée</option>';
+						echo '<option id="1">Peux être empruntée</option>';
+						echo '<option id="2">Peux être reservée</option>';
+				 echo '</select><br></div>';//reservation
+				 					echo '<input type="hidden" id="idEtat" name="idEtat">';
+				                    echo' <div><button type="submit" class="btn tf-btn btn-default">Modifier</button></div>';//button
+				    echo' </form>';//fermeture form
+				   	 /**************************/	
+					/*FIN FORM DE MODIF D'ÉTAT*/
+				   /**************************/
+				   
+				   
 				   	 /************************************/	
 					/*DEBUT FORM DE L'AJOUT DE CATÉGORIE*/
 				   /************************************/
 					echo '<form id="formCategorie" style="display:none;"  action="ajoutCategorie.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
-                    echo ' <div> <label>Catégorie</label>
-                                    <input class="form-control" id="categorie" name="categorie" placeholder="Entrez la catérogie"></input><br></div>';//categorie
+                    echo ' <div> <label>Médium</label>
+                                    <input class="form-control" id="medium" name="medium" placeholder="Entrez le médium"></input><br></div>';//categorie
 									
                    echo' <div><button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>';//button
                    echo' </form>';//fermeture form
 				   	 /**********************************/	
 					/*FIN FORM DE L'AJOUT DE CATÉGORIE*/
 				   /**********************************/
+				   
+				   	 /**********************************/	
+					/*DEBUT FORM DE MODIF DE CATÉGORIE*/
+				   /**********************************/
+				   
+				   
+				   	$reponseMedium = $Cnn->prepare('SELECT * from categorie;');
+					$reponseMedium->execute();
+					echo '<form id="formAllMedium" style="display:none;" method="POST" enctype="multipart/form-data">';
+                   	echo ' <div> <label>Tous les Médiums</label>
+                                    <select class="form-control" id="AllMedium" name="AllMedium" onchange="ajaxModifierMedium();">';
+					echo '<option id="allMedium0"></option>';
+						while($infoMedium = $reponseMedium->fetch())
+						{
+							echo '<option id="allEtat'.$infoMedium['idCategorie'].'">'.$infoMedium['nomCategorie'].'</option>';
+						}
+						
+						echo '</select><br></div>';//etat	
+									
+                   echo' </form>';//fermeture form
+				   
+					echo '<form id="formModifierMedium" style="display:none;"  action="modifierMedium.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
+                    echo ' <div> <label>Médium</label>
+                                    <input class="form-control" id="mediumModif" name="mediumModif" placeholder="Entrez le médium"></input><br></div>';//categorie
+				echo '<input type="hidden" id="idMedium" name="idMedium">';			
+                   echo' <div><button type="submit" class="btn tf-btn btn-default">Modifier</button></div>';//button
+                   echo' </form>';//fermeture form
+				   	 /********************************/	
+					/*FIN FORM DE MODIF DE CATÉGORIE*/
+				   /********************************/
 				}
 			}
 			?>               
@@ -508,6 +664,41 @@ $("#formSprmCommanditaire").validate(
 			 $('#divOv').css('display', 'none');
 			 $('#divEtat').css('display', 'none');
 			 $('#divCat').css('display', 'none');
+			 $('#formGestionnaire').css('display', 'none');
+			 $('#formAjouterOeuvre').css('display', 'none');
+			 $('#formEtat').css('display', 'none');
+			 $('#formCategorie').css('display', 'none');
+			 $('#formModifierOeuvre').css('display', 'none');
+			 $('#formAllTitre').css('display', 'none');
+			 $('#formModifierEtat').css('display', 'none');
+			 $('#formModifierMedium').css('display', 'none');
+			 $('#formSprmGestionnaire').css('display', 'none');
+			$('#formAllEtat').css('display', 'none');
+			$('#formAllMedium').css('display', 'none');
+			$('#divRes').css('display', 'none');
+			$('#formReservation').css('display', 'none');
+		}	
+		function reservation() {
+			$('#divRes').slideToggle("slow", function () {
+			});
+			$('#divCom').css('display', 'none');
+			$('#divGes').css('display', 'none');
+			 $('#divOv').css('display', 'none');
+			 $('#divEtat').css('display', 'none');
+			 $('#divCat').css('display', 'none');
+			 $('#formGestionnaire').css('display', 'none');
+			 $('#formAjouterOeuvre').css('display', 'none');
+			 $('#formEtat').css('display', 'none');
+			 $('#formCategorie').css('display', 'none');
+			 $('#formModifierOeuvre').css('display', 'none');
+			 $('#formAllTitre').css('display', 'none');
+			 $('#formModifierEtat').css('display', 'none');
+			 $('#formModifierMedium').css('display', 'none');
+			 $('#formSprmGestionnaire').css('display', 'none');
+			$('#formAllEtat').css('display', 'none');
+			$('#formAllMedium').css('display', 'none');
+			$('#formAjoutCommanditaire').css('display', 'none');
+		    $('#formSprmCommanditaire').css('display', 'none');
 		}	
 		function gestionnaire() {
 			$('#divGes').slideToggle("slow", function () {
@@ -516,6 +707,19 @@ $("#formSprmCommanditaire").validate(
 			 $('#divOv').css('display', 'none');
 			 $('#divEtat').css('display', 'none');
 			 $('#divCat').css('display', 'none');
+			 $('#formAjoutCommanditaire').css('display', 'none');
+			 $('#formAjouterOeuvre').css('display', 'none');
+			 $('#formEtat').css('display', 'none');
+			 $('#formCategorie').css('display', 'none');
+			 $('#formModifierOeuvre').css('display', 'none');
+			 $('#formAllTitre').css('display', 'none');
+			 $('#formSprmCommanditaire').css('display', 'none');
+			 $('#formModifierEtat').css('display', 'none');
+			 $('#formModifierMedium').css('display', 'none');
+			 $('#formAllEtat').css('display', 'none');
+			 $('#formAllMedium').css('display', 'none');
+			 $('#divRes').css('display', 'none');
+			 $('#formReservation').css('display', 'none');
 		}
 			function oeuvre() {
 			$('#divOv').slideToggle("slow", function () {
@@ -524,6 +728,19 @@ $("#formSprmCommanditaire").validate(
 			 $('#divCom').css('display', 'none');
 			 $('#divEtat').css('display', 'none');
 			 $('#divCat').css('display', 'none');
+			 $('#formAjoutCommanditaire').css('display', 'none');
+			 $('#formGestionnaire').css('display', 'none');
+			 $('#formEtat').css('display', 'none');
+			 $('#formCategorie').css('display', 'none');
+			  $('#formAllTitre').css('display', 'none');
+			  $('#formSprmCommanditaire').css('display', 'none');
+			  $('#formModifierEtat').css('display', 'none');
+			 $('#formModifierMedium').css('display', 'none');
+			 $('#formSprmGestionnaire').css('display', 'none');
+			 $('#formAllEtat').css('display', 'none');
+			 $('#formAllMedium').css('display', 'none');
+			 $('#divRes').css('display', 'none');
+			 $('#formReservation').css('display', 'none');
 		}
 		function etat() {
 			$('#divEtat').slideToggle("slow", function () {
@@ -532,6 +749,18 @@ $("#formSprmCommanditaire").validate(
 			 $('#divOv').css('display', 'none');
 			 $('#divCom').css('display', 'none');
 			 $('#divCat').css('display', 'none');
+			$('#formAjoutCommanditaire').css('display', 'none');
+			$('#formCategorie').css('display', 'none');
+			$('#formGestionnaire').css('display', 'none');
+			 $('#formAjouterOeuvre').css('display', 'none');
+			 $('#formModifierOeuvre').css('display', 'none');
+			 $('#formAllTitre').css('display', 'none');
+			 $('#formSprmCommanditaire').css('display', 'none');
+			 $('#formModifierMedium').css('display', 'none');
+			 $('#formSprmGestionnaire').css('display', 'none');
+			 $('#formAllMedium').css('display', 'none');
+			 $('#divRes').css('display', 'none');
+			 $('#formReservation').css('display', 'none');
 		}
 		function categorie() {
 			$('#divCat').slideToggle("slow", function () {
@@ -540,9 +769,20 @@ $("#formSprmCommanditaire").validate(
 			 $('#divOv').css('display', 'none');
 			 $('#divEtat').css('display', 'none');
 			 $('#divCom').css('display', 'none');
+			 $('#formAjoutCommanditaire').css('display', 'none');
+			$('#formGestionnaire').css('display', 'none');
+			$('#formAjouterOeuvre').css('display', 'none');
+			$('#formEtat').css('display', 'none');
+			$('#formModifierOeuvre').css('display', 'none');
+			$('#formAllTitre').css('display', 'none');
+			$('#formSprmCommanditaire').css('display', 'none');
+			$('#formModifierEtat').css('display', 'none');
+			$('#formSprmGestionnaire').css('display', 'none');
+			$('#formAllEtat').css('display', 'none');
+			$('#divRes').css('display', 'none');
+			$('#formReservation').css('display', 'none');
 		}
-
-
+		
 	function ajouterCommanditaire() {
 			$('#formAjoutCommanditaire').slideToggle("slow", function () {
 			});
@@ -553,6 +793,12 @@ $("#formSprmCommanditaire").validate(
 			 $('#formModifierOeuvre').css('display', 'none');
 			 $('#formAllTitre').css('display', 'none');
 			 $('#formSprmCommanditaire').css('display', 'none');
+		     $('#formModifierEtat').css('display', 'none');
+			 $('#formModifierMedium').css('display', 'none');
+			 $('#formSprmGestionnaire').css('display', 'none');
+			 $('#formAllEtat').css('display', 'none');
+			 $('#formAllMedium').css('display', 'none');
+			 $('#formReservation').css('display', 'none');
 		}
 		function ajouterGestionnaire() {
 			$('#formGestionnaire').slideToggle("slow", function () {
@@ -564,6 +810,12 @@ $("#formSprmCommanditaire").validate(
 			 $('#formModifierOeuvre').css('display', 'none');
 			 $('#formAllTitre').css('display', 'none');
 			 $('#formSprmCommanditaire').css('display', 'none');
+			 $('#formModifierEtat').css('display', 'none');
+			 $('#formModifierMedium').css('display', 'none');
+			 $('#formSprmGestionnaire').css('display', 'none');
+			 $('#formAllEtat').css('display', 'none');
+			 $('#formAllMedium').css('display', 'none');
+			 $('#formReservation').css('display', 'none');
 		}
 		function ajouterOeuvre() {
 			$('#formAjouterOeuvre').slideToggle("slow", function () {
@@ -575,6 +827,12 @@ $("#formSprmCommanditaire").validate(
 			 $('#formModifierOeuvre').css('display', 'none');
 			 $('#formAllTitre').css('display', 'none');
 			 $('#formSprmCommanditaire').css('display', 'none');
+			$('#formModifierEtat').css('display', 'none');
+			 $('#formModifierMedium').css('display', 'none');
+			 $('#formSprmGestionnaire').css('display', 'none');
+			 $('#formAllEtat').css('display', 'none');
+			 $('#formAllMedium').css('display', 'none');
+			 $('#formReservation').css('display', 'none');
 		}
 		function afficherTitre() {
 			$('#formAllTitre').slideToggle("slow", function () {
@@ -586,6 +844,12 @@ $("#formSprmCommanditaire").validate(
 			  $('#formAjouterOeuvre').css('display', 'none');
 			  $('#formModifierOeuvre').css('display', 'none');
 			  $('#formSprmCommanditaire').css('display', 'none');
+			  $('#formModifierEtat').css('display', 'none');
+			 $('#formModifierMedium').css('display', 'none');
+			 $('#formSprmGestionnaire').css('display', 'none');
+			 $('#formAllEtat').css('display', 'none');
+			 $('#formAllMedium').css('display', 'none');
+			 $('#formReservation').css('display', 'none');
 		}
 		function modifierOeuvre() {
 			$('#formModifierOeuvre').slideToggle("slow", function () {
@@ -597,6 +861,12 @@ $("#formSprmCommanditaire").validate(
 			  $('#formAjouterOeuvre').css('display', 'none');
 			  $('#formAllTitre').css('display', 'none');
 			  $('#formSprmCommanditaire').css('display', 'none');
+			  $('#formModifierEtat').css('display', 'none');
+			 $('#formModifierMedium').css('display', 'none');
+			 $('#formSprmGestionnaire').css('display', 'none');
+			 $('#formAllEtat').css('display', 'none');
+			 $('#formAllMedium').css('display', 'none');
+			 $('#formReservation').css('display', 'none');
 		}
 		function ajouterEtat() {
 			$('#formEtat').slideToggle("slow", function () {
@@ -608,6 +878,12 @@ $("#formSprmCommanditaire").validate(
 			 $('#formModifierOeuvre').css('display', 'none');
 			 $('#formAllTitre').css('display', 'none');
 			 $('#formSprmCommanditaire').css('display', 'none');
+			 $('#formModifierEtat').css('display', 'none');
+			 $('#formModifierMedium').css('display', 'none');
+			 $('#formSprmGestionnaire').css('display', 'none');
+			 $('#formAllEtat').css('display', 'none');
+			 $('#formAllMedium').css('display', 'none');
+			 $('#formReservation').css('display', 'none');
 		}
 		function ajouterCategorie() {
 			$('#formCategorie').slideToggle("slow", function () {
@@ -619,6 +895,12 @@ $("#formSprmCommanditaire").validate(
 			$('#formModifierOeuvre').css('display', 'none');
 			$('#formAllTitre').css('display', 'none');
 			$('#formSprmCommanditaire').css('display', 'none');
+			$('#formModifierEtat').css('display', 'none');
+			 $('#formModifierMedium').css('display', 'none');
+			 $('#formSprmGestionnaire').css('display', 'none');
+			 $('#formAllEtat').css('display', 'none');
+			 $('#formAllMedium').css('display', 'none');
+			 $('#formReservation').css('display', 'none');
 		}
 		function sprmCommanditaire(){
 				$('#formSprmCommanditaire').slideToggle("slow", function () {
@@ -630,8 +912,119 @@ $("#formSprmCommanditaire").validate(
 			 $('#formCategorie').css('display', 'none');
 			 $('#formModifierOeuvre').css('display', 'none');
 			 $('#formAllTitre').css('display', 'none');
+			 $('#formModifierEtat').css('display', 'none');
+			 $('#formModifierMedium').css('display', 'none');
+			 $('#formSprmGestionnaire').css('display', 'none');
+			 $('#formAllEtat').css('display', 'none');
+			 $('#formAllMedium').css('display', 'none');
+			 $('#formReservation').css('display', 'none');
+		}
+		function modifierEtat(){
+				$('#formModifierEtat').slideToggle("slow", function () {
+			});
+			$('#formModifierMedium').css('display', 'none');
+			$('#formEtat').css('display', 'none');
+			$('#formAjoutCommanditaire').css('display', 'none');
+			$('#formGestionnaire').css('display', 'none');
+			$('#formAjouterOeuvre').css('display', 'none');
+			$('#formEtat').css('display', 'none');
+			$('#formModifierOeuvre').css('display', 'none');
+			$('#formAllTitre').css('display', 'none');
+			$('#formSprmCommanditaire').css('display', 'none');
+			$('#formSprmGestionnaire').css('display', 'none');
+			$('#formAllEtat').css('display', 'none');
+			$('#formAllMedium').css('display', 'none');
+			$('#formReservation').css('display', 'none');
+		}
+		function afficherEtat(){
+				$('#formAllEtat').slideToggle("slow", function () {
+			});
+			$('#formModifierEtat').css('display', 'none');
+			$('#formModifierMedium').css('display', 'none');
+			$('#formEtat').css('display', 'none');
+			$('#formAjoutCommanditaire').css('display', 'none');
+			$('#formGestionnaire').css('display', 'none');
+			$('#formAjouterOeuvre').css('display', 'none');
+			$('#formEtat').css('display', 'none');
+			$('#formModifierOeuvre').css('display', 'none');
+			$('#formAllTitre').css('display', 'none');
+			$('#formSprmCommanditaire').css('display', 'none');
+			$('#formSprmGestionnaire').css('display', 'none');
+			$('#formAllMedium').css('display', 'none');
+			$('#formReservation').css('display', 'none');
+		}
+		function modifierMedium(){
+				$('#formModifierMedium').slideToggle("slow", function () {
+			});
+			$('#formCategorie').css('display', 'none');
+			$('#formModifierEtat').css('display', 'none');
+			$('#formEtat').css('display', 'none');
+			$('#formAjoutCommanditaire').css('display', 'none');
+			$('#formGestionnaire').css('display', 'none');
+			$('#formAjouterOeuvre').css('display', 'none');
+			$('#formEtat').css('display', 'none');
+			$('#formModifierOeuvre').css('display', 'none');
+			$('#formAllTitre').css('display', 'none');
+			$('#formSprmCommanditaire').css('display', 'none');
+			$('#formSprmGestionnaire').css('display', 'none');
+			$('#formAllEtat').css('display', 'none');
+			$('#formAllMedium').css('display', 'none');
+			$('#formReservation').css('display', 'none');
 		}
 		
+		function afficherMedium(){
+				$('#formAllMedium').slideToggle("slow", function () {
+			});
+			$('#formCategorie').css('display', 'none');
+			$('#formModifierEtat').css('display', 'none');
+			$('#formEtat').css('display', 'none');
+			$('#formAjoutCommanditaire').css('display', 'none');
+			$('#formGestionnaire').css('display', 'none');
+			$('#formAjouterOeuvre').css('display', 'none');
+			$('#formEtat').css('display', 'none');
+			$('#formModifierOeuvre').css('display', 'none');
+			$('#formAllTitre').css('display', 'none');
+			$('#formSprmCommanditaire').css('display', 'none');
+			$('#formSprmGestionnaire').css('display', 'none');
+			$('#formAllEtat').css('display', 'none');
+			$('#formModifierMedium').css('display', 'none');
+			$('#formReservation').css('display', 'none');
+		}
+			function sprmGestionnaire(){
+				$('#formSprmGestionnaire').slideToggle("slow", function () {
+			});
+			$('#formModifierMedium').css('display', 'none')
+			$('#formModifierEtat').css('display', 'none');
+			$('#formEtat').css('display', 'none');
+			$('#formAjoutCommanditaire').css('display', 'none');
+			$('#formGestionnaire').css('display', 'none');
+			$('#formAjouterOeuvre').css('display', 'none');
+			$('#formEtat').css('display', 'none');
+			$('#formModifierOeuvre').css('display', 'none');
+			$('#formAllTitre').css('display', 'none');
+			$('#formSprmCommanditaire').css('display', 'none');
+			$('#formAllEtat').css('display', 'none');
+			$('#formAllMedium').css('display', 'none');
+			$('#formReservation').css('display', 'none');
+		}
+		
+		function voirReservation(){
+				$('#formReservation').slideToggle("slow", function () {
+			});
+			$('#formModifierMedium').css('display', 'none')
+			$('#formModifierEtat').css('display', 'none');
+			$('#formEtat').css('display', 'none');
+			$('#formAjoutCommanditaire').css('display', 'none');
+			$('#formGestionnaire').css('display', 'none');
+			$('#formAjouterOeuvre').css('display', 'none');
+			$('#formEtat').css('display', 'none');
+			$('#formModifierOeuvre').css('display', 'none');
+			$('#formAllTitre').css('display', 'none');
+			$('#formSprmCommanditaire').css('display', 'none');
+			$('#formAllEtat').css('display', 'none');
+			$('#formAllMedium').css('display', 'none');
+			$('#formSprmGestionnaire').css('display', 'none');
+		}
 	function ajaxModifierOeuvre()
 	{ 
 		var e = document.getElementById('allTitre');
@@ -661,6 +1054,60 @@ $("#formSprmCommanditaire").validate(
 				});
 };
 
+
+function ajaxModifierEtat()
+{ 
+	var e = document.getElementById('AllEtat');
+	var selectedIndex = e.options[e.selectedIndex].value;
+	$.ajax({
+			url: "chercherInfosEtats.php", 
+			type: 'POST',
+			dataType: 'html',
+			data:{selectedIndex:selectedIndex},
+			success : function(output)
+			   {
+				   var infos = JSON.parse(output);
+				   document.getElementById('EtatModif').value = infos.nomEtat;
+				   document.getElementById('reservationModif').selectedIndex = infos.peuxEtreReserve;
+				   document.getElementById('idEtat').value = infos.idetat;
+				   modifierEtat();
+			   }
+			});
+};
+function ajaxModifierMedium()
+{ 
+	var e = document.getElementById('AllMedium');
+	var selectedIndex = e.options[e.selectedIndex].value;
+	$.ajax({
+			url: "chercherInfosMediums.php", 
+			type: 'POST',
+			dataType: 'html',
+			data:{selectedIndex:selectedIndex},
+			success : function(output)
+			   {
+				   var infos = JSON.parse(output);
+				   document.getElementById('mediumModif').value = infos.nomCategorie;
+				   document.getElementById('idMedium').value = infos.idCategorie;
+				   modifierMedium();
+			   }
+			});
+};
+function supprimer(idReservation,idOeuvre)
+{
+	 $.ajax({
+		  url : "Supprimer.php",
+		  type : 'POST',
+		  dataType:'html',
+		  data : {idReservation:idReservation,idOeuvre:idOeuvre},
+		  success: function(output)
+		  			{
+						alert("Supression effectuée");
+						document.location.href="Gestionnaire.php";
+						$('#divRes').css('display', 'block');
+						voirReservation();
+					},
+		});
+}
 </script>
 
   </body>
