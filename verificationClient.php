@@ -21,7 +21,7 @@ else if(isset($_POST['emailClient']) && isset($_POST['nomClient']) && isset($_PO
 	}
 	else if($type == 'Reserver')
 	{
-				$sql = 'select count(*) nombre from (SELECT MailPersonneReserve FROM reservation where MailPersonneReserve = "'.$mail.'") as nombre;';
+				$sql = 'select count(*) nombre from (SELECT MailPersonneReserve FROM reservation where MailPersonneReserve = "'.$mail.'" and effectif = 1) as nombre;';
 		$infoPersonne = $Cnn->prepare($sql);
 		$infoPersonne->execute();
 		$nombre;
@@ -31,16 +31,33 @@ else if(isset($_POST['emailClient']) && isset($_POST['nomClient']) && isset($_PO
 		}
 		if ($nombre <2)
 		{
-			$sql = 'select idReservation from reservation where idOeuvre ='.$idOeuvre;
-			$infoReserv = $Cnn->prepare($sql);
-			$infoReserv->execute();
-			$nb = 0;
+			
+			$sql = 'select idReservation from reservation where idOeuvre ='.$idOeuvre.' and effectif=1 and MailPersonneReserve = "'.$mail.'";';
+			$infoReservationDuClient = $Cnn->prepare($sql);
+			$infoReservationDuClient->execute();
+			if ($infoReservationDuClient->fetch() == true)
+			{
+				$_SESSION['max'] = 'Vous avez déjà réserver cette oeuvre';
+				header('location:index.php');
+			}
+			else
+			{
+				$sql = 'select idReservation from reservation where idOeuvre ='.$idOeuvre.' and effectif=1';
+				$infoReserv = $Cnn->prepare($sql);
+				$infoReserv->execute();
+				$nb = 1;
 				while ($nbOeuvre = $infoReserv->fetch())
 				{
 					$nb+=1;
 				}
 				
-				$message = 'Cliquez sur le lien pour finaliser la réservation de l\'oeuvre. Prendre note que vous serrez la personne numéro '.$nb.' dans la liste d\'attente Si vous ne voulez plus celle-ci, ignorez ce message : '.$type.'.php?mail='.$mail.'&nom='.$nom.'&prenom='.$prenom.'&local='.$local.'&idOeuvre='.$idOeuvre.'&type='.$type;
+				
+					$sql = 'insert into reservation (Date,NomPersonneReserve,PrenomPersonneReserve,MailPersonneReserve,Local,idOeuvre,effectif) VALUES(NOW(),"'.$nom.'","'.$prenom.'","'.$mail.'","'.$local.'","'.$idOeuvre.'",0)';
+					$insertEmprunt = $Cnn->prepare($sql);
+					$insertEmprunt->execute();
+				
+				
+				$message = 'Cliquez sur le lien pour finaliser la réservation de l\'oeuvre. Prendre note que vous serrez la personne numéro '.$nb.' dans la liste d\'attente Si vous ne voulez plus celle-ci, ignorez ce message :<a href="localhost/'.$type.'.php?mail='.$mail.'&idOeuvre='.$idOeuvre.'&type='.$type.'">'.$type.'</a>' ;
 					/*ENVOIE DU MAIL*/
 			
 				$mail = new PHPMailer;
@@ -53,7 +70,7 @@ else if(isset($_POST['emailClient']) && isset($_POST['nomClient']) && isset($_PO
 				$mail->SMTPSecure = 'ssl';
 				$mail->Port = 465;
 				$mail->setFrom('infogalerievirtuellecba@gmail.com', 'Réservation GV');
-				$mail->addAddress('cednoel@live.ca');	
+				$mail->addAddress('cedericnoel@gmail.com');	
 				$mail->isHTML(true);
 				$mail->CharSet = 'UTF-8';
 				$mail->Subject = 'Réservation sur la Galerie des Arts Visuels';
@@ -69,6 +86,7 @@ else if(isset($_POST['emailClient']) && isset($_POST['nomClient']) && isset($_PO
 						$_SESSION['acces'] = 'oui';
 					echo 'Message envoyé';
 				}
+			}
 		}
 		else
 		{

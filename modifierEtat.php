@@ -1,7 +1,7 @@
 <?php
 session_start();
 include('connexionBd.php');
-if (isset($_POST['reservationModif'])&&isset($_GET['email']) && isset($_POST['EtatModif'])&& isset($_POST['idEtat']))
+if (isset($_POST['reservationModif']) && isset($_POST['EtatModif'])&& isset($_POST['idEtat']))
 {
 	$peuxEtreReserve;
 		if ($_POST['reservationModif'] == 'Ne peux être reservée ou empruntée')
@@ -23,22 +23,12 @@ if (isset($_POST['reservationModif'])&&isset($_GET['email']) && isset($_POST['Et
 		 	
 		$_SESSION['Uploader'] = 'Modification d\'état effectuée';	
 		
-		$uniqId = uniqid();
-		$ajoutUniqId = $Cnn->prepare('update gestionnaire set uniqId = "'.$uniqId.'" where email = "'.$_GET['email'].'" ');
-		$ajoutUniqId->execute();
-		header('location:Gestionnaire.php?id='.$uniqId.'&email='.$_GET['email']);
+		header('location:Gestionnaire.php');
 		 
-}
-else if(isset($_GET['email']) && htmlentities($_GET['email']))
-{
-       	$_SESSION['Uploader'] = 'Erreur pendant la modification';	
-		$uniqId = uniqid();
-		$ajoutUniqId = $Cnn->prepare('update gestionnaire set uniqId = "'.$uniqId.'" where email = "'.$_GET['email'].'" ');
-		$ajoutUniqId->execute();
-		header('location:Gestionnaire.php?id='.$uniqId.'&email='.$_GET['email']);
 }
 else
 {
+	$_SESSION['acces'] = 'non';
 	header('location:index.php');
 }
 ?>

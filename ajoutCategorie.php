@@ -2,9 +2,9 @@
 session_start();
 
 include('connexionBd.php');
-if (isset($_POST['categorie']) && htmlentities($_POST['categorie'])&&isset($_SESSION['email']) && htmlentities($_SESSION['email'])&&isset($_SESSION['mdp']) && htmlentities($_SESSION['mdp']))
+if (isset($_POST['medium'])&&isset($_SESSION['email'])&&isset($_SESSION['mdp']))
 {
-		 $ajouterCategorie = $Cnn->prepare('insert into categorie (nomCategorie) VALUES ("'.$_POST['categorie'].'");');
+		 $ajouterCategorie = $Cnn->prepare('insert into categorie (nomCategorie) VALUES ("'.$_POST['medium'].'");');
 		 $ajouterCategorie->execute();
 		 	
 		$_SESSION['Uploader'] = 'Ajout du médium effectué';	
@@ -14,6 +14,7 @@ if (isset($_POST['categorie']) && htmlentities($_POST['categorie'])&&isset($_SES
 }
 else
 {
+	$_SESSION['acces'] = 'non';
 	header('location:index.php');
 }
 ?>

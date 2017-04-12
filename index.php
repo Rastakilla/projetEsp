@@ -3,17 +3,33 @@
   <head>
   <?PHP
   session_start();
-  unset($_SESSION['email']);
-  unset($_SESSION['mdp']);
+  if (isset($_GET['off']) && $_GET['off'] == true)
+  {
+	    unset($_SESSION['email']);
+ 		unset($_SESSION['mdp']);
+  }
+   if (isset($_SESSION['temps']) && $_SESSION['temps'] != NULL)
+  {
+	    echo '<script>alert("'.$_SESSION['temps'].'");</script>';
+		unset($_SESSION['temps']);
+  }
+  if(isset($_SESSION['email']) && isset($_SESSION['mdp']) && isset($_SESSION['gestionnaire'])&& $_SESSION['gestionnaire'] = 'ok')
+  {?>
+	   <script type="text/javascript">
+		   window.open("http://localhost/Gestionnaire.php",'_blank');
+	</script>
+ <?PHP }
   if (isset($_SESSION['acces']) && $_SESSION['acces'] == 'non')
   {
+	  unset($_SESSION['email']);
+ 	  unset($_SESSION['mdp']);
 	  echo '<script>alert("Accès refusé.");</script>';
   }
   else if (isset($_SESSION['acces']) && $_SESSION['acces'] == 'oui')
   {
-	  	  echo '<script>alert("Un message a été envoyé à votre courriel pour la confirmation.");</script>';
+	  	  echo '<script>alert("Un message a été envoyé à votre courriel pour la confirmation. Prendre note que le lien est valide pour une durée de 24 heures.");</script>';
   }
-    else if (isset($_SESSION['max']) && $_SESSION['max'] != '')
+  if (isset($_SESSION['max']) && $_SESSION['max'] != '')
   {
 	  	  echo '<script>alert("'.$_SESSION["max"].'.");</script>';
   }

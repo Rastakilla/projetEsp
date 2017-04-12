@@ -1,5 +1,6 @@
 <?PHP
 session_start();
+unset($_SESSION['gestionnaire']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -89,7 +90,7 @@ session_start();
 					 <button type="button" class="btn tf-btn btn-notdefault" onclick="etat();">État</button>&nbsp;&nbsp;&nbsp;
 					<button type="button" class="btn tf-btn btn-notdefault" onclick="categorie();">Médium</button>&nbsp;&nbsp;&nbsp;					
                     <button type="button" class="btn tf-btn btn-notdefault" onclick="reservation();">Réservation</button>&nbsp;&nbsp;&nbsp;
-					 <button type="button" class="btn tf-btn btn-notdefault" onclick="gestionnaire();">Gestionnaire</button>&nbsp;&nbsp;&nbsp;
+					<!-- <button type="button" class="btn tf-btn btn-notdefault" onclick="gestionnaire();">Gestionnaire</button>&nbsp;&nbsp;&nbsp; -->
 					<button type="button" class="btn tf-btn btn-notdefault" onclick="commanditaire();">Commanditaire</button>&nbsp;&nbsp;&nbsp;
 
 					</div>
@@ -135,7 +136,7 @@ session_start();
 					 /**********************************/	
 					/*DEBUT FORM POUR VOIR RESERVATION*/
 				   /**********************************/
-				   		$reponseReservation = $Cnn->prepare('Select * from reservation order by date;');
+				   		$reponseReservation = $Cnn->prepare('Select * from reservation where effectif = 1 order by date;');
 						$reponseReservation->execute();
 				   
 				echo '  <form id="formReservation" style="display:none;" enctype="multipart/form-data">';
@@ -148,6 +149,7 @@ session_start();
 							<th>Mail</th>
 							<th>Local</th>
 							<th>Date</th>
+							<th>Effectif</th>
 							<th>Supprimer</th>
 						  </tr>';
 						  $path = '';
@@ -167,8 +169,16 @@ session_start();
 							<th>'.$infoReservation["PrenomPersonneReserve"].'</th>
 							<th>'.$infoReservation["MailPersonneReserve"].'</th>
 							<th>'.$infoReservation["Local"].'</th>
-							<th>'.$infoReservation["Date"].'</th>
-							 <th><img src=img/trash.png style="width:30%; cursor:pointer;" onClick="supprimer('.$infoReservation["idReservation"].','.$infoReservation["idOeuvre"].')"></th>
+							<th>'.$infoReservation["Date"].'</th>';
+							if ($infoReservation["effectif"] == 0)
+							{
+								echo '<th>NON</th>';
+							}
+							else if ($infoReservation["effectif"] == 1)
+							{
+								echo '<th>OUI</th>';	
+							}
+							echo ' <th><img src=img/trash.png style="width:30%; cursor:pointer;" onClick="supprimer('.$infoReservation["idReservation"].','.$infoReservation["idOeuvre"].')"></th>
 						  </tr>';
 						} 
 					 

@@ -22,19 +22,12 @@ include('connexionBd.php');
 		$sql = 'insert into commanditaire (nomCommanditaire,pathCommanditaire) VALUES ("'.$_POST['commanditaire'].'","'.$file_name.'");';
 		$mettreCommanditaire = $Cnn->prepare($sql);
 		$mettreCommanditaire->execute();
-		$_SESSION['Uploader'] = 'True';	
-		
-		$uniqId = uniqid();
-		$ajoutUniqId = $Cnn->prepare('update gestionnaire set uniqId = "'.$uniqId.'" where email = "'.$_GET['email'].'" ');
-		$ajoutUniqId->execute();
-		header('location:Gestionnaire.php?id='.$uniqId.'&email='.$_GET['email']);
+		$_SESSION['Uploader'] = 'Ajout du commanditaire effectué';	
+		header('location:Gestionnaire.php');
 		 
       }else{
-       	$_SESSION['Uploader'] =$errors;	
-		$uniqId = uniqid();
-		$ajoutUniqId = $Cnn->prepare('update gestionnaire set uniqId = "'.$uniqId.'" where email = "'.$_GET['email'].'" ');
-		$ajoutUniqId->execute();
-		header('location:Gestionnaire.php?id='.$uniqId.'&email='.$_GET['email']);
+       	$_SESSION['acces'] ='non';	
+		header('location:Gestionnaire.php');
       }
    }
 ?>

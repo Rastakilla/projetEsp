@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <?PHP
+	session_start();
   include('connexionBd.php');
  $cpt = 0;
   ?>
@@ -84,21 +85,23 @@
 		else if (isset($_GET['idOeuvre']) && $_GET['idOeuvre']!=NULL)
 		{
 			$idOeuvre = htmlentities($_GET['idOeuvre']);
-			if (isset($_GET['emprunter'])  && $_GET['emprunter'] != NULL)
+			if (isset($_GET['emprunter'])  && $_GET['emprunter'] != NULL && $_GET['emprunter'] == 'true')
 			{
 				$emprunter = 'Emprunter';
 			}
-			else if (isset($_GET['reserver'])  && $_GET['reserver'] != NULL)
+			else if (isset($_GET['reserver'])  && $_GET['reserver'] != NULL && $_GET['reserver'] == 'true')
 			{
 				$reserver = 'Reserver';
 			}
 			else
 			{
+				$_SESSION['acces'] = 'non';
 				header('Location: index.php');
 			}
 		}
 		else
 		{
+			$_SESSION['acces'] = 'non';
 			header('Location: index.php');
 		}
 		?>
@@ -116,13 +119,72 @@
 					$whereGlobal = ' where oeuvres.idOeuvres ="'.$idOeuvre.'";';	
 					if (isset($emprunter))
 					{
-						$Medium = true;
-						echo '<h2><strong>'.$emprunter.' une oeuvre</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
+						$sql = 'select idetat from etat where peuxEtreReserve = 1';
+						$infoEtat = $Cnn->prepare($sql);
+						$infoEtat->execute();
+						$cpt = 0;
+						$whereEtat = ' idEtat=';
+						while ($Etats = $infoEtat->fetch())
+						{
+							if ($cpt == 0)
+							{
+								$whereEtat = $whereEtat.$Etats['idetat'];
+							}
+							else
+							{
+								$whereEtat= $whereEtat.' or idEtat='.$Etats['idetat'];
+							}
+							$cpt++;
+						}
+						
+						
+						$sql = 'select nomOeuvre from oeuvres where idOeuvres = '.$idOeuvre.' and ('.$whereEtat.');';
+						$infoBonneOeuvre = $Cnn->prepare($sql);
+						$infoBonneOeuvre->execute();
+						if ($infoBonneOeuvre->fetch() == false)
+						{
+							$_SESSION['acces'] = 'non';
+							header('location:index.php');
+						}
+						else
+						{
+							$Medium = true;
+							echo '<h2><strong>'.$emprunter.' une oeuvre</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
+						}
 					}
 					else if (isset($reserver))
 					{
-						$Medium = true;
-						echo '<h2><strong>'.$reserver.' une oeuvre</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
+						$sql = 'select idetat from etat where peuxEtreReserve = 2';
+						$infoEtat = $Cnn->prepare($sql);
+						$infoEtat->execute();
+						$cpt = 0;
+						$whereEtat = ' idEtat=';
+						while ($Etats = $infoEtat->fetch())
+						{
+							if ($cpt == 0)
+							{
+								$whereEtat = $whereEtat.$Etats['idetat'];
+							}
+							else
+							{
+								$whereEtat= $whereEtat.' or idEtat='.$Etats['idetat'];
+							}
+							$cpt++;
+						}
+												
+						$sql = 'select nomOeuvre from oeuvres where idOeuvres = '.$idOeuvre.' and ('.$whereEtat.');';
+						$infoBonneOeuvre = $Cnn->prepare($sql);
+						$infoBonneOeuvre->execute();
+						if ($infoBonneOeuvre->fetch() == false)
+						{
+							$_SESSION['acces'] = 'non';
+							header('location:index.php');
+						}
+						else
+						{
+							$Medium = true;
+							echo '<h2><strong>'.$reserver.' une oeuvre</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
+						}
 					}
 					else
 					{

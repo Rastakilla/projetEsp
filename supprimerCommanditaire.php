@@ -1,7 +1,7 @@
 <?php
 session_start();
 include('connexionBd.php');
-   if(isset($_POST['sprmCom'])){
+   if(isset($_POST['sprmCom']) && isset($_SESSION['email'])){
 	   $sql = 'select pathCommanditaire from commanditaire where nomCommanditaire = "'.$_POST["sprmCom"].'";';
 	   $infoCommanditaire = $Cnn->prepare($sql);
 	   $infoCommanditaire->execute();
@@ -12,17 +12,12 @@ include('connexionBd.php');
 		$sql = 'delete from commanditaire where nomCommanditaire="'.$_POST["sprmCom"].'";';
 		$mettreCommanditaire = $Cnn->prepare($sql);
 		$mettreCommanditaire->execute();
-		$_SESSION['Uploader'] = 'True';	
+		$_SESSION['Uploader'] = 'Suppression de commanditaire effectuée';	
 		
-		$uniqId = uniqid();
-		$ajoutUniqId = $Cnn->prepare('update gestionnaire set uniqId = "'.$uniqId.'" where email = "'.$_GET['email'].'" ');
-		$ajoutUniqId->execute();
-		header('location:Gestionnaire.php?id='.$uniqId.'&email='.$_GET['email']);
+		header('location:Gestionnaire.php');
 		 
       }else{
-		$uniqId = uniqid();
-		$ajoutUniqId = $Cnn->prepare('update gestionnaire set uniqId = "'.$uniqId.'" where email = "'.$_GET['email'].'" ');
-		$ajoutUniqId->execute();
-		header('location:Gestionnaire.php?id='.$uniqId.'&email='.$_GET['email']);
+		  $_SESSION['acces'] = 'non';
+		header('location:index.php');
       }
 ?>

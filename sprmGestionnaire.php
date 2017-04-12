@@ -1,22 +1,17 @@
 <?php
 session_start();
 include('connexionBd.php');
-   if(isset($_POST['sprmEmail'])){
+   if(isset($_POST['sprmEmail']) && isset($_SESSION['email'])){
 
 		$sql = 'delete from gestionnaire where email="'.$_POST["sprmEmail"].'";';
 		$sprmGestionnaire = $Cnn->prepare($sql);
 		$sprmGestionnaire->execute();
 		$_SESSION['Uploader'] = 'Suppression du gestionnaire effectuée';	
 		
-		$uniqId = uniqid();
-		$ajoutUniqId = $Cnn->prepare('update gestionnaire set uniqId = "'.$uniqId.'" where email = "'.$_GET['email'].'" ');
-		$ajoutUniqId->execute();
-		header('location:Gestionnaire.php?id='.$uniqId.'&email='.$_GET['email']);
+		header('location:Gestionnaire.php');
 		 
       }else{
-		$uniqId = uniqid();
-		$ajoutUniqId = $Cnn->prepare('update gestionnaire set uniqId = "'.$uniqId.'" where email = "'.$_GET['email'].'" ');
-		$ajoutUniqId->execute();
-		header('location:Gestionnaire.php?id='.$uniqId.'&email='.$_GET['email']);
+		  $_SESSION['acces'] = 'non';
+		header('location:index.php');
       }
 ?>

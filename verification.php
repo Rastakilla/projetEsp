@@ -24,9 +24,10 @@ else
 	}
 	else
 	{
+		$_SESSION['gestionnaire'] = 'ok';
 		$_SESSION['email'] = $email;
 		$_SESSION['mdp'] = $mdp;
-		header('location:Gestionnaire.php'); 
+		header('location:index.php');
 
 	}
 }

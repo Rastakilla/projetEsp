@@ -1,7 +1,7 @@
 <?php
 session_start();
 include('connexionBd.php');
-if (isset($_POST['etat']) && htmlentities($_POST['etat']) && isset($_POST['reservation']) && htmlentities($_POST['reservation'])&&isset($_GET['email']) && htmlentities($_GET['email']))
+if (isset($_POST['etat']) && htmlentities($_POST['etat']) && isset($_POST['reservation']) && htmlentities($_POST['reservation']))
 {
 	$peuxEtreReserve;
 		if ($_POST['reservation'] == 'Ne peux être reservée ou empruntée')
@@ -20,23 +20,12 @@ if (isset($_POST['etat']) && htmlentities($_POST['etat']) && isset($_POST['reser
 		 $ajouterEtat->execute();
 		 	
 		$_SESSION['Uploader'] = 'Ajout d\'État effectué';	
-		
-		$uniqId = uniqid();
-		$ajoutUniqId = $Cnn->prepare('update gestionnaire set uniqId = "'.$uniqId.'" where email = "'.$_GET['email'].'" ');
-		$ajoutUniqId->execute();
-		header('location:Gestionnaire.php?id='.$uniqId.'&email='.$_GET['email']);
+		header('location:Gestionnaire.php');
 		 
-}
-else if (isset($_GET['email']) && htmlentities($_GET['email']))
-{
-       	$_SESSION['Uploader'] = 'Erreur pendant l\'ajout de l\'etat';	
-		$uniqId = uniqid();
-		$ajoutUniqId = $Cnn->prepare('update gestionnaire set uniqId = "'.$uniqId.'" where email = "'.$_GET['email'].'" ');
-		$ajoutUniqId->execute();
-		header('location:Gestionnaire.php?id='.$uniqId.'&email='.$_GET['email']);
 }
 else
 {
+	$_SESSION['acces'] = 'non';
 	header('location:index.php');
 }
 ?>

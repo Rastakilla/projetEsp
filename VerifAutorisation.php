@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <?PHP
+	session_start();
   include('connexionBd.php');
   ?>
   <style>
@@ -43,7 +44,14 @@
        
   </head>
   <body style='height:92.3vh;'>
-	<?PHP include_once('includes/HeaderOeuvres.php'); ?>
+	<?PHP include_once('includes/HeaderOeuvres.php'); 
+	if (isset($_SESSION['email']) && isset($_SESSION['mdp']))
+	{
+		header('location:Gestionnaire.php');
+	}
+	else
+	{
+	?>
 
     <!-- Oeuvres
     ==========================================-->
@@ -54,14 +62,16 @@
                      <div align="center"> Email
                                     <input class="form-control-little" id="email" name="email" placeholder="Entrez votre adresse Email"></input><br>
                                      Mot de Passe
-                                    <input class="form-control-little" id="mdp" name="mdp" placeholder="Entrez votre mot de passe"></input><br>
+                                    <input type="password" class="form-control-little" id="mdp" name="mdp" placeholder="Entrez votre mot de passe"></input><br>
                    		 <button type="submit" class="btn tf-btn btn-notdefault">Envoyer</button>
                     </div>
                     </form>
             </div>
         </div>
     </div>
-                  	<?PHP include('includes/Footer.php'); ?>
+                  	<?PHP 
+	}
+	include('includes/Footer.php'); ?>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery.1.11.1.js"></script>

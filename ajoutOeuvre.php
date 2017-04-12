@@ -38,19 +38,13 @@ include('connexionBd.php');
 		 echo $sql;
 		$ajoutOeuvre = $Cnn->prepare($sql);
 		$ajoutOeuvre->execute();	
-		$_SESSION['Uploader'] = 'True';	
-		
-		$uniqId = uniqid();
-		$ajoutUniqId = $Cnn->prepare('update gestionnaire set uniqId = "'.$uniqId.'" where email = "'.$_GET['email'].'" ');
-		$ajoutUniqId->execute();
-		header('location:Gestionnaire.php?id='.$uniqId.'&email='.$_GET['email']);
-		 
-      }else{
-       	$_SESSION['Uploader'] =$errors;	
-		$uniqId = uniqid();
-		$ajoutUniqId = $Cnn->prepare('update gestionnaire set uniqId = "'.$uniqId.'" where email = "'.$_GET['email'].'" ');
-		$ajoutUniqId->execute();
-		header('location:Gestionnaire.php?id='.$uniqId.'&email='.$_GET['email']);
+		$_SESSION['Uploader'] = 'Ajout d\'oeuvre effectuée';	
+		header('location:Gestionnaire.php');
       }
+	  else
+	  {
+		  $_SESSION['Uploader'] = $errors;
+		  header('location:Gestionnaire.php');
+	  }
    }
 ?>

@@ -1,7 +1,7 @@
 <?php
 session_start();
 include('connexionBd.php');
-if (isset($_POST['auteurM']) && htmlentities($_POST['auteurM'])&&isset($_GET['email']) && htmlentities($_GET['email']))
+if (isset($_POST['auteurM']) && htmlentities($_POST['auteurM']))
 {
 	$sql = 'Select idCategorie from categorie where nomCategorie ="'.$_POST['categorieM'].'"';
 	$chercherCategories = $Cnn->prepare($sql);
@@ -27,24 +27,14 @@ if (isset($_POST['auteurM']) && htmlentities($_POST['auteurM'])&&isset($_GET['em
 		 $ajouterGestionnaire = $Cnn->prepare($sql);
 		 $ajouterGestionnaire->execute();
 		 	
-		$_SESSION['Uploader'] = 'True';	
+		$_SESSION['Uploader'] = 'Modification d\'oeuvre effectué';	
 		
-		$uniqId = uniqid();
-		$ajoutUniqId = $Cnn->prepare('update gestionnaire set uniqId = "'.$uniqId.'" where email = "'.$_GET['email'].'" ');
-		$ajoutUniqId->execute();
-		header('location:Gestionnaire.php?id='.$uniqId.'&email='.$_GET['email']);
+		header('location:Gestionnaire.php');
 		 
-}
-else if(isset($_GET['email']) && htmlentities($_GET['email']))
-{
-       	$_SESSION['Uploader'] = 'Erreur pendant la modification';	
-		$uniqId = uniqid();
-		$ajoutUniqId = $Cnn->prepare('update gestionnaire set uniqId = "'.$uniqId.'" where email = "'.$_GET['email'].'" ');
-		$ajoutUniqId->execute();
-		header('location:Gestionnaire.php?id='.$uniqId.'&email='.$_GET['email']);
 }
 else
 {
+	$_SESSION['acces'] = 'non';
 	header('location:index.php');
 }
 ?>
