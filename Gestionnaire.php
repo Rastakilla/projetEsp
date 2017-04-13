@@ -149,7 +149,6 @@ unset($_SESSION['gestionnaire']);
 							<th>Mail</th>
 							<th>Local</th>
 							<th>Date</th>
-							<th>Effectif</th>
 							<th>Supprimer</th>
 						  </tr>';
 						  $path = '';
@@ -170,14 +169,6 @@ unset($_SESSION['gestionnaire']);
 							<th>'.$infoReservation["MailPersonneReserve"].'</th>
 							<th>'.$infoReservation["Local"].'</th>
 							<th>'.$infoReservation["Date"].'</th>';
-							if ($infoReservation["effectif"] == 0)
-							{
-								echo '<th>NON</th>';
-							}
-							else if ($infoReservation["effectif"] == 1)
-							{
-								echo '<th>OUI</th>';	
-							}
 							echo ' <th><img src=img/trash.png style="width:30%; cursor:pointer;" onClick="supprimer('.$infoReservation["idReservation"].','.$infoReservation["idOeuvre"].')"></th>
 						  </tr>';
 						} 
