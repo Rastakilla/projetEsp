@@ -18,7 +18,7 @@ if (isset($_POST['vMail']) && isset($_POST['vMessage']))
 	$mail->Port = 465;
 	$mail->setFrom($email, $email);
 	//$mail->setFrom(cpepin@cegepba.qc.ca, cpepin@cegepba.qc.ca);
-	$mail->addAddress('cedericnoel@gmail.ca','cedericnoel@gmail.ca');	
+	$mail->addAddress('cedericnoel@gmail.com','cedericnoel@gmail.com');	
 	$mail->isHTML(true);
 	$mail->CharSet = 'UTF-8';
 	$mail->Subject = 'Question section contactez-nous - Galerie des Arts Visuels';
