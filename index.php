@@ -176,7 +176,7 @@
 
 					echo '<th width="100%"> <div class="item" style="cursor:pointer; width:300px;" onClick=" window.location.href = \'oeuvres.php?etat='.$Etat[$cpt].'\'" >
                         <div class="thumbnail">
-                            <img src="img/categorie/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle team-img" width="100%">
+                            <img src="img/categorie/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle picture-img" width="100%">
                             <div class="caption">
                                 <h3>'.$Etat[$cpt].'</h3>
                             </div>
@@ -226,7 +226,7 @@
 					{
 					echo '<th width="100%"> <div class="item" style="cursor:pointer; width:300px;" onClick=" window.location.href = \'oeuvres.php?categorie='.$Categorie[$cpt].'\'" >
                         <div class="thumbnail">
-                            <img src="img/categorie/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle team-img" width="100%">
+                            <img src="img/categorie/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle picture-img" width="100%">
                             <div class="caption">
                                 <h3>'.$Categorie[$cpt].'</h3>
                             </div>
@@ -275,7 +275,7 @@
 					{
 					echo '<th width="100%"> <div class="item" style="cursor:pointer; width:300px;" onClick=" window.location.href = \'oeuvres.php?annee='.$Annee[$cpt].'\'" >
                         <div class="thumbnail">
-                            <img src="img/categorie/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle team-img" width="100%">
+                            <img src="img/categorie/'.$donneeOeuvre['nomOeuvre'].'" alt="..." class="img-circle picture-img" width="100%">
                             <div class="caption">
                                 <h3>'.$Annee[$cpt].'</h3>
                             </div>

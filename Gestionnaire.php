@@ -46,7 +46,7 @@ unset($_SESSION['gestionnaire']);
        <script src="lightbox2-master/dist/js/lightbox-plus-jquery.min.js"></script>
        
   </head>
-  <body style='height:92.3vh;'>
+  <body  style="height:92.3vh; min-height:100%; background-color:#2E3033;" onload ="menu();">
 	<?PHP include('includes/HeaderGestionnaire.php'); ?>
 
     <!-- Oeuvres
@@ -90,7 +90,7 @@ unset($_SESSION['gestionnaire']);
 					 <button type="button" class="btn tf-btn btn-notdefault" onclick="etat();">État</button>&nbsp;&nbsp;&nbsp;
 					<button type="button" class="btn tf-btn btn-notdefault" onclick="categorie();">Médium</button>&nbsp;&nbsp;&nbsp;					
                     <button type="button" class="btn tf-btn btn-notdefault" onclick="reservation();">Réservation</button>&nbsp;&nbsp;&nbsp;
-					<!-- <button type="button" class="btn tf-btn btn-notdefault" onclick="gestionnaire();">Gestionnaire</button>&nbsp;&nbsp;&nbsp; -->
+					 <button type="button" class="btn tf-btn btn-notdefault" onclick="gestionnaire();">Gestionnaire</button>&nbsp;&nbsp;&nbsp;
 					<button type="button" class="btn tf-btn btn-notdefault" onclick="commanditaire();">Commanditaire</button>&nbsp;&nbsp;&nbsp;
 
 					</div>
@@ -138,9 +138,9 @@ unset($_SESSION['gestionnaire']);
 				   /**********************************/
 				   		$reponseReservation = $Cnn->prepare('Select * from reservation where effectif = 1 order by date;');
 						$reponseReservation->execute();
-				   
-				echo '  <form id="formReservation" style="display:none;" enctype="multipart/form-data">';
-				echo ' <div> <br>
+				  ?> 
+				<form id="formReservation" style="display:none;" enctype="multipart/form-data">'
+				<div align="center"> <br>
 						<table style="width:95%; margin-left:5%;">
 						  <tr>
 						  	<th>Oeuvre</th>
@@ -150,7 +150,8 @@ unset($_SESSION['gestionnaire']);
 							<th>Local</th>
 							<th>Date</th>
 							<th>Supprimer</th>
-						  </tr>';
+						  </tr>
+                          <?PHP
 						  $path = '';
 						  $titre = '';
 						while ($infoReservation = $reponseReservation->fetch())
@@ -184,14 +185,16 @@ unset($_SESSION['gestionnaire']);
 					 /****************************************/	
 					/*DEBUT FORM DE L'AJOUT DE COMMANDITAIRE*/
 				   /****************************************/
-					echo '<form id="formAjoutCommanditaire" style="display:none;" action="ajoutCommanditaire.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
-				 echo ' <div> <br><label>Nom du commanditaire</label>
-                       <input class="form-control" id="commanditaire" name="commanditaire" placeholder="Entrez le nom du commanditaire"></input></div>';//nomCommanditaire
-                     echo '<div><br><label for="image">Image</label>
-                     <input type="file" name="image" id="image"></div>';//imageCommanditaire
+					?>
+                    <form id="formAjoutCommanditaire" style="display:none;" action="ajoutCommanditaire.php?email=<?PHP echo $email;?>" method="POST" enctype="multipart/form-data">
+				<div align="center"> <br>Nom du commanditaire
+                       <input class="form-control-little" id="commanditaire" name="commanditaire" placeholder="Entrez le nom du commanditaire"></input>
+                   <br><label style="margin-left:40%;" for="image">Image
+                     <input type="file" name="image" id="image"></label><br>
 									
-                   echo' <div><button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>';//button
-                   echo' </form>';//fermeture form
+                   <button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>
+                   </form>
+                   <?PHP
 				   	 /**************************************/	
 					/*FIN FORM DE L'AJOUT DE COMMANDITAIRE*/
 				   /**************************************/
@@ -201,16 +204,16 @@ unset($_SESSION['gestionnaire']);
 				$reponseCommanditaire = $Cnn->prepare('Select nomCommanditaire,idCommanditaire from commanditaire;');
 						$reponseCommanditaire->execute();
 					echo '<form id="formSprmCommanditaire" style="display:none;" action="supprimerCommanditaire.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
-									 echo ' <div> <label>Nom du commanditaire</label>
-                                    <select class="form-control" id="sprmCom" name="sprmCom">';
+									 echo ' <div align="center"> Nom du commanditaire
+                                    <select class="form-control-little" id="sprmCom" name="sprmCom">';
 									echo '<option id="sprmCom0"></option>';
 									while($infoCommanditaire = $reponseCommanditaire->fetch())
 									{
 										echo '<option id="com'.$infoCommanditaire['idCommanditaire'].'">'.$infoCommanditaire['nomCommanditaire'].'</option>';
 									}
-									echo'</select></div><br>';//com
+									echo'</select><br>';//com
 									
-                   echo' <div><button type="submit" class="btn tf-btn btn-default">Supprimer</button></div>';//button
+                   echo' <button type="submit" class="btn tf-btn btn-default">Supprimer</button></div>';//button
                    echo' </form>';//fermeture form
 				   	 /*************************************/	
 					/*FIN FORM DE DELETE DE COMMANDITAIRE*/
@@ -219,12 +222,15 @@ unset($_SESSION['gestionnaire']);
 					 /***************************************/	
 					/*DEBUT FORM DE L'AJOUT DE GESTIONNAIRE*/
 				   /***************************************/
-					echo '<form id="formGestionnaire" style="display:none;" action="ajoutGestionnaire.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
-                    echo ' <div> <label>Email</label>
-                                    <input class="form-control" id="mail" name="mail" placeholder="Entrez le email du gestionnaire"></input><br></div>';//email
+				   ?>
+					<form id="formGestionnaire" style="display:none;" action="ajoutGestionnaire.php?email=<?PHP echo $email;?>" method="POST" enctype="multipart/form-data">
+                    <div align="center">
+                    Email<input class="form-control-little" id="mail" name="mail" placeholder="Entrez le email du gestionnaire"></input><br>
+				Mot de passe <input type	="password" class="form-control-little" id="password" name="password" placeholder="Entrez le mot de passe du gestionnaire"></input><br>
 									
-                   echo' <div><button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>';//button
-                   echo' </form>';//fermeture form
+                   <button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>
+                   </form>
+                   <?PHP
 				   	 /*************************************/	
 					/*FIN FORM DE L'AJOUT DE GESTIONNAIRE*/
 				   /*************************************/
@@ -233,56 +239,47 @@ unset($_SESSION['gestionnaire']);
 				   	/*************************************/	
 					/*DEBUT FORM DE SPRM DE GESTIONNAIRE*/
 				   /************************************/
-					echo '<form id="formGestionnaire" style="display:none;" action="ajoutGestionnaire.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
-                    echo ' <div> <label>Email</label>
-                                    <input class="form-control" id="mail" name="mail" placeholder="Entrez le email du gestionnaire"></input><br></div>';//email
-									
-                   echo' <div><button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>';//button
-                   echo' </form>';//fermeture form
-				   	 /**********************************/	
-					/*FIN FORM DE SPRM DE GESTIONNAIRE*/
-				   /**********************************/
+
 				   $sql = 'select * from gestionnaire';
 				   $reponseSprmGestionnaire = $Cnn->prepare($sql);
 				   $reponseSprmGestionnaire->execute();
 				   
 				   					echo '<form id="formSprmGestionnaire" style="display:none;" action="sprmGestionnaire.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
 					
-							echo ' <div> <label>Email</label>
-                                    <select class="form-control" id="sprmEmail" name="sprmEmail">';
+							echo ' <div align="center"> Email
+                                    <select class="form-control-little" id="sprmEmail" name="sprmEmail">';
 					echo '<option id="sprmEmail0"></option>';
 						while($infoSprmGestionnaire = $reponseSprmGestionnaire->fetch())
 						{
 							echo '<option id="etat'.$infoSprmGestionnaire['idgestionnaire'].'">'.$infoSprmGestionnaire['email'].'</option>';
 						}
+						?>
 						
-						echo '</select><br></div>';//etat
+						</select><br>
 						
-						echo' <div><button type="submit" class="btn tf-btn btn-default">Supprimer</button></div>';//button
+						<button type="submit" class="btn tf-btn btn-default">Supprimer</button></div>
 						
-						  echo' </form>';//fermeture form
+						 </form>
+					<?PHP
+					 /**********************************/	
+					/*FIN FORM DE SPRM DE GESTIONNAIRE*/
+				   /**********************************/
 					
 					/*********************************/	
 					/*DEBUT FORM DE L'AJOUT D'OEUVRES*/
 					/*********************************/
 					echo '<form id="formAjouterOeuvre" style="display:none;"  action="ajoutOeuvre.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
-                    echo ' <div> <label>Auteur</label>
-                                    <input class="form-control" id="auteur" name="auteur" placeholder="Entrez le nom de l\'auteur"></input></div>';//auteur
-					 echo ' <div> <label>Titre</label>
-                                    <input class="form-control" id="titre" name="titre" placeholder="Entrez le titre"></input></div>';//titre
-					echo ' <div> <label>Hauteur</label>
-                                    <input class="form-control" id="hauteur" name="hauteur" placeholder="Entrez la hauteur en centimètre"></input></div>';//Hauteur
-					echo ' <div> <label>Largeur</label>
-                                    <input class="form-control" id="largeur" name="largeur" placeholder="Entrez la hauteur en centimètre"></input></div>';//Largeur
-					echo ' <div> <label>Profondeur</label>
-                                    <input class="form-control" id="profondeur" name="profondeur" placeholder="Entrez la profondeur en centimètre"></input></div>';//Profondeur
-					echo ' <div> <label>Emplacement</label>
-                                    <input class="form-control" id="lieu" name="lieu" placeholder="Entrez l\'emplacement(si applicable, local ou endroit)"></input></div>';//lieu ou emplacement
-				echo ' <div> <label>Description</label>
-                                    <input class="form-control" id="description" name="description" placeholder="Entrez un description (facultatif)"></input></div>';//description		
-					 echo ' <div> <label>Année</label>
-                                    <select class="form-control" id="annee" name="annee">';
-									echo '<option id="annee0"></option>';
+					?>
+                    <div align="center"> Auteur <input class="form-control-little" id="auteur" name="auteur" placeholder="Entrez le nom de l\'auteur"></input>
+					 Titre <input class="form-control-little" id="titre" name="titre" placeholder="Entrez le titre"></input>
+					Hauteur <input class="form-control-little" id="hauteur" name="hauteur" placeholder="Entrez la hauteur en centimètre"></input>
+					Largeur	<input class="form-control-little" id="largeur" name="largeur" placeholder="Entrez la hauteur en centimètre"></input>
+					Profondeur <input class="form-control-little" id="profondeur" name="profondeur" placeholder="Entrez la profondeur en centimètre"></input>
+					Emplacement	<input class="form-control-little" id="lieu" name="lieu" placeholder="Entrez l\'emplacement(si applicable, local ou endroit)"></input>
+				Description	<input class="form-control-little" id="description" name="description" placeholder="Entrez un description (facultatif)"></input>	
+					 Année	<select class="form-control-little" id="annee" name="annee">
+									<option id="annee0"></option>
+									<?PHP
 									$cpt =  date("Y");
 									$cpt2 =  date("Y")-100;
 									while ($cpt >= $cpt2)
@@ -290,33 +287,33 @@ unset($_SESSION['gestionnaire']);
 										echo '<option id="annee'.$cpt.'">'.$cpt.'</option>';
 										$cpt--;										
 									}
-									echo'</select></div>';//annee							
+									echo'</select>';//annee							
 									
-					echo ' <div> <label>Médium</label>
-                                    <select class="form-control" id="categorie" name="categorie">';
+					echo 'Médium
+                                    <select class="form-control-little" id="categorie" name="categorie">';
 					echo '<option id="categorie0"></option>';
 						while($infoCategorie = $reponseCategorie->fetch())
 						{
 							echo '<option id="categorie'.$infoCategorie['idCategorie'].'">'.$infoCategorie['nomCategorie'].'</option>';
 						}
 									
-						echo'</select></div>';//Categorie
+						echo'</select>';//Categorie
 				
-					echo ' <div> <label>État</label>
-                                    <select class="form-control" id="etat" name="etat">';
+					echo 'État
+                                    <select class="form-control-little" id="etat" name="etat">';
 					echo '<option id="etat0"></option>';
 						while($infoEtat = $reponseEtat->fetch())
 						{
 							echo '<option id="etat'.$infoEtat['idetat'].'">'.$infoEtat['NomEtat'].'</option>';
 						}
 						
-						echo '</select><br></div>';//etat
+						echo '</select><br>';//etat
 						
 						
-						 echo '<div><label for="image">Image</label>
-                     <input type="file" name="image" id="image"></div>';//fichier		
+						 echo '<label style="margin-left:40%;" for="image">Image
+                     <input type="file" name="image" id="image"></label><br>';//fichier		
 									
-                   echo' <div><button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>';//button
+                   echo'<button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>';//button
                    echo' </form>';//fermeture form
 				   	 /*******************************/	
 					/*FIN FORM DE L'AJOUT D'OEUVRES*/
@@ -329,37 +326,46 @@ unset($_SESSION['gestionnaire']);
 					$reponseEtat->execute();
 					$reponseCategorie = $Cnn->prepare('SELECT nomCategorie,idCategorie from categorie;');
 					$reponseCategorie->execute();
-				   $titresOeuvre = $Cnn->prepare('Select Titre from oeuvres;');
+				   $titresOeuvre = $Cnn->prepare('Select nomOeuvre,idOeuvres from oeuvres;');
 				   $titresOeuvre->execute();
 				   echo '<form id="formAllTitre"  style="display:none;">';
-				   echo '<br><div> <label>Tous les Titres d\'oeuvres</label>';
-				   echo' <select class="form-control" id="allTitre" name="allTitre" onchange="ajaxModifierOeuvre();">';
+				   echo '<br><div align="center"> Toutes les oeuvres';
+				  /* echo' <select class="form-control-little" id="allTitre" name="allTitre" onchange="ajaxModifierOeuvre();">';
 				   echo '<option id="noTitre"></option>';
 				   while ($titreOeuvre = $titresOeuvre->fetch())
 				   {
 							echo '<option id="'.$titreOeuvre['Titre'].'" value = "'.$titreOeuvre['Titre'].'">'.$titreOeuvre['Titre'].'</option>';									
 					}
-					echo'</select></div>';//Tous les Titres	
-					echo '</form>';
-					echo '<form id="formModifierOeuvre" style="display:none;"  action="modifierOeuvre.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
-					echo "<br> <a id ='oeuvreImage' data-lightbox='Oeuvre'><p class = 'color'><b><u>VOIR L'OEUVRE</u></b></p></a>";
-                    echo ' <div> <label>Auteur</label>
-                                    <input class="form-control" id="auteurM" name="auteurM" placeholder="Entrez le nom de l\'auteur"></input></div>';//auteur
-					 echo ' <div> <label>Titre</label>
-                                    <input class="form-control" id="titreM" name="titreM" placeholder="Entrez le titre"></input></div>';//titre
-					echo ' <div> <label>Hauteur</label>
-                                    <input class="form-control" id="hauteurM" name="hauteurM" placeholder="Entrez la hauteur en centimètre"></input></div>';//Hauteur
-					echo ' <div> <label>Largeur</label>
-                                    <input class="form-control" id="largeurM" name="largeurM" placeholder="Entrez la hauteur en centimètre"></input></div>';//Largeur
-					echo ' <div> <label>Profondeur</label>
-                                    <input class="form-control" id="profondeurM" name="profondeurM" placeholder="Entrez la profondeur en centimètre"></input></div>';//Profondeur
-					echo ' <div> <label>Emplacement</label>
-                                    <input class="form-control" id="lieuM" name="lieuM" placeholder="Entrez l\'emplacement(si applicable, local ou endroit)"></input></div>';//lieu ou emplacement
-				echo ' <div> <label>Description</label>
-                                    <input class="form-control" id="descriptionM" name="descriptionM" placeholder="Entrez un description (facultatif)"></input></div>';//description		
-					 echo ' <div> <label>Année</label>
-                                    <select class="form-control" id="anneeM" name="anneeM">';
-									echo '<option id="anneeM0"></option>';
+					echo'</select>;*/
+					echo '<table width="100%">';
+					$cpt = 5;
+					while($Oeuvres = $titresOeuvre->fetch())
+					{
+						if($cpt%5 == 0)
+						{
+							echo '<tr>';						
+						}
+						echo '<th style="text-align:center;" >';
+						echo '<img onClick="ajaxModifierOeuvre('.$Oeuvres['idOeuvres'].');" src="img/categorie/'.$Oeuvres['nomOeuvre'].'"style="cursor: pointer;	margin-right:5px; max-width:200px; margin-left:5px;">';
+						echo '</th>';
+						$cpt++;
+					}
+					?>
+					</table>
+					</div>
+					</form>
+					<form id="formModifierOeuvre" style="display:none;"  action="modifierOeuvre.php?email='.$email.'" method="POST" enctype="multipart/form-data">
+					<br> <a id ='oeuvreImage' data-lightbox='Oeuvre'><p class = 'color'><b><u>VOIR L'OEUVRE</u></b></p></a>
+                    <div align="center"> Auteur  <input class="form-control-little" id="auteurM" name="auteurM" placeholder="Entrez le nom de l\'auteur"></input>
+					 Titre <input class="form-control-little" id="titreM" name="titreM" placeholder="Entrez le titre"></input>
+					Hauteur <input class="form-control-little" id="hauteurM" name="hauteurM" placeholder="Entrez la hauteur en centimètre"></input>
+					Largeur <input class="form-control-little" id="largeurM" name="largeurM" placeholder="Entrez la hauteur en centimètre"></input>
+					Profondeur  <input class="form-control-little" id="profondeurM" name="profondeurM" placeholder="Entrez la profondeur en centimètre"></input>
+					Emplacement  <input class="form-control-little" id="lieuM" name="lieuM" placeholder="Entrez l\'emplacement(si applicable, local ou endroit)"></input>
+				Description	<input class="form-control-little" id="descriptionM" name="descriptionM" placeholder="Entrez un description (facultatif)"></input>	
+					 Année	<select class="form-control-little" id="anneeM" name="anneeM">
+									<option id="anneeM0"></option>
+                                    <?PHP
 									$cpt = date("Y");
 									$cpt2 = date("Y") - 100;
 									while ($cpt >=$cpt2)
@@ -367,29 +373,29 @@ unset($_SESSION['gestionnaire']);
 										echo '<option id="anneeM'.$cpt.'">'.$cpt.'</option>';
 										$cpt--;										
 									}
-									echo'</select></div>';//annee							
+									echo'</select>';//annee							
 									
-					echo ' <div> <label>Catégorie</label>
-                                    <select class="form-control" id="categorieM" name="categorieM">';
+					echo 'Catégorie
+                                    <select class="form-control-little" id="categorieM" name="categorieM">';
 					echo '<option id="categorieM0"></option>';
 						while($infoCategorie = $reponseCategorie->fetch())
 						{
 							echo '<option id="categorieM'.$infoCategorie['idCategorie'].'">'.$infoCategorie['nomCategorie'].'</option>';
 						}
 									
-						echo'</select></div>';//Categorie
+						echo'</select>';//Categorie
 				
-					echo ' <div> <label>État</label>
-                                    <select class="form-control" id="etatM" name="etatM">';
+					echo 'État
+                                    <select class="form-control-little" id="etatM" name="etatM">';
 					echo '<option id="etatM0"></option>';
 						while($infoEtat = $reponseEtat->fetch())
 						{
 							echo '<option id="etatM'.$infoEtat['idetat'].'">'.$infoEtat['NomEtat'].'</option>';
 						}
 						
-						echo '</select><br></div>';//etat	
+						echo '</select><br>';//etat	
 					echo '<input type="hidden" id="idOeuvre" name="idOeuvre">';
-                   echo' <div><button type="submit" class="btn tf-btn btn-default">Modifier</button></div>';//button
+                   echo'<button type="submit" class="btn tf-btn btn-default">Modifier</button></div>';//button
                    echo' </form>';//fermeture form
 				   	 /***************************/	
 					/*FIN FORM MODIFIER OEUVRES*/
@@ -401,18 +407,20 @@ unset($_SESSION['gestionnaire']);
 					/*DEBUT FORM DE L'AJOUT D'ÉTAT*/
 				   /******************************/
 					echo '<form id="formEtat" style="display:none;"  action="ajoutEtat.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
-                    echo ' <div> <label>État</label>
-                                    <input class="form-control" id="etat" name="etat" placeholder="Entrez l\'état"></input><br></div>';//etat
+					?>
+                    <div align="center"> État
+                                    <input class="form-control-little" id="etat" name="etat" placeholder="Entrez l\'état"></input><br>
 									
-				 echo ' <div> <label>Réservation</label> <b><i>Indiquez si cette état permet la réservation.</i></b> <select class="form-control" id="reservation" name="reservation"><br></div>';
-					 echo '<option id="blind"></option>';
-						echo '<option id="0">Ne peux être reservée ou empruntée</option>';
-						echo '<option id="1">Peux être empruntée</option>';
-						echo '<option id="2">Peux être reservée</option>';
-				 echo '</select><br></div>';//reservation
+				 Réservation <b><i>Indiquez si cette état permet la réservation.</i></b> <select class="form-control-little" id="reservation" name="reservation"><br>
+					 <option id="blind"></option>
+						<option id="0">Ne peux être reservée ou empruntée</option>
+						<option id="1">Peux être empruntée</option>
+						<option id="2">Peux être reservée</option>
+				</select><br>
 									
-                   echo' <div><button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>';//button
-                   echo' </form>';//fermeture form
+                  <button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>
+                   </form>
+                   <?PHP
 				   	 /****************************/	
 					/*FIN FORM DE L'AJOUT D'ÉTAT*/
 				   /****************************/
@@ -426,30 +434,30 @@ unset($_SESSION['gestionnaire']);
 				   	$reponseEtat = $Cnn->prepare('SELECT NomEtat,idetat from etat;');
 					$reponseEtat->execute();
 					echo '<form id="formAllEtat" style="display:none;" method="POST" enctype="multipart/form-data">';
-                   	echo ' <div> <label>Tous les états</label>
-                                    <select class="form-control" id="AllEtat" name="AllEtat" onchange="ajaxModifierEtat();">';
+                   	echo '<div align="center">Tous les états
+                                    <select class="form-control-little" id="AllEtat" name="AllEtat" onchange="ajaxModifierEtat();">';
 					echo '<option id="allEtat0"></option>';
 						while($infoEtat = $reponseEtat->fetch())
 						{
 							echo '<option id="allEtat'.$infoEtat['idetat'].'">'.$infoEtat['NomEtat'].'</option>';
 						}
+						?>
 						
-						echo '</select><br></div>';//etat	
+						</select><br></div>
 									
-                   echo' </form>';//fermeture form
+                   </form>
 				  
 				  
-				   echo '<form id="formModifierEtat" style="display:none;"  action="modifierEtat.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
-				   	echo ' <div> <label>État</label>
-					<input class="form-control" id="EtatModif" name="EtatModif" placeholder="Entrez l\'état"></input></div>';//Etat
-				   	 echo ' <div> <label>Réservation</label> <b><i>Indiquez si cette état permet la réservation.</i></b> <select class="form-control" id="reservationModif" name="reservationModif"><br></div>';
-						echo '<option id="0">Ne peux être reservée ou empruntée</option>';
-						echo '<option id="1">Peux être empruntée</option>';
-						echo '<option id="2">Peux être reservée</option>';
-				 echo '</select><br></div>';//reservation
-				 					echo '<input type="hidden" id="idEtat" name="idEtat">';
-				                    echo' <div><button type="submit" class="btn tf-btn btn-default">Modifier</button></div>';//button
-				    echo' </form>';//fermeture form
+				   <form id="formModifierEtat" style="display:none;"  action="modifierEtat.php?email=<?PHP echo $email;?>" method="POST" enctype="multipart/form-data">
+				   	<div align="center">État <input class="form-control-little" id="EtatModif" name="EtatModif" placeholder="Entrez l\'état"></input>  Réservation <b><i>Indiquez si cette état permet la réservation.</i></b> <select class="form-control-little" id="reservationModif" name="reservationModif"><br>
+						<option id="0">Ne peux être reservée ou empruntée</option>
+						<option id="1">Peux être empruntée</option>
+						<option id="2">Peux être reservée</option>
+				</select><br>
+                        <input type="hidden" id="idEtat" name="idEtat">
+                        <button type="submit" class="btn tf-btn btn-default">Modifier</button></div>
+				    </form>
+                    <?PHP
 				   	 /**************************/	
 					/*FIN FORM DE MODIF D'ÉTAT*/
 				   /**************************/
@@ -458,12 +466,14 @@ unset($_SESSION['gestionnaire']);
 				   	 /************************************/	
 					/*DEBUT FORM DE L'AJOUT DE CATÉGORIE*/
 				   /************************************/
-					echo '<form id="formCategorie" style="display:none;"  action="ajoutCategorie.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
-                    echo ' <div> <label>Médium</label>
-                                    <input class="form-control" id="medium" name="medium" placeholder="Entrez le médium"></input><br></div>';//categorie
+				   ?>
+					<form id="formCategorie" style="display:none;"  action="ajoutCategorie.php?email=<?PHP echo $email;?>" method="POST" enctype="multipart/form-data">
+                    <div align="center">Médium
+                                    <input class="form-control-little" id="medium" name="medium" placeholder="Entrez le médium"></input><br>
 									
-                   echo' <div><button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>';//button
-                   echo' </form>';//fermeture form
+                   <button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>
+                   </form>
+                   <?PHP
 				   	 /**********************************/	
 					/*FIN FORM DE L'AJOUT DE CATÉGORIE*/
 				   /**********************************/
@@ -476,24 +486,24 @@ unset($_SESSION['gestionnaire']);
 				   	$reponseMedium = $Cnn->prepare('SELECT * from categorie;');
 					$reponseMedium->execute();
 					echo '<form id="formAllMedium" style="display:none;" method="POST" enctype="multipart/form-data">';
-                   	echo ' <div> <label>Tous les Médiums</label>
-                                    <select class="form-control" id="AllMedium" name="AllMedium" onchange="ajaxModifierMedium();">';
+                   	echo '<div align="center">Tous les Médiums
+                                    <select class="form-control-little" id="AllMedium" name="AllMedium" onchange="ajaxModifierMedium();">';
 					echo '<option id="allMedium0"></option>';
 						while($infoMedium = $reponseMedium->fetch())
 						{
 							echo '<option id="allEtat'.$infoMedium['idCategorie'].'">'.$infoMedium['nomCategorie'].'</option>';
 						}
-						
-						echo '</select><br></div>';//etat	
+						?>
+						</select><br></div>
 									
-                   echo' </form>';//fermeture form
+                   </form>
 				   
-					echo '<form id="formModifierMedium" style="display:none;"  action="modifierMedium.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
-                    echo ' <div> <label>Médium</label>
-                                    <input class="form-control" id="mediumModif" name="mediumModif" placeholder="Entrez le médium"></input><br></div>';//categorie
-				echo '<input type="hidden" id="idMedium" name="idMedium">';			
-                   echo' <div><button type="submit" class="btn tf-btn btn-default">Modifier</button></div>';//button
-                   echo' </form>';//fermeture form
+					<form id="formModifierMedium" style="display:none;"  action="modifierMedium.php?email='.$email.'" method="POST" enctype="multipart/form-data">
+                   <div align="center">Médium <input class="form-control-little" id="mediumModif" name="mediumModif" placeholder="Entrez le médium"></input><br>
+				<input type="hidden" id="idMedium" name="idMedium">			
+                   <button type="submit" class="btn tf-btn btn-default">Modifier</button></div>
+                   </form>
+                   <?PHP
 				   	 /********************************/	
 					/*FIN FORM DE MODIF DE CATÉGORIE*/
 				   /********************************/
@@ -523,11 +533,14 @@ $("#formGestionnaire").validate(
 	{	rules:
 		{	mail: {	required:true,	
 						regex_E:true
+					},
+			password: {	required:true
 					}
 		},
 		messages : { 			mail : {required : 'Le email est obligatoire',
-										regex_E :'Doit etre de format @cegepba.qc.ca',
-								}
+										regex_E :'Doit etre de format @cegepba.qc.ca'
+								},
+								password:{required:'Le mot de pass est obligatoire'}
 					}
 					
 	}
@@ -1026,15 +1039,13 @@ $("#formSprmCommanditaire").validate(
 			$('#formAllMedium').css('display', 'none');
 			$('#formSprmGestionnaire').css('display', 'none');
 		}
-	function ajaxModifierOeuvre()
+	function ajaxModifierOeuvre(id)
 	{ 
-		var e = document.getElementById('allTitre');
-		var selectedIndex = e.options[e.selectedIndex].value;
     	$.ajax({
 				url: "chercherInfosOeuvres.php", 
 				type: 'POST',
 				dataType: 'html',
-				data:{selectedIndex:selectedIndex},
+				data:{id:id},
 				success : function(output)
 		           {
 					   var infos = JSON.parse(output);
@@ -1109,8 +1120,13 @@ function supprimer(idReservation,idOeuvre)
 					},
 		});
 }
+	function menu(){
+	 $('.navbar-default').addClass('on');
+	}
 </script>
 
   </body>
-                    	<?PHP include('includes/Footer.php'); ?>
+  <div style="position:fixed; width:100%;">
+       <?PHP include('includes/Footer.php'); ?>
+       </div>
 </html>

@@ -117,7 +117,7 @@
 				{
 					$Medium = true;
 					$whereGlobal = ' where oeuvres.idOeuvres ="'.$idOeuvre.'";';	
-					if (isset($emprunter))
+					/*if (isset($emprunter))
 					{
 						$sql = 'select idetat from etat where peuxEtreReserve = 1';
 						$infoEtat = $Cnn->prepare($sql);
@@ -152,7 +152,7 @@
 							echo '<h2><strong>'.$emprunter.' une oeuvre</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
 						}
 					}
-					else if (isset($reserver))
+					else*/ if (isset($reserver))
 					{
 						$sql = 'select idetat from etat where peuxEtreReserve = 2';
 						$infoEtat = $Cnn->prepare($sql);
@@ -219,14 +219,14 @@
 				 else if(isset($dimensions))
 				 {
 					 $Medium = true;
-				    echo '<h2><strong>'.$dimensions.'</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
-					echo '
+				    echo '<h2><strong>'.$dimensions.'</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>'; ?>
 					<div align="center">
 					 Hauteur
                                     <input type="number" class="form-control-little" id="hauteur" name="hauteur" placeholder="Hauteur(cm)"></input>Largeur
                                     <input  type="number" class="form-control-little" id="largeur" name="largeur" placeholder="Largeur(cm)"></input>Profondeur
                                     <input  type="number" class="form-control-little" id="profondeur" name="profondeur" placeholder="Profondeur(cm)"></input><br>';
-					echo '<button type="button" class="btn tf-btn btn-notdefault" onclick="RechercherDimensions();">Rechercher</button></div><br><br>';
+					echo '<button type="button" class="btn tf-btn btn-notdefault" onclick="RechercherDimensions();">Rechercher</button></div><br><br>
+                    <?PHP
 					$where = '';
 					$prefixH = '';
 					$prefixL = '';
@@ -307,13 +307,15 @@
 						echo '<th style="text-align:center;" ><a href="img/categorie/'.$infoOeuvres['nomOeuvre'].'" data-lightbox="'.$infoOeuvres['nomOeuvre'].'"><img src="img/categorie/'.$infoOeuvres['nomOeuvre'].'"style="cursor: pointer;	margin-right:50px; max-width:500px; margin-left:50px; border: 3px solid '.$contour.'"></a>';
 						if(!isset($idOeuvre))
 						{
-							if($infoOeuvres['peuxEtreReserve'] == 1)
+							/*if($infoOeuvres['peuxEtreReserve'] == 1)
 							{
 								echo '<a href="oeuvres.php?emprunter=true&idOeuvre='.$infoOeuvres["idOeuvres"].'">  <u><h4>Emprunter cette oeuvre</h4></u> </a>';			
 							}
-							else if($infoOeuvres['peuxEtreReserve'] == 2)
+							else*/ if($infoOeuvres['peuxEtreReserve'] == 2)
 							{
-								echo '<a href="oeuvres.php?reserver=true&idOeuvre='.$infoOeuvres["idOeuvres"].'">  <u><h4>Réserver cette oeuvre</h4></u> </a>';			
+								echo '<form method="post" action="oeuvres.php?reserver=true&idOeuvre='.$infoOeuvres["idOeuvres"].'">
+							  <br><button type="submit" class="btn tf-btn btn-notdefault" />Réserver cette oeuvre </button>
+							</form>';		
 							}
 							else
 							{
@@ -353,25 +355,25 @@
 					else
 					{
 						$bouton = NULL;
-						if (isset($emprunter))
+						/*if (isset($emprunter))
 						{
 							$bouton = $emprunter;
 						}
-						else if(isset($reserver))
+						else*/ if(isset($reserver))
 						{
 							$bouton = $reserver;
 						}
 						?>
 					<form id="infoClient" action="verificationClient.php?type=<?PHP echo $bouton;?>&idOeuvre=<?PHP echo $_GET['idOeuvre'];?>" method="POST">
-                     <div> 
-                      <label>Prenom</label>
-                                    <input class="form-control" id="prenomClient" name="prenomClient" placeholder="Entrez votre prenom"></input>
-                      <label>Nom</label>
-                                    <input class="form-control" id="nomClient" name="nomClient" placeholder="Entrez votre nom"></input>
-                     <label>Local</label>
-                                    <input class="form-control" id="localClient" name="localClient" placeholder="Entrez votre local"></input>               
-                     <label>Email</label>
-                                    <input class="form-control" id="emailClient" name="emailClient" placeholder="Entrez votre adresse Email"></input><br></div>
+                     <div align="center"> <br>
+                      Prenom
+                                    <input class="form-control-little" id="prenomClient" name="prenomClient" placeholder="Entrez votre prenom"></input>
+                      Nom
+                                    <input class="form-control-little" id="nomClient" name="nomClient" placeholder="Entrez votre nom"></input>
+                     Local
+                                    <input class="form-control-little" id="localClient" name="localClient" placeholder="Entrez votre local"></input>               
+                     Email
+                                    <input class="form-control-little" id="emailClient" name="emailClient" placeholder="Entrez votre adresse Email"></input><br></div>
                     <div><button type="submit" class="btn tf-btn btn-default"> <?PHP echo $bouton;?></button></div>
                     </form>
 					<?PHP }

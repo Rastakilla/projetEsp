@@ -1,9 +1,9 @@
 <?PHP
 session_start();
 include('connexionBd.php');
-if (isset($_POST['selectedIndex']) && $_POST['selectedIndex'] != '')
+if (isset($_POST['id']) && $_POST['id'] != '')
 {
-	$sql ='select idOeuvres,nomOeuvre,Auteur,Hauteur,Largeur,Profondeur,Titre,Annee,lieu,description,nomCategorie,NomEtat from oeuvres inner join categorie on oeuvres.idCategorie = categorie.idCategorie inner join etat on oeuvres.idEtat = etat.idetat where Titre ="'.$_POST['selectedIndex'].'";';
+	$sql ='select idOeuvres,nomOeuvre,Auteur,Hauteur,Largeur,Profondeur,Titre,Annee,lieu,description,nomCategorie,NomEtat from oeuvres inner join categorie on oeuvres.idCategorie = categorie.idCategorie inner join etat on oeuvres.idEtat = etat.idetat where idOeuvres ="'.$_POST['id'].'";';
 	$infoOeuvres = $Cnn->prepare($sql);
 	$infoOeuvres->execute();
 	if($oeuvre = $infoOeuvres->fetch())
