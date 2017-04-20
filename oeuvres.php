@@ -224,8 +224,8 @@
 					 Hauteur
                                     <input type="number" class="form-control-little" id="hauteur" name="hauteur" placeholder="Hauteur(cm)"></input>Largeur
                                     <input  type="number" class="form-control-little" id="largeur" name="largeur" placeholder="Largeur(cm)"></input>Profondeur
-                                    <input  type="number" class="form-control-little" id="profondeur" name="profondeur" placeholder="Profondeur(cm)"></input><br>';
-					echo '<button type="button" class="btn tf-btn btn-notdefault" onclick="RechercherDimensions();">Rechercher</button></div><br><br>
+                                    <input  type="number" class="form-control-little" id="profondeur" name="profondeur" placeholder="Profondeur(cm)"></input><br>
+					<button type="button" class="btn tf-btn btn-notdefault" onclick="RechercherDimensions();">Rechercher</button></div><br><br>
                     <?PHP
 					$where = '';
 					$prefixH = '';
@@ -434,10 +434,10 @@ $.validator.addMethod("regex_E",
 		function (value, element){
 				return this.optional(element) || /^[a-zA-Z]+@cegepba\.qc\.ca$/.test(value);
 			});
-$.validator.addMethod("regex_L", 
+/*$.validator.addMethod("regex_L", 
 		function (value, element){
 				return this.optional(element) || /^[A-Z,a-z]-[0-9]{3}$/.test(value);
-			});
+			});*/
 			$.validator.addMethod("regex_N", 
 		function (value, element){
 				return this.optional(element) || /^[0-9]$/.test(value);

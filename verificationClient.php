@@ -51,13 +51,13 @@ else if(isset($_POST['emailClient']) && isset($_POST['nomClient']) && isset($_PO
 					$nb+=1;
 				}
 				
-				
-					$sql = 'insert into reservation (Date,NomPersonneReserve,PrenomPersonneReserve,MailPersonneReserve,Local,idOeuvre,effectif) VALUES(NOW(),"'.$nom.'","'.$prenom.'","'.$mail.'","'.$local.'","'.$idOeuvre.'",0)';
+					$now = date('Y-m-d H:i:s');
+					$sql = 'insert into reservation (Date,NomPersonneReserve,PrenomPersonneReserve,MailPersonneReserve,Local,idOeuvre,effectif) VALUES("'.$now.'","'.$nom.'","'.$prenom.'","'.$mail.'","'.$local.'","'.$idOeuvre.'",0)';
 					$insertEmprunt = $Cnn->prepare($sql);
 					$insertEmprunt->execute();
 				
 				
-				$message = 'Cliquez sur le lien pour finaliser la réservation de l\'oeuvre. Prendre note que vous serrez la personne numéro '.$nb.' dans la liste d\'attente Si vous ne voulez plus celle-ci, ignorez ce message :<a href="localhost/'.$type.'.php?mail='.$mail.'&idOeuvre='.$idOeuvre.'&type='.$type.'">'.$type.'</a>' ;
+				$message = 'Cliquez sur le lien pour finaliser la réservation de l\'oeuvre. Prendre note que vous serrez la personne numéro '.$nb.' dans la liste d\'attente Si vous ne voulez plus celle-ci, ignorez ce message :<a href="localhost/'.$type.'.php?mail='.$mail.'&idOeuvre='.$idOeuvre.'&type='.$type.'&date='.$now.'">'.$type.'</a>' ;
 					/*ENVOIE DU MAIL*/
 			
 				$mail = new PHPMailer;

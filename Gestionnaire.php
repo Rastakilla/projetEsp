@@ -139,7 +139,7 @@ unset($_SESSION['gestionnaire']);
 				   		$reponseReservation = $Cnn->prepare('Select * from reservation where effectif = 1 order by date;');
 						$reponseReservation->execute();
 				  ?> 
-				<form id="formReservation" style="display:none;" enctype="multipart/form-data">'
+				<form id="formReservation" style="display:none;" enctype="multipart/form-data">
 				<div align="center"> <br>
 						<table style="width:95%; margin-left:5%;">
 						  <tr>
@@ -275,7 +275,7 @@ unset($_SESSION['gestionnaire']);
 					Hauteur <input class="form-control-little" id="hauteur" name="hauteur" placeholder="Entrez la hauteur en centimètre"></input>
 					Largeur	<input class="form-control-little" id="largeur" name="largeur" placeholder="Entrez la hauteur en centimètre"></input>
 					Profondeur <input class="form-control-little" id="profondeur" name="profondeur" placeholder="Entrez la profondeur en centimètre"></input>
-					Emplacement	<input class="form-control-little" id="lieu" name="lieu" placeholder="Entrez l\'emplacement(si applicable, local ou endroit)"></input>
+					Emplacement	<input class="form-control-little" id="lieu" name="lieu" placeholder="Entrez l'emplacement(si applicable)"></input>
 				Description	<input class="form-control-little" id="description" name="description" placeholder="Entrez un description (facultatif)"></input>	
 					 Année	<select class="form-control-little" id="annee" name="annee">
 									<option id="annee0"></option>
@@ -354,14 +354,14 @@ unset($_SESSION['gestionnaire']);
 					</table>
 					</div>
 					</form>
-					<form id="formModifierOeuvre" style="display:none;"  action="modifierOeuvre.php?email='.$email.'" method="POST" enctype="multipart/form-data">
+					<form id="formModifierOeuvre" style="display:none;"  action="modifierOeuvre.php?email=<?PHP echo $email;?>" method="POST" enctype="multipart/form-data">
 					<br> <a id ='oeuvreImage' data-lightbox='Oeuvre'><p class = 'color'><b><u>VOIR L'OEUVRE</u></b></p></a>
                     <div align="center"> Auteur  <input class="form-control-little" id="auteurM" name="auteurM" placeholder="Entrez le nom de l\'auteur"></input>
 					 Titre <input class="form-control-little" id="titreM" name="titreM" placeholder="Entrez le titre"></input>
 					Hauteur <input class="form-control-little" id="hauteurM" name="hauteurM" placeholder="Entrez la hauteur en centimètre"></input>
 					Largeur <input class="form-control-little" id="largeurM" name="largeurM" placeholder="Entrez la hauteur en centimètre"></input>
 					Profondeur  <input class="form-control-little" id="profondeurM" name="profondeurM" placeholder="Entrez la profondeur en centimètre"></input>
-					Emplacement  <input class="form-control-little" id="lieuM" name="lieuM" placeholder="Entrez l\'emplacement(si applicable, local ou endroit)"></input>
+					Emplacement  <input class="form-control-little" id="lieuM" name="lieuM" placeholder="Entrez l'emplacement(si applicable)"></input>
 				Description	<input class="form-control-little" id="descriptionM" name="descriptionM" placeholder="Entrez un description (facultatif)"></input>	
 					 Année	<select class="form-control-little" id="anneeM" name="anneeM">
 									<option id="anneeM0"></option>

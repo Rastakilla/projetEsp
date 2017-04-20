@@ -1,7 +1,7 @@
 <?PHP
 session_start();
 include('connexionBd.php');
-if (isset($_GET['mail']) && isset($_GET['idOeuvre'])&& isset($_GET['type']))
+if (isset($_GET['mail']) && isset($_GET['idOeuvre'])&& isset($_GET['type'])&& isset($_GET['date']))
 {
 	$sql = 'select idOeuvre from reservation where MailPersonneReserve ="'.$_GET['mail'].'" and idOeuvre ="'.$_GET['idOeuvre'].'" and effectif = 1;';
 	$infoOeuvre = $Cnn->prepare($sql);
@@ -20,14 +20,7 @@ if (isset($_GET['mail']) && isset($_GET['idOeuvre'])&& isset($_GET['type']))
 		{
 			$mail = $_GET['mail'];
 			$idOeuvre = $_GET['idOeuvre'];
-			$sql = 'Select Date from reservation where MailPersonneReserve ="'.$_GET['mail'].'" and idOeuvre ="'.$_GET['idOeuvre'].'" and effectif=0;';
-			$DateBd;
-			$infoDate = $Cnn->prepare($sql);
-			$infoDate->execute();
-			if ($Date = $infoDate->fetch())
-			{
-				$DateBd = $Date['Date'];
-			}
+			$DateBd = $_GET['date'];
 			date_default_timezone_set('America/New_York');
 			$DateNow = date('Y-m-d H:i:s');
 			$date1Timestamp = strtotime($DateBd);
@@ -37,9 +30,12 @@ if (isset($_GET['mail']) && isset($_GET['idOeuvre'])&& isset($_GET['type']))
 			$difference = $difference/(60*60*24);
 			if ($difference < 1)
 			{
-			$sql = 'update reservation set effectif = 1 where MailPersonneReserve = "'.$_GET['mail'].'" and idOeuvre = "'.$_GET['idOeuvre'].'";';
+			$sql = 'update reservation set effectif = 1 where MailPersonneReserve = "'.$_GET['mail'].'" and idOeuvre = "'.$_GET['idOeuvre'].'" and Date = "'.$DateBd.'";';
 			$insertEmprunt = $Cnn->prepare($sql);
 			$insertEmprunt->execute();
+			/*$sql = 'delete from reservation where MailPersonneReserve ="'.$_GET['mail'].'" and idOeuvre ="'.$_GET['idOeuvre'].'" and effectif=0;';
+				$mettreCommanditaire = $Cnn->prepare($sql);
+				$mettreCommanditaire->execute();*/
 			$_SESSION['type'] = $_GET['type'];
 			header('location:index.php');
 			/* TODO */
@@ -47,7 +43,7 @@ if (isset($_GET['mail']) && isset($_GET['idOeuvre'])&& isset($_GET['type']))
 			}
 			else if ($difference >=1)
 			{
-				$sql = 'delete from reservation where MailPersonneReserve ="'.$_GET['mail'].'" and idOeuvre ="'.$_GET['idOeuvre'].'" and effectif=0;';
+				$sql = 'delete from reservation where MailPersonneReserve ="'.$_GET['mail'].'" and idOeuvre ="'.$_GET['idOeuvre'].'" and effectif=0 and Date="'.$_GET['date'].'";';
 				$mettreCommanditaire = $Cnn->prepare($sql);
 				$mettreCommanditaire->execute();
 				$_SESSION['temps'] = 'Le delai de 24 heures a été dépassé. Une nouvelle demande est nécessaire pour pouvoir réserver l\'oeuvre.';
