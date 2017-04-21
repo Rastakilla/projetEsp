@@ -4,17 +4,13 @@ include('connexionBd.php');
 if (isset($_POST['reservationModif']) && isset($_POST['EtatModif'])&& isset($_POST['idEtat']))
 {
 	$peuxEtreReserve;
-		if ($_POST['reservationModif'] == 'Ne peux être reservée ou empruntée')
+		if ($_POST['reservationModif'] == 'Non')
 		{
 			$peuxEtreReserve = '0';
 		}
-		else if ($_POST['reservationModif'] == 'Peux être empruntée')
+		else if ($_POST['reservationModif'] == 'Oui')
 		{
 			$peuxEtreReserve = '1';
-		}
-		else if ($_POST['reservationModif'] == 'Peux être reservée')
-		{
-			$peuxEtreReserve = '2';
 		}
 	
 	$sql = 'update etat set NomEtat = "'.$_POST["EtatModif"].'",peuxEtreReserve = "'.$peuxEtreReserve.'" where idetat = "'.$_POST["idEtat"].'";';

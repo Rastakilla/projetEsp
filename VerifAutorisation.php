@@ -106,7 +106,7 @@ $("#gestionnaire").validate(
 
 $.validator.addMethod("regex_E", 
 		function (value, element){
-				return this.optional(element) || /^[a-zA-Z]+@cegepba\.qc\.ca$/.test(value);
+				return this.optional(element) || /^[a-zA-Z0-9]+@cegepba\.qc\.ca$/.test(value);
 			});
 </script>
 

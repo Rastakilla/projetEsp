@@ -307,11 +307,7 @@
 						echo '<th style="text-align:center;" ><a href="img/categorie/'.$infoOeuvres['nomOeuvre'].'" data-lightbox="'.$infoOeuvres['nomOeuvre'].'"><img src="img/categorie/'.$infoOeuvres['nomOeuvre'].'"style="cursor: pointer;	margin-right:50px; max-width:500px; margin-left:50px; border: 3px solid '.$contour.'"></a>';
 						if(!isset($idOeuvre))
 						{
-							/*if($infoOeuvres['peuxEtreReserve'] == 1)
-							{
-								echo '<a href="oeuvres.php?emprunter=true&idOeuvre='.$infoOeuvres["idOeuvres"].'">  <u><h4>Emprunter cette oeuvre</h4></u> </a>';			
-							}
-							else*/ if($infoOeuvres['peuxEtreReserve'] == 2)
+							if($infoOeuvres['peuxEtreReserve'] == 1)
 							{
 								echo '<form method="post" action="oeuvres.php?reserver=true&idOeuvre='.$infoOeuvres["idOeuvres"].'">
 							  <br><button type="submit" class="btn tf-btn btn-notdefault" />Réserver cette oeuvre </button>

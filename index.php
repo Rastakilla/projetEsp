@@ -16,7 +16,8 @@
   if(isset($_SESSION['email']) && isset($_SESSION['mdp']) && isset($_SESSION['gestionnaire'])&& $_SESSION['gestionnaire'] = 'ok')
   {?>
 	   <script type="text/javascript">
-		   window.open("http://localhost/Gestionnaire.php",'_blank');
+		  // window.open("http://10.4.1.21/etu13/Gestionnaire.php",'_blank');
+		  window.open("http://localhost/Gestionnaire.php",'_blank');
 	</script>
  <?PHP }
   if (isset($_SESSION['acces']) && $_SESSION['acces'] == 'non')

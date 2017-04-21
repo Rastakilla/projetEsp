@@ -1,6 +1,6 @@
 <?PHP
 session_start();
-require '/PHPMailer/PHPMailerAutoload.php';
+include('PHPMailer/PHPMailerAutoload.php');
 include('connexionBd.php');
 if(!isset($_GET['type']) || !isset($_POST['emailClient']) )
 {
@@ -15,11 +15,7 @@ else if(isset($_POST['emailClient']) && isset($_POST['nomClient']) && isset($_PO
 	$type = $_GET['type'];
 	$idOeuvre = $_GET['idOeuvre'];
 	$message = '';
-	if($type == 'Emprunter')
-	{
-		$message = 'Cliquez sur le lien pour finaliser l\'emprunt de l\'oeuvre. Si vous ne voulez plus celle-ci, ignorez ce message. : '.$type.'.php?mail='.$mail.'&nom='.$nom.'&prenom='.$prenom.'&local='.$local.'&idOeuvre='.$idOeuvre.'&type='.$type;
-	}
-	else if($type == 'Reserver')
+ if($type == 'Reserver')
 	{
 				$sql = 'select count(*) nombre from (SELECT MailPersonneReserve FROM reservation where MailPersonneReserve = "'.$mail.'" and effectif = 1) as nombre;';
 		$infoPersonne = $Cnn->prepare($sql);
@@ -70,7 +66,7 @@ else if(isset($_POST['emailClient']) && isset($_POST['nomClient']) && isset($_PO
 				$mail->SMTPSecure = 'ssl';
 				$mail->Port = 465;
 				$mail->setFrom('infogalerievirtuellecba@gmail.com', 'Réservation GV');
-				$mail->addAddress('cedericnoel@gmail.com');	
+				$mail->addAddress($mail);	
 				$mail->isHTML(true);
 				$mail->CharSet = 'UTF-8';
 				$mail->Subject = 'Réservation sur la Galerie des Arts Visuels';

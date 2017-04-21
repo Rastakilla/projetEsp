@@ -124,6 +124,7 @@ unset($_SESSION['gestionnaire']);
                     
                     	<div id="divRes" style="display:none"><br>
 					<button type="button" class="btn tf-btn btn-notdefault" onclick="voirReservation();">Voir Réservations</button>&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="btn tf-btn btn-notdefault" onclick="voirDeplacements();">Voir Déplacements</button>&nbsp;&nbsp;&nbsp;
 					</div>
                     <style>
                     table, th, td {
@@ -178,6 +179,82 @@ unset($_SESSION['gestionnaire']);
 				   	 /*********************************/	
 					/*FIN  FORM POUR VOIR RESERVATION*/
 				   /*********************************/
+					
+					
+					
+					
+					 /***********************************/	
+					/*DEBUT FORM POUR VOIR DÉPLACEMENTS*/
+				   /***********************************/
+				   		$infoProchaineReservation = $Cnn->prepare('Select * from (select * from reservation where effectif = 1 order by date) as info group by idOeuvre');
+						$infoProchaineReservation->execute();
+				  ?> 
+				<form id="formDeplacement" style="display:none;" enctype="multipart/form-data">
+                <div align="center"> <br>
+						<table style="width:95%; margin-left:5%;">
+						  <tr>
+						  	<th>Oeuvre</th>
+							<th>Local de provenance</th> 
+							<th>Local d'envoie</th>
+							<th>Nouveau Locataire</th>
+						  </tr>
+                          <?PHP
+						  while($Deplacement = $infoProchaineReservation->fetch())
+						  {
+							  echo '<tr>';
+							  echo '<th>'.$Deplacement["idOeuvre"].'</th>';
+						 	 $infoEmprunt = $Cnn->prepare('select * from emprunt where idOeuvre = '.$Deplacement["idOeuvre"].';');
+						  	$infoEmprunt->execute();
+							echo '<th>';
+							if ($Emprunt = $infoEmprunt->fetch())
+							{
+								echo $Emprunt['Local'];
+							}
+							else
+							{
+								echo 'Lentrepot';// faire ici le local de loeuvre directement
+							}
+							echo '<th>'.$Deplacement['Local'].'</th>';
+							echo '<th>'.$Deplacement['PrenomPersonneReserve'].' '.$Deplacement['NomPersonneReserve'].'</th>';
+							echo '</th>';
+							echo '</tr>';
+						  }
+						  
+						  
+						  
+						  
+						  
+						  
+						  
+						  
+						   /*
+						  $path = '';
+						  $titre = '';
+						while ($infoReservation = $reponseReservation->fetch())
+						{
+							$reponseOeuvre = $Cnn->prepare('Select Titre,nomOeuvre from oeuvres where idOeuvres = '.$infoReservation["idOeuvre"].';');
+							$reponseOeuvre->execute();
+							if ($oeuvre = $reponseOeuvre->fetch())
+							{
+								$path = $oeuvre["nomOeuvre"];
+								$titre = $oeuvre["Titre"];
+							}
+						echo ' <tr>
+						  	<th>'.$titre.'</th>
+							<th>'.$infoReservation["NomPersonneReserve"].'</th>
+							<th>'.$infoReservation["PrenomPersonneReserve"].'</th>
+							<th>'.$infoReservation["MailPersonneReserve"].'</th>
+							<th>'.$infoReservation["Local"].'</th>
+							<th>'.$infoReservation["Date"].'</th>';
+							echo ' <th><img src=img/trash.png style="width:30%; cursor:pointer;" onClick="supprimer('.$infoReservation["idReservation"].','.$infoReservation["idOeuvre"].')"></th>
+						  </tr>';
+						} */
+					 
+                    echo '</table></div>';
+					echo '</form>';//fermeture form*/
+				   	 /**********************************/	
+					/*FIN  FORM POUR VOIR DÉPLACEMENTS*/
+				   /**********************************/
 					
 					
 					
@@ -413,9 +490,8 @@ unset($_SESSION['gestionnaire']);
 									
 				 Réservation <b><i>Indiquez si cette état permet la réservation.</i></b> <select class="form-control-little" id="reservation" name="reservation"><br>
 					 <option id="blind"></option>
-						<option id="0">Ne peux être reservée ou empruntée</option>
-						<option id="1">Peux être empruntée</option>
-						<option id="2">Peux être reservée</option>
+						<option id="0">Non</option>
+						<option id="1">Oui</option>
 				</select><br>
 									
                   <button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>
@@ -450,9 +526,8 @@ unset($_SESSION['gestionnaire']);
 				  
 				   <form id="formModifierEtat" style="display:none;"  action="modifierEtat.php?email=<?PHP echo $email;?>" method="POST" enctype="multipart/form-data">
 				   	<div align="center">État <input class="form-control-little" id="EtatModif" name="EtatModif" placeholder="Entrez l\'état"></input>  Réservation <b><i>Indiquez si cette état permet la réservation.</i></b> <select class="form-control-little" id="reservationModif" name="reservationModif"><br>
-						<option id="0">Ne peux être reservée ou empruntée</option>
-						<option id="1">Peux être empruntée</option>
-						<option id="2">Peux être reservée</option>
+						<option id="0">Non</option>
+						<option id="1">Oui</option>
 				</select><br>
                         <input type="hidden" id="idEtat" name="idEtat">
                         <button type="submit" class="btn tf-btn btn-default">Modifier</button></div>
@@ -691,6 +766,7 @@ $("#formSprmCommanditaire").validate(
 			$('#formAllMedium').css('display', 'none');
 			$('#divRes').css('display', 'none');
 			$('#formReservation').css('display', 'none');
+			$('#formDeplacement').css('display', 'none');
 		}	
 		function reservation() {
 			$('#divRes').slideToggle("slow", function () {
@@ -734,6 +810,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllMedium').css('display', 'none');
 			 $('#divRes').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
+			 $('#formDeplacement').css('display', 'none');
 		}
 			function oeuvre() {
 			$('#divOv').slideToggle("slow", function () {
@@ -755,6 +832,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllMedium').css('display', 'none');
 			 $('#divRes').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
+			 $('#formDeplacement').css('display', 'none');
 		}
 		function etat() {
 			$('#divEtat').slideToggle("slow", function () {
@@ -775,6 +853,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllMedium').css('display', 'none');
 			 $('#divRes').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
+			 $('#formDeplacement').css('display', 'none');
 		}
 		function categorie() {
 			$('#divCat').slideToggle("slow", function () {
@@ -795,6 +874,7 @@ $("#formSprmCommanditaire").validate(
 			$('#formAllEtat').css('display', 'none');
 			$('#divRes').css('display', 'none');
 			$('#formReservation').css('display', 'none');
+			$('#formDeplacement').css('display', 'none');
 		}
 		
 	function ajouterCommanditaire() {
@@ -813,6 +893,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllEtat').css('display', 'none');
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
+			 $('#formDeplacement').css('display', 'none');
 		}
 		function ajouterGestionnaire() {
 			$('#formGestionnaire').slideToggle("slow", function () {
@@ -830,6 +911,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllEtat').css('display', 'none');
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
+			 $('#formDeplacement').css('display', 'none');
 		}
 		function ajouterOeuvre() {
 			$('#formAjouterOeuvre').slideToggle("slow", function () {
@@ -847,6 +929,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllEtat').css('display', 'none');
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
+			 $('#formDeplacement').css('display', 'none');
 		}
 		function afficherTitre() {
 			$('#formAllTitre').slideToggle("slow", function () {
@@ -864,6 +947,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllEtat').css('display', 'none');
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
+			 $('#formDeplacement').css('display', 'none');
 		}
 		function modifierOeuvre() {
 			$('#formModifierOeuvre').slideToggle("slow", function () {
@@ -881,6 +965,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllEtat').css('display', 'none');
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
+			 $('#formDeplacement').css('display', 'none');
 		}
 		function ajouterEtat() {
 			$('#formEtat').slideToggle("slow", function () {
@@ -898,6 +983,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllEtat').css('display', 'none');
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
+			 $('#formDeplacement').css('display', 'none');
 		}
 		function ajouterCategorie() {
 			$('#formCategorie').slideToggle("slow", function () {
@@ -915,6 +1001,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllEtat').css('display', 'none');
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
+			 $('#formDeplacement').css('display', 'none');
 		}
 		function sprmCommanditaire(){
 				$('#formSprmCommanditaire').slideToggle("slow", function () {
@@ -932,6 +1019,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllEtat').css('display', 'none');
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
+			 $('#formDeplacement').css('display', 'none');
 		}
 		function modifierEtat(){
 				$('#formModifierEtat').slideToggle("slow", function () {
@@ -949,6 +1037,7 @@ $("#formSprmCommanditaire").validate(
 			$('#formAllEtat').css('display', 'none');
 			$('#formAllMedium').css('display', 'none');
 			$('#formReservation').css('display', 'none');
+			$('#formDeplacement').css('display', 'none');
 		}
 		function afficherEtat(){
 				$('#formAllEtat').slideToggle("slow", function () {
@@ -966,6 +1055,7 @@ $("#formSprmCommanditaire").validate(
 			$('#formSprmGestionnaire').css('display', 'none');
 			$('#formAllMedium').css('display', 'none');
 			$('#formReservation').css('display', 'none');
+			$('#formDeplacement').css('display', 'none');
 		}
 		function modifierMedium(){
 				$('#formModifierMedium').slideToggle("slow", function () {
@@ -984,6 +1074,7 @@ $("#formSprmCommanditaire").validate(
 			$('#formAllEtat').css('display', 'none');
 			$('#formAllMedium').css('display', 'none');
 			$('#formReservation').css('display', 'none');
+			$('#formDeplacement').css('display', 'none');
 		}
 		
 		function afficherMedium(){
@@ -1003,6 +1094,7 @@ $("#formSprmCommanditaire").validate(
 			$('#formAllEtat').css('display', 'none');
 			$('#formModifierMedium').css('display', 'none');
 			$('#formReservation').css('display', 'none');
+			$('#formDeplacement').css('display', 'none');
 		}
 			function sprmGestionnaire(){
 				$('#formSprmGestionnaire').slideToggle("slow", function () {
@@ -1020,11 +1112,31 @@ $("#formSprmCommanditaire").validate(
 			$('#formAllEtat').css('display', 'none');
 			$('#formAllMedium').css('display', 'none');
 			$('#formReservation').css('display', 'none');
+			$('#formDeplacement').css('display', 'none');
 		}
 		
 		function voirReservation(){
 				$('#formReservation').slideToggle("slow", function () {
 			});
+			$('#formModifierMedium').css('display', 'none')
+			$('#formModifierEtat').css('display', 'none');
+			$('#formEtat').css('display', 'none');
+			$('#formAjoutCommanditaire').css('display', 'none');
+			$('#formGestionnaire').css('display', 'none');
+			$('#formAjouterOeuvre').css('display', 'none');
+			$('#formEtat').css('display', 'none');
+			$('#formModifierOeuvre').css('display', 'none');
+			$('#formAllTitre').css('display', 'none');
+			$('#formSprmCommanditaire').css('display', 'none');
+			$('#formAllEtat').css('display', 'none');
+			$('#formAllMedium').css('display', 'none');
+			$('#formSprmGestionnaire').css('display', 'none');
+			$('#formDeplacement').css('display', 'none');
+		}	
+		function voirDeplacements(){
+				$('#formDeplacement').slideToggle("slow", function () {
+			});formDeplacement
+			$('#formReservation').css('display', 'none');
 			$('#formModifierMedium').css('display', 'none')
 			$('#formModifierEtat').css('display', 'none');
 			$('#formEtat').css('display', 'none');

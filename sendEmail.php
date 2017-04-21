@@ -1,5 +1,5 @@
 <?php 
-require '/PHPMailer/PHPMailerAutoload.php';
+include ('/PHPMailer/PHPMailerAutoload.php');
 echo $_POST['vMail'];
 echo $_POST['vMessage'];
 if (isset($_POST['vMail']) && isset($_POST['vMessage'])) 

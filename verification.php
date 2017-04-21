@@ -1,6 +1,6 @@
 <?PHP
 session_start();
-require '/PHPMailer/PHPMailerAutoload.php';
+include('/PHPMailer/PHPMailerAutoload.php');
 include('connexionBd.php');
 if(!isset($_POST['email']) && !isset($_POST['mdp']))
 {
