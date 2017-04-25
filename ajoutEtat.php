@@ -8,7 +8,11 @@ if (isset($_POST['etat']) && htmlentities($_POST['etat']) && isset($_POST['reser
 		{
 			$peuxEtreReserve = '0';
 		}
-		else if ($_POST['reservation'] == 'Oui')
+		else if ($_POST['reservation'] == 'Permet la réservation')
+		{
+			$peuxEtreReserve = '2';
+		}
+		else if ($_POST['reservation'] == "Permet l'emprunt")
 		{
 			$peuxEtreReserve = '1';
 		}

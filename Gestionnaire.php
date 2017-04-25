@@ -90,7 +90,7 @@ unset($_SESSION['gestionnaire']);
 					 <button type="button" class="btn tf-btn btn-notdefault" onclick="etat();">État</button>&nbsp;&nbsp;&nbsp;
 					<button type="button" class="btn tf-btn btn-notdefault" onclick="categorie();">Médium</button>&nbsp;&nbsp;&nbsp;					
                     <button type="button" class="btn tf-btn btn-notdefault" onclick="reservation();">Réservation</button>&nbsp;&nbsp;&nbsp;
-					 <button type="button" class="btn tf-btn btn-notdefault" onclick="gestionnaire();">Gestionnaire</button>&nbsp;&nbsp;&nbsp;
+					 <button type="button" class="btn tf-btn btn-notdefault" onclick="emprunt();">Emprunt</button>&nbsp;&nbsp;&nbsp;
 					<button type="button" class="btn tf-btn btn-notdefault" onclick="commanditaire();">Commanditaire</button>&nbsp;&nbsp;&nbsp;
 
 					</div>
@@ -102,9 +102,8 @@ unset($_SESSION['gestionnaire']);
 					<button type="button" class="btn tf-btn btn-notdefault" onclick="sprmCommanditaire();">Supprimer Commanditaire</button>&nbsp;&nbsp;&nbsp;
 					 </div>
 					  				
-					  <div id="divGes" style="display:none"><br>
-					<button type="button" class="btn tf-btn btn-notdefault" onclick="ajouterGestionnaire();">Ajouter Gestionnaire</button>&nbsp;&nbsp;&nbsp;
-					 <button type="button" class="btn tf-btn btn-notdefault" onclick="sprmGestionnaire();">Supprimer Gestionnaire</button>&nbsp;&nbsp;&nbsp;
+					  <div id="divEmprunt" style="display:none"><br>
+					<button type="button" class="btn tf-btn btn-notdefault" onclick="voirEmprunt();">Voir Emprunts</button>&nbsp;&nbsp;&nbsp;
 					 </div>
 					 
 					 <div id="divOv" style="display:none"><br>
@@ -165,13 +164,13 @@ unset($_SESSION['gestionnaire']);
 								$titre = $oeuvre["Titre"];
 							}
 						echo ' <tr>
-						  	<th>'.$titre.'</th>
+						  	<th><a href="img/categorie/'.$path.'" data-lightbox="'.$path.'"><u>'.$titre.'</u></a></th>
 							<th>'.$infoReservation["NomPersonneReserve"].'</th>
 							<th>'.$infoReservation["PrenomPersonneReserve"].'</th>
 							<th>'.$infoReservation["MailPersonneReserve"].'</th>
 							<th>'.$infoReservation["Local"].'</th>
 							<th>'.$infoReservation["Date"].'</th>';
-							echo ' <th><img src=img/trash.png style="width:30%; cursor:pointer;" onClick="supprimer('.$infoReservation["idReservation"].','.$infoReservation["idOeuvre"].')"></th>
+							echo ' <th><img src=img/trash.png style="width:30%; cursor:pointer;" onClick="supprimer('.$infoReservation["idReservation"].')"></th>
 						  </tr>';
 						} 
 					 
@@ -201,8 +200,16 @@ unset($_SESSION['gestionnaire']);
                           <?PHP
 						  while($Deplacement = $infoProchaineReservation->fetch())
 						  {
+							  $sql2 = 'select * from Oeuvres where idOeuvres = '.$Deplacement["idOeuvre"].';';
+							  $infoOeuvre = $Cnn->prepare($sql2);
+							  $infoOeuvre->execute();
 							  echo '<tr>';
-							  echo '<th>'.$Deplacement["idOeuvre"].'</th>';
+							  echo '<th>';
+							 if ($Oeuvre = $infoOeuvre->fetch())
+							{
+								echo '<a href="img/categorie/'.$Oeuvre['nomOeuvre'].'" data-lightbox="'.$Oeuvre['nomOeuvre'].'"><img src="img/categorie/'.$Oeuvre['nomOeuvre'].'"style="cursor: pointer;max-width:125px;margin-right:-100px;"></a>';
+							}
+							  echo'</th>';
 						 	 $infoEmprunt = $Cnn->prepare('select * from emprunt where idOeuvre = '.$Deplacement["idOeuvre"].';');
 						  	$infoEmprunt->execute();
 							echo '<th>';
@@ -212,43 +219,16 @@ unset($_SESSION['gestionnaire']);
 							}
 							else
 							{
-								echo 'Lentrepot';// faire ici le local de loeuvre directement
+								if ($Oeuvre = $infoOeuvre->fetch())
+								{
+									echo $Oeuvre['Local'];
+								}
 							}
 							echo '<th>'.$Deplacement['Local'].'</th>';
 							echo '<th>'.$Deplacement['PrenomPersonneReserve'].' '.$Deplacement['NomPersonneReserve'].'</th>';
 							echo '</th>';
 							echo '</tr>';
 						  }
-						  
-						  
-						  
-						  
-						  
-						  
-						  
-						  
-						   /*
-						  $path = '';
-						  $titre = '';
-						while ($infoReservation = $reponseReservation->fetch())
-						{
-							$reponseOeuvre = $Cnn->prepare('Select Titre,nomOeuvre from oeuvres where idOeuvres = '.$infoReservation["idOeuvre"].';');
-							$reponseOeuvre->execute();
-							if ($oeuvre = $reponseOeuvre->fetch())
-							{
-								$path = $oeuvre["nomOeuvre"];
-								$titre = $oeuvre["Titre"];
-							}
-						echo ' <tr>
-						  	<th>'.$titre.'</th>
-							<th>'.$infoReservation["NomPersonneReserve"].'</th>
-							<th>'.$infoReservation["PrenomPersonneReserve"].'</th>
-							<th>'.$infoReservation["MailPersonneReserve"].'</th>
-							<th>'.$infoReservation["Local"].'</th>
-							<th>'.$infoReservation["Date"].'</th>';
-							echo ' <th><img src=img/trash.png style="width:30%; cursor:pointer;" onClick="supprimer('.$infoReservation["idReservation"].','.$infoReservation["idOeuvre"].')"></th>
-						  </tr>';
-						} */
 					 
                     echo '</table></div>';
 					echo '</form>';//fermeture form*/
@@ -296,51 +276,53 @@ unset($_SESSION['gestionnaire']);
 					/*FIN FORM DE DELETE DE COMMANDITAIRE*/
 				   /*************************************/
 					
-					 /***************************************/	
-					/*DEBUT FORM DE L'AJOUT DE GESTIONNAIRE*/
-				   /***************************************/
+					 /******************************/	
+					/*DEBUT FORM POUR VOIR EMPRUNT*/
+				   /******************************/
+				   				   		$reponseEmprunt = $Cnn->prepare('Select * from emprunt where confirme = 1 order by date;');
+						$reponseEmprunt->execute();
+				   
 				   ?>
-					<form id="formGestionnaire" style="display:none;" action="ajoutGestionnaire.php?email=<?PHP echo $email;?>" method="POST" enctype="multipart/form-data">
-                    <div align="center">
-                    Email<input class="form-control-little" id="mail" name="mail" placeholder="Entrez le email du gestionnaire"></input><br>
-				Mot de passe <input type	="password" class="form-control-little" id="password" name="password" placeholder="Entrez le mot de passe du gestionnaire"></input><br>
-									
-                   <button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>
-                   </form>
-                   <?PHP
-				   	 /*************************************/	
-					/*FIN FORM DE L'AJOUT DE GESTIONNAIRE*/
-				   /*************************************/
-				   
-				   
-				   	/*************************************/	
-					/*DEBUT FORM DE SPRM DE GESTIONNAIRE*/
-				   /************************************/
-
-				   $sql = 'select * from gestionnaire';
-				   $reponseSprmGestionnaire = $Cnn->prepare($sql);
-				   $reponseSprmGestionnaire->execute();
-				   
-				   					echo '<form id="formSprmGestionnaire" style="display:none;" action="sprmGestionnaire.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
-					
-							echo ' <div align="center"> Email
-                                    <select class="form-control-little" id="sprmEmail" name="sprmEmail">';
-					echo '<option id="sprmEmail0"></option>';
-						while($infoSprmGestionnaire = $reponseSprmGestionnaire->fetch())
+					<form id="formEmprunt" style="display:none;" enctype="multipart/form-data">
+				<div align="center"> <br>
+						<table style="width:95%; margin-left:5%;">
+						  <tr>
+						  	<th>Oeuvre</th>
+							<th>Nom</th> 
+							<th>Prenom</th>
+							<th>Mail</th>
+							<th>Local</th>
+							<th>Date</th>
+							<th>Supprimer</th>
+						  </tr>
+                          <?PHP
+						  $path = '';
+						  $titre = '';
+						while ($infoEmprunt = $reponseEmprunt->fetch())
 						{
-							echo '<option id="etat'.$infoSprmGestionnaire['idgestionnaire'].'">'.$infoSprmGestionnaire['email'].'</option>';
-						}
-						?>
-						
-						</select><br>
-						
-						<button type="submit" class="btn tf-btn btn-default">Supprimer</button></div>
-						
-						 </form>
-					<?PHP
-					 /**********************************/	
-					/*FIN FORM DE SPRM DE GESTIONNAIRE*/
-				   /**********************************/
+							$reponseOeuvre = $Cnn->prepare('Select Titre,nomOeuvre from oeuvres where idOeuvres = '.$infoEmprunt["idOeuvre"].';');
+							$reponseOeuvre->execute();
+							if ($oeuvre = $reponseOeuvre->fetch())
+							{
+								$path = $oeuvre["nomOeuvre"];
+								$titre = $oeuvre["Titre"];
+							}
+						echo ' <tr>
+						<th><a href="img/categorie/'.$path.'" data-lightbox="'.$path.'"><u>'.$titre.'</u></a></th>
+							<th>'.$infoEmprunt["NomPersonneEmprunt"].'</th>
+							<th>'.$infoEmprunt["PrenomPersonneEmprunt"].'</th>
+							<th>'.$infoEmprunt["MailPersonneEmprunt"].'</th>
+							<th>'.$infoEmprunt["Local"].'</th>
+							<th>'.$infoEmprunt["Date"].'</th>';
+							echo ' <th><img src=img/trash.png style="width:30%; cursor:pointer;" onClick="supprimerEmprunt('.$infoEmprunt["idEmprunt"].','.$infoEmprunt["idOeuvre"].')"></th>
+						  </tr>';
+						} 
+					 
+                    echo '</table></div></form>';//fermeture form
+				   	 /****************************/	
+					/*FIN FORM POUR VOIR EMPRUNT*/
+				   /****************************/
+				    			 
 					
 					/*********************************/	
 					/*DEBUT FORM DE L'AJOUT D'OEUVRES*/
@@ -486,12 +468,13 @@ unset($_SESSION['gestionnaire']);
 					echo '<form id="formEtat" style="display:none;"  action="ajoutEtat.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
 					?>
                     <div align="center"> État
-                                    <input class="form-control-little" id="etat" name="etat" placeholder="Entrez l\'état"></input><br>
+                                    <input class="form-control-little" id="etat" name="etat" placeholder="Entrez l'état"></input><br>
 									
-				 Réservation <b><i>Indiquez si cette état permet la réservation.</i></b> <select class="form-control-little" id="reservation" name="reservation"><br>
+				<b><i>Indiquez si cette état permet l'emprunt ou la réservation.</i></b> <select class="form-control-little" id="reservation" name="reservation"><br>
 					 <option id="blind"></option>
 						<option id="0">Non</option>
-						<option id="1">Oui</option>
+						<option id="1">Permet l'emprunt</option>
+                        <option id="2">Permet la réservation</option>
 				</select><br>
 									
                   <button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>
@@ -525,9 +508,11 @@ unset($_SESSION['gestionnaire']);
 				  
 				  
 				   <form id="formModifierEtat" style="display:none;"  action="modifierEtat.php?email=<?PHP echo $email;?>" method="POST" enctype="multipart/form-data">
-				   	<div align="center">État <input class="form-control-little" id="EtatModif" name="EtatModif" placeholder="Entrez l\'état"></input>  Réservation <b><i>Indiquez si cette état permet la réservation.</i></b> <select class="form-control-little" id="reservationModif" name="reservationModif"><br>
+				   	<div align="center">État <input class="form-control-little" id="EtatModif" name="EtatModif" placeholder="Entrez l'état"></input> <b><i>Indiquez si cette état permet l'emprunt ou la réservation.</i></b> <select class="form-control-little" id="reservationModif" name="reservationModif"><br>
 						<option id="0">Non</option>
-						<option id="1">Oui</option>
+                        <option id="1">Permet l'emprunt</option>
+                        <option id="2">Permet la réservation</option>
+						
 				</select><br>
                         <input type="hidden" id="idEtat" name="idEtat">
                         <button type="submit" class="btn tf-btn btn-default">Modifier</button></div>
@@ -604,7 +589,7 @@ unset($_SESSION['gestionnaire']);
 <script type="text/javascript" src="jquery-validation-1.15.0/dist/jquery.validate.min.js"></script>
 <script type="text/javascript" src="jquery-validation-1.15.0/dist/localization/messages_fr.js"></script>
     <script>
-$("#formGestionnaire").validate(
+$("#formEmprunt").validate(
 	{	rules:
 		{	mail: {	required:true,	
 						regex_E:true
@@ -707,7 +692,7 @@ $("#formEtat").validate(
 					}
 		},
 		messages : { 			etat : {required : 'L\'état est obligatoire'},
-								reservation : {required : 'La possibilité de réservation est obligatoire'}
+								reservation : {required : 'La possibilité est obligatoire'}
 					}
 					
 	}
@@ -749,11 +734,11 @@ $("#formSprmCommanditaire").validate(
 	function commanditaire() {
 			$('#divCom').slideToggle("slow", function () {
 			});
-			$('#divGes').css('display', 'none');
+			$('#divEmprunt').css('display', 'none');
 			 $('#divOv').css('display', 'none');
 			 $('#divEtat').css('display', 'none');
 			 $('#divCat').css('display', 'none');
-			 $('#formGestionnaire').css('display', 'none');
+			 $('#formEmprunt').css('display', 'none');
 			 $('#formAjouterOeuvre').css('display', 'none');
 			 $('#formEtat').css('display', 'none');
 			 $('#formCategorie').css('display', 'none');
@@ -761,7 +746,6 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllTitre').css('display', 'none');
 			 $('#formModifierEtat').css('display', 'none');
 			 $('#formModifierMedium').css('display', 'none');
-			 $('#formSprmGestionnaire').css('display', 'none');
 			$('#formAllEtat').css('display', 'none');
 			$('#formAllMedium').css('display', 'none');
 			$('#divRes').css('display', 'none');
@@ -772,11 +756,11 @@ $("#formSprmCommanditaire").validate(
 			$('#divRes').slideToggle("slow", function () {
 			});
 			$('#divCom').css('display', 'none');
-			$('#divGes').css('display', 'none');
+			$('#divEmprunt').css('display', 'none');
 			 $('#divOv').css('display', 'none');
 			 $('#divEtat').css('display', 'none');
 			 $('#divCat').css('display', 'none');
-			 $('#formGestionnaire').css('display', 'none');
+			 $('#formEmprunt').css('display', 'none');
 			 $('#formAjouterOeuvre').css('display', 'none');
 			 $('#formEtat').css('display', 'none');
 			 $('#formCategorie').css('display', 'none');
@@ -784,14 +768,13 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllTitre').css('display', 'none');
 			 $('#formModifierEtat').css('display', 'none');
 			 $('#formModifierMedium').css('display', 'none');
-			 $('#formSprmGestionnaire').css('display', 'none');
 			$('#formAllEtat').css('display', 'none');
 			$('#formAllMedium').css('display', 'none');
 			$('#formAjoutCommanditaire').css('display', 'none');
 		    $('#formSprmCommanditaire').css('display', 'none');
 		}	
-		function gestionnaire() {
-			$('#divGes').slideToggle("slow", function () {
+		function emprunt() {
+			$('#divEmprunt').slideToggle("slow", function () {
 			});
 			$('#divCom').css('display', 'none');
 			 $('#divOv').css('display', 'none');
@@ -815,19 +798,18 @@ $("#formSprmCommanditaire").validate(
 			function oeuvre() {
 			$('#divOv').slideToggle("slow", function () {
 			});
-			$('#divGes').css('display', 'none');
+			$('#divEmprunt').css('display', 'none');
 			 $('#divCom').css('display', 'none');
 			 $('#divEtat').css('display', 'none');
 			 $('#divCat').css('display', 'none');
 			 $('#formAjoutCommanditaire').css('display', 'none');
-			 $('#formGestionnaire').css('display', 'none');
+			 $('#formEmprunt').css('display', 'none');
 			 $('#formEtat').css('display', 'none');
 			 $('#formCategorie').css('display', 'none');
 			  $('#formAllTitre').css('display', 'none');
 			  $('#formSprmCommanditaire').css('display', 'none');
 			  $('#formModifierEtat').css('display', 'none');
 			 $('#formModifierMedium').css('display', 'none');
-			 $('#formSprmGestionnaire').css('display', 'none');
 			 $('#formAllEtat').css('display', 'none');
 			 $('#formAllMedium').css('display', 'none');
 			 $('#divRes').css('display', 'none');
@@ -837,19 +819,18 @@ $("#formSprmCommanditaire").validate(
 		function etat() {
 			$('#divEtat').slideToggle("slow", function () {
 			});
-			$('#divGes').css('display', 'none');
+			$('#divEmprunt').css('display', 'none');
 			 $('#divOv').css('display', 'none');
 			 $('#divCom').css('display', 'none');
 			 $('#divCat').css('display', 'none');
 			$('#formAjoutCommanditaire').css('display', 'none');
 			$('#formCategorie').css('display', 'none');
-			$('#formGestionnaire').css('display', 'none');
+			$('#formEmprunt').css('display', 'none');
 			 $('#formAjouterOeuvre').css('display', 'none');
 			 $('#formModifierOeuvre').css('display', 'none');
 			 $('#formAllTitre').css('display', 'none');
 			 $('#formSprmCommanditaire').css('display', 'none');
 			 $('#formModifierMedium').css('display', 'none');
-			 $('#formSprmGestionnaire').css('display', 'none');
 			 $('#formAllMedium').css('display', 'none');
 			 $('#divRes').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
@@ -858,29 +839,27 @@ $("#formSprmCommanditaire").validate(
 		function categorie() {
 			$('#divCat').slideToggle("slow", function () {
 			});
-			$('#divGes').css('display', 'none');
+			$('#divEmprunt').css('display', 'none');
 			 $('#divOv').css('display', 'none');
 			 $('#divEtat').css('display', 'none');
 			 $('#divCom').css('display', 'none');
 			 $('#formAjoutCommanditaire').css('display', 'none');
-			$('#formGestionnaire').css('display', 'none');
+			$('#formEmprunt').css('display', 'none');
 			$('#formAjouterOeuvre').css('display', 'none');
 			$('#formEtat').css('display', 'none');
 			$('#formModifierOeuvre').css('display', 'none');
 			$('#formAllTitre').css('display', 'none');
 			$('#formSprmCommanditaire').css('display', 'none');
 			$('#formModifierEtat').css('display', 'none');
-			$('#formSprmGestionnaire').css('display', 'none');
 			$('#formAllEtat').css('display', 'none');
 			$('#divRes').css('display', 'none');
 			$('#formReservation').css('display', 'none');
 			$('#formDeplacement').css('display', 'none');
 		}
 		
-	function ajouterCommanditaire() {
-			$('#formAjoutCommanditaire').slideToggle("slow", function () {
+	function voirEmprunt() {
+			$('#formEmprunt').slideToggle("slow", function () {
 			});
-			$('#formGestionnaire').css('display', 'none');
 			 $('#formAjouterOeuvre').css('display', 'none');
 			 $('#formEtat').css('display', 'none');
 			 $('#formCategorie').css('display', 'none');
@@ -889,25 +868,6 @@ $("#formSprmCommanditaire").validate(
 			 $('#formSprmCommanditaire').css('display', 'none');
 		     $('#formModifierEtat').css('display', 'none');
 			 $('#formModifierMedium').css('display', 'none');
-			 $('#formSprmGestionnaire').css('display', 'none');
-			 $('#formAllEtat').css('display', 'none');
-			 $('#formAllMedium').css('display', 'none');
-			 $('#formReservation').css('display', 'none');
-			 $('#formDeplacement').css('display', 'none');
-		}
-		function ajouterGestionnaire() {
-			$('#formGestionnaire').slideToggle("slow", function () {
-			});
-			$('#formAjoutCommanditaire').css('display', 'none');
-			 $('#formAjouterOeuvre').css('display', 'none');
-			 $('#formEtat').css('display', 'none');
-			 $('#formCategorie').css('display', 'none');
-			 $('#formModifierOeuvre').css('display', 'none');
-			 $('#formAllTitre').css('display', 'none');
-			 $('#formSprmCommanditaire').css('display', 'none');
-			 $('#formModifierEtat').css('display', 'none');
-			 $('#formModifierMedium').css('display', 'none');
-			 $('#formSprmGestionnaire').css('display', 'none');
 			 $('#formAllEtat').css('display', 'none');
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
@@ -917,7 +877,7 @@ $("#formSprmCommanditaire").validate(
 			$('#formAjouterOeuvre').slideToggle("slow", function () {
 			});
 			$('#formAjoutCommanditaire').css('display', 'none');
-			 $('#formGestionnaire').css('display', 'none');
+			 $('#formEmprunt').css('display', 'none');
 			 $('#formEtat').css('display', 'none');
 			 $('#formCategorie').css('display', 'none');
 			 $('#formModifierOeuvre').css('display', 'none');
@@ -925,7 +885,6 @@ $("#formSprmCommanditaire").validate(
 			 $('#formSprmCommanditaire').css('display', 'none');
 			$('#formModifierEtat').css('display', 'none');
 			 $('#formModifierMedium').css('display', 'none');
-			 $('#formSprmGestionnaire').css('display', 'none');
 			 $('#formAllEtat').css('display', 'none');
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
@@ -935,7 +894,7 @@ $("#formSprmCommanditaire").validate(
 			$('#formAllTitre').slideToggle("slow", function () {
 			});
 			$('#formAjoutCommanditaire').css('display', 'none');
-			 $('#formGestionnaire').css('display', 'none');
+			 $('#formEmprunt').css('display', 'none');
 			 $('#formEtat').css('display', 'none');
 			 $('#formCategorie').css('display', 'none');
 			  $('#formAjouterOeuvre').css('display', 'none');
@@ -943,7 +902,6 @@ $("#formSprmCommanditaire").validate(
 			  $('#formSprmCommanditaire').css('display', 'none');
 			  $('#formModifierEtat').css('display', 'none');
 			 $('#formModifierMedium').css('display', 'none');
-			 $('#formSprmGestionnaire').css('display', 'none');
 			 $('#formAllEtat').css('display', 'none');
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
@@ -953,7 +911,7 @@ $("#formSprmCommanditaire").validate(
 			$('#formModifierOeuvre').slideToggle("slow", function () {
 			});
 			$('#formAjoutCommanditaire').css('display', 'none');
-			 $('#formGestionnaire').css('display', 'none');
+			 $('#formEmprunt').css('display', 'none');
 			 $('#formEtat').css('display', 'none');
 			 $('#formCategorie').css('display', 'none');
 			  $('#formAjouterOeuvre').css('display', 'none');
@@ -961,7 +919,6 @@ $("#formSprmCommanditaire").validate(
 			  $('#formSprmCommanditaire').css('display', 'none');
 			  $('#formModifierEtat').css('display', 'none');
 			 $('#formModifierMedium').css('display', 'none');
-			 $('#formSprmGestionnaire').css('display', 'none');
 			 $('#formAllEtat').css('display', 'none');
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
@@ -972,14 +929,13 @@ $("#formSprmCommanditaire").validate(
 			});
 			$('#formAjoutCommanditaire').css('display', 'none');
 			$('#formCategorie').css('display', 'none');
-			$('#formGestionnaire').css('display', 'none');
+			$('#formEmprunt').css('display', 'none');
 			 $('#formAjouterOeuvre').css('display', 'none');
 			 $('#formModifierOeuvre').css('display', 'none');
 			 $('#formAllTitre').css('display', 'none');
 			 $('#formSprmCommanditaire').css('display', 'none');
 			 $('#formModifierEtat').css('display', 'none');
 			 $('#formModifierMedium').css('display', 'none');
-			 $('#formSprmGestionnaire').css('display', 'none');
 			 $('#formAllEtat').css('display', 'none');
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
@@ -989,7 +945,7 @@ $("#formSprmCommanditaire").validate(
 			$('#formCategorie').slideToggle("slow", function () {
 			});
 			$('#formAjoutCommanditaire').css('display', 'none');
-			$('#formGestionnaire').css('display', 'none');
+			$('#formEmprunt').css('display', 'none');
 			$('#formAjouterOeuvre').css('display', 'none');
 			$('#formEtat').css('display', 'none');
 			$('#formModifierOeuvre').css('display', 'none');
@@ -997,7 +953,6 @@ $("#formSprmCommanditaire").validate(
 			$('#formSprmCommanditaire').css('display', 'none');
 			$('#formModifierEtat').css('display', 'none');
 			 $('#formModifierMedium').css('display', 'none');
-			 $('#formSprmGestionnaire').css('display', 'none');
 			 $('#formAllEtat').css('display', 'none');
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
@@ -1007,7 +962,7 @@ $("#formSprmCommanditaire").validate(
 				$('#formSprmCommanditaire').slideToggle("slow", function () {
 			});
 			$('#formAjoutCommanditaire').css('display', 'none');
-			$('#formGestionnaire').css('display', 'none');
+			$('#formEmprunt').css('display', 'none');
 			 $('#formAjouterOeuvre').css('display', 'none');
 			 $('#formEtat').css('display', 'none');
 			 $('#formCategorie').css('display', 'none');
@@ -1015,7 +970,6 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllTitre').css('display', 'none');
 			 $('#formModifierEtat').css('display', 'none');
 			 $('#formModifierMedium').css('display', 'none');
-			 $('#formSprmGestionnaire').css('display', 'none');
 			 $('#formAllEtat').css('display', 'none');
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
@@ -1027,13 +981,12 @@ $("#formSprmCommanditaire").validate(
 			$('#formModifierMedium').css('display', 'none');
 			$('#formEtat').css('display', 'none');
 			$('#formAjoutCommanditaire').css('display', 'none');
-			$('#formGestionnaire').css('display', 'none');
+			$('#formEmprunt').css('display', 'none');
 			$('#formAjouterOeuvre').css('display', 'none');
 			$('#formEtat').css('display', 'none');
 			$('#formModifierOeuvre').css('display', 'none');
 			$('#formAllTitre').css('display', 'none');
 			$('#formSprmCommanditaire').css('display', 'none');
-			$('#formSprmGestionnaire').css('display', 'none');
 			$('#formAllEtat').css('display', 'none');
 			$('#formAllMedium').css('display', 'none');
 			$('#formReservation').css('display', 'none');
@@ -1046,13 +999,12 @@ $("#formSprmCommanditaire").validate(
 			$('#formModifierMedium').css('display', 'none');
 			$('#formEtat').css('display', 'none');
 			$('#formAjoutCommanditaire').css('display', 'none');
-			$('#formGestionnaire').css('display', 'none');
+			$('#formEmprunt').css('display', 'none');
 			$('#formAjouterOeuvre').css('display', 'none');
 			$('#formEtat').css('display', 'none');
 			$('#formModifierOeuvre').css('display', 'none');
 			$('#formAllTitre').css('display', 'none');
 			$('#formSprmCommanditaire').css('display', 'none');
-			$('#formSprmGestionnaire').css('display', 'none');
 			$('#formAllMedium').css('display', 'none');
 			$('#formReservation').css('display', 'none');
 			$('#formDeplacement').css('display', 'none');
@@ -1064,13 +1016,12 @@ $("#formSprmCommanditaire").validate(
 			$('#formModifierEtat').css('display', 'none');
 			$('#formEtat').css('display', 'none');
 			$('#formAjoutCommanditaire').css('display', 'none');
-			$('#formGestionnaire').css('display', 'none');
+			$('#formEmprunt').css('display', 'none');
 			$('#formAjouterOeuvre').css('display', 'none');
 			$('#formEtat').css('display', 'none');
 			$('#formModifierOeuvre').css('display', 'none');
 			$('#formAllTitre').css('display', 'none');
 			$('#formSprmCommanditaire').css('display', 'none');
-			$('#formSprmGestionnaire').css('display', 'none');
 			$('#formAllEtat').css('display', 'none');
 			$('#formAllMedium').css('display', 'none');
 			$('#formReservation').css('display', 'none');
@@ -1084,36 +1035,18 @@ $("#formSprmCommanditaire").validate(
 			$('#formModifierEtat').css('display', 'none');
 			$('#formEtat').css('display', 'none');
 			$('#formAjoutCommanditaire').css('display', 'none');
-			$('#formGestionnaire').css('display', 'none');
+			$('#formEmprunt').css('display', 'none');
 			$('#formAjouterOeuvre').css('display', 'none');
 			$('#formEtat').css('display', 'none');
 			$('#formModifierOeuvre').css('display', 'none');
 			$('#formAllTitre').css('display', 'none');
 			$('#formSprmCommanditaire').css('display', 'none');
-			$('#formSprmGestionnaire').css('display', 'none');
 			$('#formAllEtat').css('display', 'none');
 			$('#formModifierMedium').css('display', 'none');
 			$('#formReservation').css('display', 'none');
 			$('#formDeplacement').css('display', 'none');
 		}
-			function sprmGestionnaire(){
-				$('#formSprmGestionnaire').slideToggle("slow", function () {
-			});
-			$('#formModifierMedium').css('display', 'none')
-			$('#formModifierEtat').css('display', 'none');
-			$('#formEtat').css('display', 'none');
-			$('#formAjoutCommanditaire').css('display', 'none');
-			$('#formGestionnaire').css('display', 'none');
-			$('#formAjouterOeuvre').css('display', 'none');
-			$('#formEtat').css('display', 'none');
-			$('#formModifierOeuvre').css('display', 'none');
-			$('#formAllTitre').css('display', 'none');
-			$('#formSprmCommanditaire').css('display', 'none');
-			$('#formAllEtat').css('display', 'none');
-			$('#formAllMedium').css('display', 'none');
-			$('#formReservation').css('display', 'none');
-			$('#formDeplacement').css('display', 'none');
-		}
+
 		
 		function voirReservation(){
 				$('#formReservation').slideToggle("slow", function () {
@@ -1122,7 +1055,7 @@ $("#formSprmCommanditaire").validate(
 			$('#formModifierEtat').css('display', 'none');
 			$('#formEtat').css('display', 'none');
 			$('#formAjoutCommanditaire').css('display', 'none');
-			$('#formGestionnaire').css('display', 'none');
+			$('#formEmprunt').css('display', 'none');
 			$('#formAjouterOeuvre').css('display', 'none');
 			$('#formEtat').css('display', 'none');
 			$('#formModifierOeuvre').css('display', 'none');
@@ -1130,7 +1063,6 @@ $("#formSprmCommanditaire").validate(
 			$('#formSprmCommanditaire').css('display', 'none');
 			$('#formAllEtat').css('display', 'none');
 			$('#formAllMedium').css('display', 'none');
-			$('#formSprmGestionnaire').css('display', 'none');
 			$('#formDeplacement').css('display', 'none');
 		}	
 		function voirDeplacements(){
@@ -1141,7 +1073,7 @@ $("#formSprmCommanditaire").validate(
 			$('#formModifierEtat').css('display', 'none');
 			$('#formEtat').css('display', 'none');
 			$('#formAjoutCommanditaire').css('display', 'none');
-			$('#formGestionnaire').css('display', 'none');
+			$('#formEmprunt').css('display', 'none');
 			$('#formAjouterOeuvre').css('display', 'none');
 			$('#formEtat').css('display', 'none');
 			$('#formModifierOeuvre').css('display', 'none');
@@ -1149,7 +1081,6 @@ $("#formSprmCommanditaire").validate(
 			$('#formSprmCommanditaire').css('display', 'none');
 			$('#formAllEtat').css('display', 'none');
 			$('#formAllMedium').css('display', 'none');
-			$('#formSprmGestionnaire').css('display', 'none');
 		}
 	function ajaxModifierOeuvre(id)
 	{ 
@@ -1216,19 +1147,29 @@ function ajaxModifierMedium()
 			   }
 			});
 };
-function supprimer(idReservation,idOeuvre)
+function supprimer(idReservation)
 {
 	 $.ajax({
-		  url : "Supprimer.php",
+		  url : "SupprimerReserv.php",
+		  type : 'POST',
+		  dataType:'html',
+		  data : {idReservation:idReservation},
+		  success: function(output)
+		  			{
+						alert("Supression de réservation effectuée");
+					},
+		});
+}
+function supprimerEmprunt(idEmprunt,idOeuvre)
+{
+	 $.ajax({
+		  url : "SupprimerEmprunt.php",
 		  type : 'POST',
 		  dataType:'html',
 		  data : {idReservation:idReservation,idOeuvre:idOeuvre},
 		  success: function(output)
 		  			{
-						alert("Supression effectuée");
-						document.location.href="Gestionnaire.php";
-						$('#divRes').css('display', 'block');
-						voirReservation();
+						alert("Supression d'emprunt effectuée");
 					},
 		});
 }

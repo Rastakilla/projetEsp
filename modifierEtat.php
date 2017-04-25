@@ -8,7 +8,11 @@ if (isset($_POST['reservationModif']) && isset($_POST['EtatModif'])&& isset($_PO
 		{
 			$peuxEtreReserve = '0';
 		}
-		else if ($_POST['reservationModif'] == 'Oui')
+		else if ($_POST['reservationModif'] == 'Permet la réservation')
+		{
+			$peuxEtreReserve = '2';
+		}
+		else if ($_POST['reservationModif'] == "Permet l'emprunt")
 		{
 			$peuxEtreReserve = '1';
 		}
