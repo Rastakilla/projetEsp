@@ -12,6 +12,9 @@ unset($_SESSION['gestionnaire']);
   label.error{
 	color: red;
 }
+.dataTables_filter label {  
+color:#FFF;
+}
 </style>
     <!-- Basic Page Needs
     ================================================== -->
@@ -23,6 +26,7 @@ unset($_SESSION['gestionnaire']);
     ================================================== -->
    <link rel="icon" href="favicon.ico" />
     <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css"  href="css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="fonts/font-awesome/css/font-awesome.css">
 
@@ -39,6 +43,8 @@ unset($_SESSION['gestionnaire']);
 
     <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,700,300,600,800,400' rel='stylesheet' type='text/css'>
+    
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.3.1/css/buttons.dataTables.min.css">
 
     <script type="text/javascript" src="js/modernizr.custom.js"></script>
        <script src="js/jssor.slider-22.2.16.min.js" type="text/javascript"></script>
@@ -75,8 +81,8 @@ unset($_SESSION['gestionnaire']);
 				}
 				if ($verificateur == false)
 				{
-					header('Location : index.php');
 					$_SESSION['acces'] = 'non';
+					header('Location : index.php');
 				}
 				else
 				{
@@ -190,27 +196,36 @@ unset($_SESSION['gestionnaire']);
 				  ?> 
 				<form id="formDeplacement" style="display:none;" enctype="multipart/form-data">
                 <div align="center"> <br>
-						<table style="width:95%; margin-left:5%;">
+						<table id='myTable' style="width:95%;">
+                        <thead>
 						  <tr>
+                          	<th>Case à cocher</th>
 						  	<th>Oeuvre</th>
+                            <th>Titre</th>
 							<th>Local de provenance</th> 
 							<th>Local d'envoie</th>
 							<th>Nouveau Locataire</th>
 						  </tr>
+                          </thead>
+                          <tbody >
                           <?PHP
 						  while($Deplacement = $infoProchaineReservation->fetch())
 						  {
 							  $sql2 = 'select * from Oeuvres where idOeuvres = '.$Deplacement["idOeuvre"].';';
 							  $infoOeuvre = $Cnn->prepare($sql2);
 							  $infoOeuvre->execute();
-							  echo '<tr>';
+							  echo '<tr style="background-color:#2E3033;">';
+						 echo '<th> <input type="checkbox" name="chekbox'.$Deplacement["idOeuvre"].'"></th>';
 							  echo '<th>';
 							 if ($Oeuvre = $infoOeuvre->fetch())
 							{
-								echo '<a href="img/categorie/'.$Oeuvre['nomOeuvre'].'" data-lightbox="'.$Oeuvre['nomOeuvre'].'"><img src="img/categorie/'.$Oeuvre['nomOeuvre'].'"style="cursor: pointer;max-width:125px;margin-right:-100px;"></a>';
+								echo '<img src="img/categorie/'.$Oeuvre['nomOeuvre'].'"style="cursor: pointer;width:125px; height:auto;">';
 							}
 							  echo'</th>';
-						 	 $infoEmprunt = $Cnn->prepare('select * from emprunt where idOeuvre = '.$Deplacement["idOeuvre"].';');
+							  echo'<th>';
+							  echo $Oeuvre['Titre'];
+							  echo'</th>';
+						 	 $infoEmprunt = $Cnn->prepare('select * from emprunt where idOeuvre = '.$Deplacement["idOeuvre"].' order by date limit 1;');
 						  	$infoEmprunt->execute();
 							echo '<th>';
 							if ($Emprunt = $infoEmprunt->fetch())
@@ -230,7 +245,8 @@ unset($_SESSION['gestionnaire']);
 							echo '</tr>';
 						  }
 					 
-                    echo '</table></div>';
+                    echo '</tbody></table></div>';
+					echo '<input type="submit" class="btn tf-btn btn-default" value="Confirmer">';
 					echo '</form>';//fermeture form*/
 				   	 /**********************************/	
 					/*FIN  FORM POUR VOIR DÉPLACEMENTS*/
@@ -470,11 +486,10 @@ unset($_SESSION['gestionnaire']);
                     <div align="center"> État
                                     <input class="form-control-little" id="etat" name="etat" placeholder="Entrez l'état"></input><br>
 									
-				<b><i>Indiquez si cette état permet l'emprunt ou la réservation.</i></b> <select class="form-control-little" id="reservation" name="reservation"><br>
+				<b><i>Indiquez si cette état permet la réservation.</i></b> <select class="form-control-little" id="reservation" name="reservation"><br>
 					 <option id="blind"></option>
 						<option id="0">Non</option>
-						<option id="1">Permet l'emprunt</option>
-                        <option id="2">Permet la réservation</option>
+						<option id="1">Oui</option>
 				</select><br>
 									
                   <button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>
@@ -508,10 +523,10 @@ unset($_SESSION['gestionnaire']);
 				  
 				  
 				   <form id="formModifierEtat" style="display:none;"  action="modifierEtat.php?email=<?PHP echo $email;?>" method="POST" enctype="multipart/form-data">
-				   	<div align="center">État <input class="form-control-little" id="EtatModif" name="EtatModif" placeholder="Entrez l'état"></input> <b><i>Indiquez si cette état permet l'emprunt ou la réservation.</i></b> <select class="form-control-little" id="reservationModif" name="reservationModif"><br>
+				   	<div align="center">État <input class="form-control-little" id="EtatModif" name="EtatModif" placeholder="Entrez l'état"></input> <b><i>Indiquez si cette état permet la réservation.</i></b> <select class="form-control-little" id="reservationModif" name="reservationModif"><br>
 						<option id="0">Non</option>
-                        <option id="1">Permet l'emprunt</option>
-                        <option id="2">Permet la réservation</option>
+                        <option id="1">Oui</option>
+
 						
 				</select><br>
                         <input type="hidden" id="idEtat" name="idEtat">
@@ -588,6 +603,9 @@ unset($_SESSION['gestionnaire']);
 <script type="text/javascript" src="jquery-validation-1.15.0/lib/jquery-1.11.1.js"></script>
 <script type="text/javascript" src="jquery-validation-1.15.0/dist/jquery.validate.min.js"></script>
 <script type="text/javascript" src="jquery-validation-1.15.0/dist/localization/messages_fr.js"></script>
+<script type="text/javascript"src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript"src="//cdn.datatables.net/buttons/1.3.1/js/buttons.print.min.js"></script>
+<script type="text/javascript"src="//cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js"></script>
     <script>
 $("#formEmprunt").validate(
 	{	rules:
@@ -1157,6 +1175,7 @@ function supprimer(idReservation)
 		  success: function(output)
 		  			{
 						alert("Supression de réservation effectuée");
+						document.location.href="gestionnaire.php";
 					},
 		});
 }
@@ -1166,16 +1185,35 @@ function supprimerEmprunt(idEmprunt,idOeuvre)
 		  url : "SupprimerEmprunt.php",
 		  type : 'POST',
 		  dataType:'html',
-		  data : {idReservation:idReservation,idOeuvre:idOeuvre},
+		  data : {idEmprunt:idEmprunt,idOeuvre:idOeuvre},
 		  success: function(output)
 		  			{
 						alert("Supression d'emprunt effectuée");
+						document.location.href="gestionnaire.php";
 					},
 		});
 }
 	function menu(){
 	 $('.navbar-default').addClass('on');
 	}
+	
+	$(document).ready(function(){
+    $('#myTable').DataTable({
+	"bPaginate":false,
+	        dom: 'Bfrtip',
+        buttons: [
+		{
+            extend:'print',
+			text:'Imprimer',
+			exportOptions:{
+				stripHtml:false,
+				columns : [0,1,2,3,4]
+			}
+		}
+        ],
+		"language":{"search":"Rechercher :"},
+	});
+});
 </script>
 
   </body>

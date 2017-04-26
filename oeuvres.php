@@ -85,11 +85,7 @@
 		else if (isset($_GET['idOeuvre']) && $_GET['idOeuvre']!=NULL)
 		{
 			$idOeuvre = htmlentities($_GET['idOeuvre']);
-			if (isset($_GET['emprunter'])  && $_GET['emprunter'] != NULL && $_GET['emprunter'] == 'true')
-			{
-				$emprunter = 'Emprunter';
-			}
-			else if (isset($_GET['reserver'])  && $_GET['reserver'] != NULL && $_GET['reserver'] == 'true')
+			if (isset($_GET['reserver'])  && $_GET['reserver'] != NULL && $_GET['reserver'] == 'true')
 			{
 				$reserver = 'Reserver';
 			}
@@ -154,7 +150,7 @@
 					}
 					else*/ if (isset($reserver))
 					{
-						$sql = 'select idetat from etat where peuxEtreReserve = 2';
+						$sql = 'select idetat from etat where peuxEtreReserve = 1';
 						$infoEtat = $Cnn->prepare($sql);
 						$infoEtat->execute();
 						$cpt = 0;
@@ -292,10 +288,6 @@
 						if($infoOeuvres['peuxEtreReserve'] == 1)
 						{
 							$contour = '#80f442';
-						}
-						else if ($infoOeuvres['peuxEtreReserve'] == 2)
-						{
-							$contour = '#fff600';
 						}
 						if(!isset($idOeuvre))
 						{
