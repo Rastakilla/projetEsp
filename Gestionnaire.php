@@ -15,6 +15,9 @@ unset($_SESSION['gestionnaire']);
 .dataTables_filter label {  
 color:#FFF;
 }
+.dataTables_filter input {  
+color:black;
+}
 </style>
     <!-- Basic Page Needs
     ================================================== -->
@@ -110,6 +113,7 @@ color:#FFF;
 					  				
 					  <div id="divEmprunt" style="display:none"><br>
 					<button type="button" class="btn tf-btn btn-notdefault" onclick="voirEmprunt();">Voir Emprunts</button>&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="btn tf-btn btn-notdefault" onclick="voirDeplacementsFin();">Déplacements de fin d'année</button>&nbsp;&nbsp;&nbsp;
 					 </div>
 					 
 					 <div id="divOv" style="display:none"><br>
@@ -129,7 +133,7 @@ color:#FFF;
                     
                     	<div id="divRes" style="display:none"><br>
 					<button type="button" class="btn tf-btn btn-notdefault" onclick="voirReservation();">Voir Réservations</button>&nbsp;&nbsp;&nbsp;
-                    <button type="button" class="btn tf-btn btn-notdefault" onclick="voirDeplacements();">Voir Déplacements</button>&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="btn tf-btn btn-notdefault" onclick="voirDeplacementsAnnee();">Déplacements en cours d'année</button>&nbsp;&nbsp;&nbsp;
 					</div>
                     <style>
                     table, th, td {
@@ -191,12 +195,10 @@ color:#FFF;
 					 /***********************************/	
 					/*DEBUT FORM POUR VOIR DÉPLACEMENTS*/
 				   /***********************************/
-				   		$infoProchaineReservation = $Cnn->prepare('Select * from (select * from reservation where effectif = 1 order by date) as info group by idOeuvre');
-						$infoProchaineReservation->execute();
 				  ?> 
 				<form id="formDeplacement" style="display:none;" enctype="multipart/form-data">
                 <div align="center"> <br>
-						<table id='myTable' style="width:95%;">
+						<table id='TablePendant' style="width:95%;">
                         <thead>
 						  <tr>
                           	<th>Case à cocher</th>
@@ -207,7 +209,119 @@ color:#FFF;
 							<th>Nouveau Locataire</th>
 						  </tr>
                           </thead>
-                          <tbody >
+                          <tbody style="background-color:#2E3033;">
+                          <?PHP
+						   $sql = 'select * from emprunt where confirme = 0';
+						  $infoEmpruntOff = $Cnn->prepare($sql);
+						  $infoEmpruntOff->execute();
+						  while($EmpruntOff = $infoEmpruntOff->fetch())
+						  {
+							echo '<tr style="background-color:#2E3033;">';  
+							$sql2 = 'select * from Oeuvres where idOeuvres = '.$EmpruntOff["idOeuvre"].';';
+							$infoOeuvre = $Cnn->prepare($sql2);
+							$infoOeuvre->execute();	  
+							echo '<th> <input type="checkbox" name="chekbox"></th>';
+							echo '<th>';
+							if ($Oeuvre = $infoOeuvre->fetch())
+							{
+								echo '<img src="img/categorie/'.$Oeuvre['nomOeuvre'].'"style="width:125px; height:auto;">';
+								echo'</th>';
+							    echo'<th>';
+							    echo $Oeuvre['Titre'];
+							    echo'</th>';
+								echo '<th>';
+								echo $Oeuvre['lieu'];
+								echo '</th>';
+							}
+							echo '<th>Entrepôt</th>';
+							echo '<th>Entrepôt</th>';
+							echo '</tr>';
+						  }
+						  $infoEmpruntOff->closeCursor();
+						  $infoProchaineReservation = $Cnn->prepare('Select * from reservation where effectif = 1 and idOeuvre NOT IN (select idOeuvre from emprunt where confirme = 1) order by idOeuvre,date');
+						  $infoProchaineReservation->execute();
+						  $nb;
+						  $found = false;
+						  $idOeuvre = "";
+						  while($Deplacement = $infoProchaineReservation->fetch())
+						  {
+							  if ($idOeuvre != $Deplacement['idOeuvre'])
+							  {
+							 	 $idOeuvre = $Deplacement['idOeuvre'];
+								 $found = false;
+							  }
+							  $sql3 = 'select count(*) as nb from emprunt where MailPersonneEmprunt = "'.$Deplacement["MailPersonneReserve"].'" and confirme = 1;';
+							  $infoCount = $Cnn->prepare($sql3);
+							  $infoCount->execute();
+							  if ($nombre = $infoCount->fetch())
+							  {
+								  $nb = $nombre['nb'];
+							  }
+							  
+							  if ($nb < 2 && $found == false)
+							  {
+								  $found = true;
+								  $sql2 = 'select * from Oeuvres where idOeuvres = '.$Deplacement["idOeuvre"].';';
+								  $infoOeuvre = $Cnn->prepare($sql2);
+								  $infoOeuvre->execute();
+								  echo '<tr style="background-color:#2E3033;">';
+							 echo '<th> <input type="checkbox" name="chekbox"></th>';
+								  echo '<th>';
+								 if ($Oeuvre = $infoOeuvre->fetch())
+								{
+									echo '<img src="img/categorie/'.$Oeuvre['nomOeuvre'].'"style="width:125px; height:auto;">';
+								    echo'</th>';
+								    echo'<th>';
+								    echo $Oeuvre['Titre'];
+								    echo'</th>';
+									$sql = 'select idOeuvre from Emprunt where confirme = 0 and idOeuvre ='.$Oeuvre["idOeuvres"];
+									echo '<th>';
+									$infoEntrepot = $Cnn->prepare($sql);
+									$infoEntrepot ->execute();
+									if ($infoEntrepot->fetch() == true)
+									{
+										echo 'Entrepôt';
+									}
+									else
+									{
+										echo $Oeuvre['lieu'];
+									}
+									echo '</th>';
+								}
+								echo '<th>'.$Deplacement['Local'].'</th>';
+								echo '<th>'.$Deplacement['PrenomPersonneReserve'].' '.$Deplacement['NomPersonneReserve'].'</th>';
+										
+								echo '</th>';
+								echo '</tr>';
+							  }
+						  }		 
+                    echo '</tbody></table></div>';
+					echo '<input type="submit" class="btn tf-btn btn-default" value="Confirmer">';
+					echo '</form>';//fermeture form*/
+				   	 /**********************************/	
+					/*FIN  FORM POUR VOIR DÉPLACEMENTS*/
+				   /**********************************/
+					
+					 /***************************************/	
+					/*DEBUT FORM POUR VOIR DÉPLACEMENTS FIN*/
+				   /***************************************/
+				   		$infoProchaineReservation = $Cnn->prepare('Select * from (select * from reservation where effectif = 1 order by date) as info group by idOeuvre');
+						$infoProchaineReservation->execute();
+				  ?> 
+				<form id="formDeplacementFin" style="display:none;" enctype="multipart/form-data">
+                <div align="center"> <br>
+						<table id='TableFin' style="width:95%;">
+                        <thead>
+						  <tr>
+                          	<th>Case à cocher</th>
+						  	<th>Oeuvre</th>
+                            <th>Titre</th>
+							<th>Local de provenance</th> 
+							<th>Local d'envoie</th>
+							<th>Nouveau Locataire</th>
+						  </tr>
+                          </thead>
+                          <tbody style="background-color:#2E3033;">
                           <?PHP
 						  while($Deplacement = $infoProchaineReservation->fetch())
 						  {
@@ -219,7 +333,7 @@ color:#FFF;
 							  echo '<th>';
 							 if ($Oeuvre = $infoOeuvre->fetch())
 							{
-								echo '<img src="img/categorie/'.$Oeuvre['nomOeuvre'].'"style="cursor: pointer;width:125px; height:auto;">';
+								echo '<img src="img/categorie/'.$Oeuvre['nomOeuvre'].'"style="width:125px; height:auto;">';
 							}
 							  echo'</th>';
 							  echo'<th>';
@@ -248,11 +362,9 @@ color:#FFF;
                     echo '</tbody></table></div>';
 					echo '<input type="submit" class="btn tf-btn btn-default" value="Confirmer">';
 					echo '</form>';//fermeture form*/
-				   	 /**********************************/	
-					/*FIN  FORM POUR VOIR DÉPLACEMENTS*/
-				   /**********************************/
-					
-					
+				   	 /**************************************/	
+					/*FIN  FORM POUR VOIR DÉPLACEMENTS FIN*/
+				   /**************************************/
 					
 					
 					 /****************************************/	
@@ -769,6 +881,7 @@ $("#formSprmCommanditaire").validate(
 			$('#divRes').css('display', 'none');
 			$('#formReservation').css('display', 'none');
 			$('#formDeplacement').css('display', 'none');
+			$('#formDeplacementFin').css('display', 'none');
 		}	
 		function reservation() {
 			$('#divRes').slideToggle("slow", function () {
@@ -790,6 +903,7 @@ $("#formSprmCommanditaire").validate(
 			$('#formAllMedium').css('display', 'none');
 			$('#formAjoutCommanditaire').css('display', 'none');
 		    $('#formSprmCommanditaire').css('display', 'none');
+			$('#formDeplacementFin').css('display', 'none');
 		}	
 		function emprunt() {
 			$('#divEmprunt').slideToggle("slow", function () {
@@ -833,6 +947,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#divRes').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
 			 $('#formDeplacement').css('display', 'none');
+			 $('#formDeplacementFin').css('display', 'none');
 		}
 		function etat() {
 			$('#divEtat').slideToggle("slow", function () {
@@ -853,6 +968,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#divRes').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
 			 $('#formDeplacement').css('display', 'none');
+			 $('#formDeplacementFin').css('display', 'none');
 		}
 		function categorie() {
 			$('#divCat').slideToggle("slow", function () {
@@ -873,6 +989,7 @@ $("#formSprmCommanditaire").validate(
 			$('#divRes').css('display', 'none');
 			$('#formReservation').css('display', 'none');
 			$('#formDeplacement').css('display', 'none');
+			$('#formDeplacementFin').css('display', 'none');
 		}
 		
 	function voirEmprunt() {
@@ -890,6 +1007,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
 			 $('#formDeplacement').css('display', 'none');
+			 $('#formDeplacementFin').css('display', 'none');
 		}
 		function ajouterOeuvre() {
 			$('#formAjouterOeuvre').slideToggle("slow", function () {
@@ -907,6 +1025,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
 			 $('#formDeplacement').css('display', 'none');
+			 $('#formDeplacementFin').css('display', 'none');
 		}
 		function afficherTitre() {
 			$('#formAllTitre').slideToggle("slow", function () {
@@ -924,6 +1043,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
 			 $('#formDeplacement').css('display', 'none');
+			 $('#formDeplacementFin').css('display', 'none');
 		}
 		function modifierOeuvre() {
 			$('#formModifierOeuvre').slideToggle("slow", function () {
@@ -941,6 +1061,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
 			 $('#formDeplacement').css('display', 'none');
+			 $('#formDeplacementFin').css('display', 'none');
 		}
 		function ajouterEtat() {
 			$('#formEtat').slideToggle("slow", function () {
@@ -958,6 +1079,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
 			 $('#formDeplacement').css('display', 'none');
+			 $('#formDeplacementFin').css('display', 'none');
 		}
 		function ajouterCategorie() {
 			$('#formCategorie').slideToggle("slow", function () {
@@ -975,6 +1097,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
 			 $('#formDeplacement').css('display', 'none');
+			 $('#formDeplacementFin').css('display', 'none');
 		}
 		function sprmCommanditaire(){
 				$('#formSprmCommanditaire').slideToggle("slow", function () {
@@ -992,6 +1115,7 @@ $("#formSprmCommanditaire").validate(
 			 $('#formAllMedium').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
 			 $('#formDeplacement').css('display', 'none');
+			 $('#formDeplacementFin').css('display', 'none');
 		}
 		function modifierEtat(){
 				$('#formModifierEtat').slideToggle("slow", function () {
@@ -1009,6 +1133,7 @@ $("#formSprmCommanditaire").validate(
 			$('#formAllMedium').css('display', 'none');
 			$('#formReservation').css('display', 'none');
 			$('#formDeplacement').css('display', 'none');
+			$('#formDeplacementFin').css('display', 'none');
 		}
 		function afficherEtat(){
 				$('#formAllEtat').slideToggle("slow", function () {
@@ -1026,6 +1151,7 @@ $("#formSprmCommanditaire").validate(
 			$('#formAllMedium').css('display', 'none');
 			$('#formReservation').css('display', 'none');
 			$('#formDeplacement').css('display', 'none');
+			$('#formDeplacementFin').css('display', 'none');
 		}
 		function modifierMedium(){
 				$('#formModifierMedium').slideToggle("slow", function () {
@@ -1044,6 +1170,7 @@ $("#formSprmCommanditaire").validate(
 			$('#formAllMedium').css('display', 'none');
 			$('#formReservation').css('display', 'none');
 			$('#formDeplacement').css('display', 'none');
+			$('#formDeplacementFin').css('display', 'none');
 		}
 		
 		function afficherMedium(){
@@ -1063,6 +1190,7 @@ $("#formSprmCommanditaire").validate(
 			$('#formModifierMedium').css('display', 'none');
 			$('#formReservation').css('display', 'none');
 			$('#formDeplacement').css('display', 'none');
+			$('#formDeplacementFin').css('display', 'none');
 		}
 
 		
@@ -1082,10 +1210,30 @@ $("#formSprmCommanditaire").validate(
 			$('#formAllEtat').css('display', 'none');
 			$('#formAllMedium').css('display', 'none');
 			$('#formDeplacement').css('display', 'none');
+			$('#formDeplacementFin').css('display', 'none');
 		}	
-		function voirDeplacements(){
+		function voirDeplacementsAnnee(){
 				$('#formDeplacement').slideToggle("slow", function () {
-			});formDeplacement
+			});
+			$('#formReservation').css('display', 'none');
+			$('#formModifierMedium').css('display', 'none')
+			$('#formModifierEtat').css('display', 'none');
+			$('#formEtat').css('display', 'none');
+			$('#formAjoutCommanditaire').css('display', 'none');
+			$('#formEmprunt').css('display', 'none');
+			$('#formAjouterOeuvre').css('display', 'none');
+			$('#formEtat').css('display', 'none');
+			$('#formModifierOeuvre').css('display', 'none');
+			$('#formAllTitre').css('display', 'none');
+			$('#formSprmCommanditaire').css('display', 'none');
+			$('#formAllEtat').css('display', 'none');
+			$('#formAllMedium').css('display', 'none');
+			$('#formDeplacementFin').css('display', 'none');
+		}
+		function voirDeplacementsFin(){
+				$('#formDeplacementFin').slideToggle("slow", function () {
+			});
+			$('#formDeplacement').css('display', 'none');
 			$('#formReservation').css('display', 'none');
 			$('#formModifierMedium').css('display', 'none')
 			$('#formModifierEtat').css('display', 'none');
@@ -1198,7 +1346,7 @@ function supprimerEmprunt(idEmprunt,idOeuvre)
 	}
 	
 	$(document).ready(function(){
-    $('#myTable').DataTable({
+    $('#TablePendant').DataTable({
 	"bPaginate":false,
 	        dom: 'Bfrtip',
         buttons: [
@@ -1207,7 +1355,22 @@ function supprimerEmprunt(idEmprunt,idOeuvre)
 			text:'Imprimer',
 			exportOptions:{
 				stripHtml:false,
-				columns : [0,1,2,3,4]
+				columns : [1,2,3,4,5]
+			}
+		}
+        ],
+		"language":{"search":"Rechercher :"},
+	});
+	 $('#TableFin').DataTable({
+	"bPaginate":false,
+	    dom: 'Bfrtip',
+        buttons: [
+		{
+            extend:'print',
+			text:'Imprimer',
+			exportOptions:{
+				stripHtml:false,
+				columns : [1,2,3,4,5]
 			}
 		}
         ],
