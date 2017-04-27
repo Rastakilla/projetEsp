@@ -219,8 +219,9 @@ color:black;
 							echo '<tr style="background-color:#2E3033;">';  
 							$sql2 = 'select * from Oeuvres where idOeuvres = '.$EmpruntOff["idOeuvre"].';';
 							$infoOeuvre = $Cnn->prepare($sql2);
-							$infoOeuvre->execute();	  
-							echo '<th> <input type="checkbox" name="chekbox"></th>';
+							$infoOeuvre->execute();	
+							 $hello = 'hello';  
+							echo '<th> <input type="checkbox" id="checkbox" name="checkbox" onclick="onCheck('.$EmpruntOff["idOeuvre"].',true)"></th>';
 							echo '<th>';
 							if ($Oeuvre = $infoOeuvre->fetch())
 							{
@@ -296,7 +297,6 @@ color:black;
 							  }
 						  }		 
                     echo '</tbody></table></div>';
-					echo '<input type="submit" class="btn tf-btn btn-default" value="Confirmer">';
 					echo '</form>';//fermeture form*/
 				   	 /**********************************/	
 					/*FIN  FORM POUR VOIR DÉPLACEMENTS*/
@@ -1345,6 +1345,12 @@ function supprimerEmprunt(idEmprunt,idOeuvre)
 	 $('.navbar-default').addClass('on');
 	}
 	
+	function onCheck(idOeuvre,choice){
+		//true = entrepot
+		//false = vrai deplacement avec reservation
+		alert(idOeuvre);
+		alert(choice);
+	}
 	$(document).ready(function(){
     $('#TablePendant').DataTable({
 	"bPaginate":false,
@@ -1361,6 +1367,7 @@ function supprimerEmprunt(idEmprunt,idOeuvre)
         ],
 		"language":{"search":"Rechercher :"},
 	});
+	
 	 $('#TableFin').DataTable({
 	"bPaginate":false,
 	    dom: 'Bfrtip',
