@@ -71,6 +71,22 @@ color:black;
 						 echo '<script>alert("'.$_SESSION['Uploader'].'");</script>';
 						 unset($_SESSION['Uploader']);
 					}
+					if (isset($_GET['deplacement']) && $_GET['deplacement'] == true)
+					{
+						reservation();
+						voirDeplacementsAnnee();
+						
+					}
+					else if (isset($_GET['reservation']) && $_GET['reservation'] == true)
+					{
+						reservation();
+						voirReservation();
+					}
+					else if (isset($_GET['emprunt']) && $_GET['emprunt'] == true)
+					{
+						emprunt();
+						voirEmprunt();
+					}
 				
 				
 				$email = htmlentities($_SESSION['email']);
@@ -220,8 +236,7 @@ color:black;
 							$sql2 = 'select * from Oeuvres where idOeuvres = '.$EmpruntOff["idOeuvre"].';';
 							$infoOeuvre = $Cnn->prepare($sql2);
 							$infoOeuvre->execute();	
-							 $hello = 'hello';  
-							echo '<th> <input type="checkbox" id="checkbox" name="checkbox" onclick="onCheck('.$EmpruntOff["idOeuvre"].',true)"></th>';
+							echo '<th> <input type="checkbox" id="checkbox'.$EmpruntOff["idOeuvre"].'true" name="checkbox" onclick="onCheck('.$EmpruntOff["idOeuvre"].',true)"></th>';
 							echo '<th>';
 							if ($Oeuvre = $infoOeuvre->fetch())
 							{
@@ -266,7 +281,7 @@ color:black;
 								  $infoOeuvre = $Cnn->prepare($sql2);
 								  $infoOeuvre->execute();
 								  echo '<tr style="background-color:#2E3033;">';
-							 echo '<th> <input type="checkbox" name="chekbox"></th>';
+							 echo '<th> <input type="checkbox" id="checkbox'.$Deplacement["idOeuvre"].'false" name="chekbox"  onclick="onCheck('.$Deplacement["idOeuvre"].',false)"></th>';
 								  echo '<th>';
 								 if ($Oeuvre = $infoOeuvre->fetch())
 								{
@@ -329,7 +344,7 @@ color:black;
 							  $infoOeuvre = $Cnn->prepare($sql2);
 							  $infoOeuvre->execute();
 							  echo '<tr style="background-color:#2E3033;">';
-						 echo '<th> <input type="checkbox" name="chekbox'.$Deplacement["idOeuvre"].'"></th>';
+						 echo '<th> <input type="checkbox" id="chekbox" name="chekbox"></th>';
 							  echo '<th>';
 							 if ($Oeuvre = $infoOeuvre->fetch())
 							{
@@ -1323,7 +1338,7 @@ function supprimer(idReservation)
 		  success: function(output)
 		  			{
 						alert("Supression de réservation effectuée");
-						document.location.href="gestionnaire.php";
+						document.location.href="gestionnaire.php?reservation=true";
 					},
 		});
 }
@@ -1337,7 +1352,7 @@ function supprimerEmprunt(idEmprunt,idOeuvre)
 		  success: function(output)
 		  			{
 						alert("Supression d'emprunt effectuée");
-						document.location.href="gestionnaire.php";
+						document.location.href="gestionnaire.php?emprunt=true";
 					},
 		});
 }
@@ -1346,10 +1361,23 @@ function supprimerEmprunt(idEmprunt,idOeuvre)
 	}
 	
 	function onCheck(idOeuvre,choice){
-		//true = entrepot
-		//false = vrai deplacement avec reservation
-		alert(idOeuvre);
-		alert(choice);
+		if (confirm('Voulez-vous vraiment confirmer ce déplacement?')) {
+			
+			 $.ajax({
+			  url : "confirmerDeplacement.php",
+			  type : 'POST',
+			  dataType:'html',
+			  data : {idOeuvre:idOeuvre,choice:choice},
+			  success: function(output)
+						{
+							alert("Confirmation effectuée!");
+							document.location.href="gestionnaire.php?deplacement=true";
+						},
+			});
+		} else {
+			document.getElementById('checkbox'+idOeuvre+choice).checked = false;
+		}
+
 	}
 	$(document).ready(function(){
     $('#TablePendant').DataTable({

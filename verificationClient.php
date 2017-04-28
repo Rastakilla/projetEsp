@@ -59,12 +59,11 @@ else if(isset($_POST['emailClient']) && isset($_POST['nomClient']) && isset($_PO
 				$mail = new PHPMailer;
 					
 				$mail->isSMTP();
-				$mail->Host = 'smtp.gmail.com';
+				$mail->Host = 'mail.kms-quebec.com';
 				$mail->SMTPAuth = true;
-				$mail->Username = 'infogalerievirtuellecba@gmail.com';
-				$mail->Password = '$CBA436$';
-				$mail->SMTPSecure = 'ssl';
-				$mail->Port = 465;
+				$mail->Username = 'cba@kms-quebec.com';
+				$mail->Password = 'Test1234';
+				$mail->Port = 587;
 				$mail->setFrom('infogalerievirtuellecba@gmail.com', 'Réservation GV');
 				$mail->addAddress($mail);	
 				$mail->isHTML(true);

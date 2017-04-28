@@ -33,13 +33,9 @@ if (isset($_GET['mail']) && isset($_GET['idOeuvre'])&& isset($_GET['type'])&& is
 			$sql = 'update reservation set effectif = 1 where MailPersonneReserve = "'.$_GET['mail'].'" and idOeuvre = "'.$_GET['idOeuvre'].'" and Date = "'.$DateBd.'";';
 			$insertEmprunt = $Cnn->prepare($sql);
 			$insertEmprunt->execute();
-			/*$sql = 'delete from reservation where MailPersonneReserve ="'.$_GET['mail'].'" and idOeuvre ="'.$_GET['idOeuvre'].'" and effectif=0;';
-				$mettreCommanditaire = $Cnn->prepare($sql);
-				$mettreCommanditaire->execute();*/
+
 			$_SESSION['type'] = $_GET['type'];
 			header('location:index.php');
-			/* TODO */
-			//Faire l'envoie de mail automatique ici si le gars veut qu'un mail soit envoyer automatiquement à l'autre.
 			}
 			else if ($difference >=1)
 			{
