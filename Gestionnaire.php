@@ -64,28 +64,29 @@ color:black;
         <div class="overlay">
             <div class="content" style='top:-150px;' >
             <?PHP
+			$sql = 'select idReservation,Date from reservation';
+			$delReservation = $Cnn->prepare($sql);
+			$delReservation->execute();
+			while ($Reservation = $delReservation->fetch())
+			{
+				$DateNow = date('Y-m-d H:i:s');
+				$date1Timestamp = strtotime($Reservation['Date']);
+				$date2Timestamp = strtotime($DateNow);
+				$difference = $date2Timestamp - $date1Timestamp;
+				$difference = $difference/(60*60*24);
+				if ($difference >= 1)
+				{
+					$sql2 = 'delete from reservation where idReservation = '.$Reservation['idReservation'];
+					$del = $Cnn->prepare($sql2);
+					$del->execute();
+				}
+			}
             if (isset($_SESSION['email']) && htmlentities($_SESSION['email']) && isset($_SESSION['mdp']) && htmlentities($_SESSION['mdp']))
 			{
 					if (isset($_SESSION['Uploader']) && $_SESSION['Uploader'] != '' && $_SESSION['Uploader'] !=NULL)
 					{
 						 echo '<script>alert("'.$_SESSION['Uploader'].'");</script>';
 						 unset($_SESSION['Uploader']);
-					}
-					if (isset($_GET['deplacement']) && $_GET['deplacement'] == true)
-					{
-						reservation();
-						voirDeplacementsAnnee();
-						
-					}
-					else if (isset($_GET['reservation']) && $_GET['reservation'] == true)
-					{
-						reservation();
-						voirReservation();
-					}
-					else if (isset($_GET['emprunt']) && $_GET['emprunt'] == true)
-					{
-						emprunt();
-						voirEmprunt();
 					}
 				
 				
@@ -324,7 +325,7 @@ color:black;
 						$infoProchaineReservation->execute();
 				  ?> 
 				<form id="formDeplacementFin" style="display:none;" enctype="multipart/form-data">
-                <div align="center"> <br>
+               <div align="center"> <br>
 						<table id='TableFin' style="width:95%;">
                         <thead>
 						  <tr>
@@ -338,44 +339,91 @@ color:black;
                           </thead>
                           <tbody style="background-color:#2E3033;">
                           <?PHP
-						  while($Deplacement = $infoProchaineReservation->fetch())
+						   $sql = 'select * from emprunt where confirme = 0';
+						  $infoEmpruntOff = $Cnn->prepare($sql);
+						  $infoEmpruntOff->execute();
+						  while($EmpruntOff = $infoEmpruntOff->fetch())
 						  {
-							  $sql2 = 'select * from Oeuvres where idOeuvres = '.$Deplacement["idOeuvre"].';';
-							  $infoOeuvre = $Cnn->prepare($sql2);
-							  $infoOeuvre->execute();
-							  echo '<tr style="background-color:#2E3033;">';
-						 echo '<th> <input type="checkbox" id="chekbox" name="chekbox"></th>';
-							  echo '<th>';
-							 if ($Oeuvre = $infoOeuvre->fetch())
+							echo '<tr style="background-color:#2E3033;">';  
+							$sql2 = 'select * from Oeuvres where idOeuvres = '.$EmpruntOff["idOeuvre"].';';
+							$infoOeuvre = $Cnn->prepare($sql2);
+							$infoOeuvre->execute();	
+							echo '<th> <input type="checkbox" id="checkbox'.$EmpruntOff["idOeuvre"].'true" name="checkbox" onclick="onCheck('.$EmpruntOff["idOeuvre"].',true)"></th>';
+							echo '<th>';
+							if ($Oeuvre = $infoOeuvre->fetch())
 							{
 								echo '<img src="img/categorie/'.$Oeuvre['nomOeuvre'].'"style="width:125px; height:auto;">';
+								echo'</th>';
+							    echo'<th>';
+							    echo $Oeuvre['Titre'];
+							    echo'</th>';
+								echo '<th>';
+								echo $Oeuvre['lieu'];
+								echo '</th>';
 							}
-							  echo'</th>';
-							  echo'<th>';
-							  echo $Oeuvre['Titre'];
-							  echo'</th>';
-						 	 $infoEmprunt = $Cnn->prepare('select * from emprunt where idOeuvre = '.$Deplacement["idOeuvre"].' order by date limit 1;');
-						  	$infoEmprunt->execute();
-							echo '<th>';
-							if ($Emprunt = $infoEmprunt->fetch())
-							{
-								echo $Emprunt['Local'];
-							}
-							else
-							{
-								if ($Oeuvre = $infoOeuvre->fetch())
-								{
-									echo $Oeuvre['Local'];
-								}
-							}
-							echo '<th>'.$Deplacement['Local'].'</th>';
-							echo '<th>'.$Deplacement['PrenomPersonneReserve'].' '.$Deplacement['NomPersonneReserve'].'</th>';
-							echo '</th>';
+							echo '<th>Entrepôt</th>';
+							echo '<th>Entrepôt</th>';
 							echo '</tr>';
 						  }
-					 
+						  $infoEmpruntOff->closeCursor();
+						  $infoProchaineReservation = $Cnn->prepare('Select * from reservation where effectif = 1 and idOeuvre NOT IN (select idOeuvre from emprunt where confirme = 1) order by idOeuvre,date');
+						  $infoProchaineReservation->execute();
+						  $nb;
+						  $found = false;
+						  $idOeuvre = "";
+						  while($Deplacement = $infoProchaineReservation->fetch())
+						  {
+							  if ($idOeuvre != $Deplacement['idOeuvre'])
+							  {
+							 	 $idOeuvre = $Deplacement['idOeuvre'];
+								 $found = false;
+							  }
+							  $sql3 = 'select count(*) as nb from emprunt where MailPersonneEmprunt = "'.$Deplacement["MailPersonneReserve"].'" and confirme = 1;';
+							  $infoCount = $Cnn->prepare($sql3);
+							  $infoCount->execute();
+							  if ($nombre = $infoCount->fetch())
+							  {
+								  $nb = $nombre['nb'];
+							  }
+							  
+							  if ($nb < 2 && $found == false)
+							  {
+								  $found = true;
+								  $sql2 = 'select * from Oeuvres where idOeuvres = '.$Deplacement["idOeuvre"].';';
+								  $infoOeuvre = $Cnn->prepare($sql2);
+								  $infoOeuvre->execute();
+								  echo '<tr style="background-color:#2E3033;">';
+							 echo '<th> <input type="checkbox" id="checkbox'.$Deplacement["idOeuvre"].'false" name="chekbox"  onclick="onCheck('.$Deplacement["idOeuvre"].',false)"></th>';
+								  echo '<th>';
+								 if ($Oeuvre = $infoOeuvre->fetch())
+								{
+									echo '<img src="img/categorie/'.$Oeuvre['nomOeuvre'].'"style="width:125px; height:auto;">';
+								    echo'</th>';
+								    echo'<th>';
+								    echo $Oeuvre['Titre'];
+								    echo'</th>';
+									$sql = 'select idOeuvre from Emprunt where confirme = 0 and idOeuvre ='.$Oeuvre["idOeuvres"];
+									echo '<th>';
+									$infoEntrepot = $Cnn->prepare($sql);
+									$infoEntrepot ->execute();
+									if ($infoEntrepot->fetch() == true)
+									{
+										echo 'Entrepôt';
+									}
+									else
+									{
+										echo $Oeuvre['lieu'];
+									}
+									echo '</th>';
+								}
+								echo '<th>'.$Deplacement['Local'].'</th>';
+								echo '<th>'.$Deplacement['PrenomPersonneReserve'].' '.$Deplacement['NomPersonneReserve'].'</th>';
+										
+								echo '</th>';
+								echo '</tr>';
+							  }
+						  }		 
                     echo '</tbody></table></div>';
-					echo '<input type="submit" class="btn tf-btn btn-default" value="Confirmer">';
 					echo '</form>';//fermeture form*/
 				   	 /**************************************/	
 					/*FIN  FORM POUR VOIR DÉPLACEMENTS FIN*/
@@ -389,10 +437,10 @@ color:black;
                     <form id="formAjoutCommanditaire" style="display:none;" action="ajoutCommanditaire.php?email=<?PHP echo $email;?>" method="POST" enctype="multipart/form-data">
 				<div align="center"> <br>Nom du commanditaire
                        <input class="form-control-little" id="commanditaire" name="commanditaire" placeholder="Entrez le nom du commanditaire"></input>
-                   <br><label style="margin-left:40%;" for="image">Image
-                     <input type="file" name="image" id="image"></label><br>
+                   <label style="margin-left:40%;" for="image">Image
+                     <input type="file" name="image" id="image"></label><br><br><br>
 									
-                   <button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>
+                   <button type="submit" class="btn tf-btn btn-notdefault">Ajouter</button></div>
                    </form>
                    <?PHP
 				   	 /**************************************/	
@@ -413,7 +461,7 @@ color:black;
 									}
 									echo'</select><br>';//com
 									
-                   echo' <button type="submit" class="btn tf-btn btn-default">Supprimer</button></div>';//button
+                   echo' <button type="submit" class="btn tf-btn btn-notdefault">Supprimer</button></div>';//button
                    echo' </form>';//fermeture form
 				   	 /*************************************/	
 					/*FIN FORM DE DELETE DE COMMANDITAIRE*/
@@ -513,9 +561,9 @@ color:black;
 						
 						
 						 echo '<label style="margin-left:40%;" for="image">Image
-                     <input type="file" name="image" id="image"></label><br>';//fichier		
+                     <input type="file" name="image" id="image"></label><br><br><br>';//fichier		
 									
-                   echo'<button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>';//button
+                   echo'<button type="submit" class="btn tf-btn btn-notdefault">Ajouter</button></div>';//button
                    echo' </form>';//fermeture form
 				   	 /*******************************/	
 					/*FIN FORM DE L'AJOUT D'OEUVRES*/
@@ -597,7 +645,7 @@ color:black;
 						
 						echo '</select><br>';//etat	
 					echo '<input type="hidden" id="idOeuvre" name="idOeuvre">';
-                   echo'<button type="submit" class="btn tf-btn btn-default">Modifier</button></div>';//button
+                   echo'<button type="submit" class="btn tf-btn btn-notdefault">Modifier</button></div>';//button
                    echo' </form>';//fermeture form
 				   	 /***************************/	
 					/*FIN FORM MODIFIER OEUVRES*/
@@ -619,7 +667,7 @@ color:black;
 						<option id="1">Oui</option>
 				</select><br>
 									
-                  <button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>
+                  <button type="submit" class="btn tf-btn btn-notdefault">Ajouter</button></div>
                    </form>
                    <?PHP
 				   	 /****************************/	
@@ -657,7 +705,7 @@ color:black;
 						
 				</select><br>
                         <input type="hidden" id="idEtat" name="idEtat">
-                        <button type="submit" class="btn tf-btn btn-default">Modifier</button></div>
+                        <button type="submit" class="btn tf-btn btn-notdefault">Modifier</button></div>
 				    </form>
                     <?PHP
 				   	 /**************************/	
@@ -673,7 +721,7 @@ color:black;
                     <div align="center">Médium
                                     <input class="form-control-little" id="medium" name="medium" placeholder="Entrez le médium"></input><br>
 									
-                   <button type="submit" class="btn tf-btn btn-default">Ajouter</button></div>
+                   <button type="submit" class="btn tf-btn btn-notdefault">Ajouter</button></div>
                    </form>
                    <?PHP
 				   	 /**********************************/	
@@ -703,7 +751,7 @@ color:black;
 					<form id="formModifierMedium" style="display:none;"  action="modifierMedium.php?email='.$email.'" method="POST" enctype="multipart/form-data">
                    <div align="center">Médium <input class="form-control-little" id="mediumModif" name="mediumModif" placeholder="Entrez le médium"></input><br>
 				<input type="hidden" id="idMedium" name="idMedium">			
-                   <button type="submit" class="btn tf-btn btn-default">Modifier</button></div>
+                   <button type="submit" class="btn tf-btn btn-notdefault">Modifier</button></div>
                    </form>
                    <?PHP
 				   	 /********************************/	
@@ -711,6 +759,30 @@ color:black;
 				   /********************************/
 				}
 			}
+			
+					if (isset($_GET['deplacement']) && $_GET['deplacement'] == 'true')
+					{?>
+						<script type="text/javascript">
+              			 $('#divRes').slideToggle("slow", function () {});
+           				 $('#formDeplacement').slideToggle("slow", function () {});
+                         </script>
+					<?PHP }
+					else if (isset($_GET['reservation']) && $_GET['reservation'] == 'true')
+					{?>
+						<script type="text/javascript">
+                         $('#divRes').slideToggle("slow", function () {});
+						 $('#formReservation').slideToggle("slow", function () {});
+                        </script>
+					<?PHP }
+					else if (isset($_GET['emprunt']) && $_GET['emprunt'] == 'true')
+					{?>
+						<script type="text/javascript">
+                        $('#divEmprunt').slideToggle("slow", function () {});
+						$('#formEmprunt').slideToggle("slow", function () {});
+                        </script>
+					<?PHP }
+			
+			
 			?>               
             </div>
         </div>
@@ -1114,6 +1186,24 @@ $("#formSprmCommanditaire").validate(
 			 $('#formDeplacement').css('display', 'none');
 			 $('#formDeplacementFin').css('display', 'none');
 		}
+			function ajouterCommanditaire() {
+			$('#formAjoutCommanditaire').slideToggle("slow", function () {
+			});
+			$('#formSprmCommanditaire').css('display', 'none');
+			$('#formEmprunt').css('display', 'none');
+			 $('#formAjouterOeuvre').css('display', 'none');
+			 $('#formEtat').css('display', 'none');
+			 $('#formCategorie').css('display', 'none');
+			 $('#formModifierOeuvre').css('display', 'none');
+			 $('#formAllTitre').css('display', 'none');
+			 $('#formModifierEtat').css('display', 'none');
+			 $('#formModifierMedium').css('display', 'none');
+			 $('#formAllEtat').css('display', 'none');
+			 $('#formAllMedium').css('display', 'none');
+			 $('#formReservation').css('display', 'none');
+			 $('#formDeplacement').css('display', 'none');
+			 $('#formDeplacementFin').css('display', 'none');
+		}
 		function sprmCommanditaire(){
 				$('#formSprmCommanditaire').slideToggle("slow", function () {
 			});
@@ -1210,7 +1300,7 @@ $("#formSprmCommanditaire").validate(
 
 		
 		function voirReservation(){
-				$('#formReservation').slideToggle("slow", function () {
+			$('#formReservation').slideToggle("slow", function () {
 			});
 			$('#formModifierMedium').css('display', 'none')
 			$('#formModifierEtat').css('display', 'none');
@@ -1330,6 +1420,7 @@ function ajaxModifierMedium()
 };
 function supprimer(idReservation)
 {
+	if (confirm('Voulez-vous vraiment supprimer cette réservation?')) {
 	 $.ajax({
 		  url : "SupprimerReserv.php",
 		  type : 'POST',
@@ -1341,9 +1432,11 @@ function supprimer(idReservation)
 						document.location.href="gestionnaire.php?reservation=true";
 					},
 		});
+	}
 }
 function supprimerEmprunt(idEmprunt,idOeuvre)
 {
+	if (confirm('Voulez-vous vraiment confirmer cet emprunt?')) {
 	 $.ajax({
 		  url : "SupprimerEmprunt.php",
 		  type : 'POST',
@@ -1355,6 +1448,7 @@ function supprimerEmprunt(idEmprunt,idOeuvre)
 						document.location.href="gestionnaire.php?emprunt=true";
 					},
 		});
+	}
 }
 	function menu(){
 	 $('.navbar-default').addClass('on');
@@ -1362,7 +1456,6 @@ function supprimerEmprunt(idEmprunt,idOeuvre)
 	
 	function onCheck(idOeuvre,choice){
 		if (confirm('Voulez-vous vraiment confirmer ce déplacement?')) {
-			
 			 $.ajax({
 			  url : "confirmerDeplacement.php",
 			  type : 'POST',

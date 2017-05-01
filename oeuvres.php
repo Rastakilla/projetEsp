@@ -362,7 +362,7 @@
                                     <input class="form-control-little" id="localClient" name="localClient" placeholder="Entrez votre local"></input>               
                      Email
                                     <input class="form-control-little" id="emailClient" name="emailClient" placeholder="Entrez votre adresse Email"></input><br></div>
-                    <div><button type="submit" class="btn tf-btn btn-default"> <?PHP echo $bouton;?></button></div>
+                    <div><button type="submit" class="btn tf-btn btn-notdefault"> <?PHP echo $bouton;?></button></div>
                     </form>
 					<?PHP }
 						echo '<br><br><br><br><br><br>';
@@ -399,8 +399,7 @@
 					},
 			nomClient: {	required:true			
 					},
-			localClient: {	required:true,
-							regex_L:true		
+			localClient: {	required:true	
 					},
 			emailClient: {	required:true,
 				   			 regex_E: true				
@@ -411,8 +410,7 @@
 								},
 								nomClient :{ required : 'Le nom est obligatoire'},
 								prenomClient :{ required : 'Le prenom est obligatoire'},
-								localClient :{ required : 'Le local est obligatoire',
-												regex_L: 'Doit être de format A-000'}
+								localClient :{ required : 'Le local est obligatoire'}
 					}
 	}
 );

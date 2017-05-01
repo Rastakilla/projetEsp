@@ -36,15 +36,11 @@
   }
   if(isset($_SESSION['type']) && $_SESSION['type'] != '')
   {
-	  if ($_SESSION['type'] == 'Emprunter')
-	  {
-		  $type = 'Emprunt';
-	  }
-	  else if ($_SESSION['type'] == 'Reserver')
+	  if ($_SESSION['type'] == 'Reserver')
 	  {
 		  $type = 'Réservation';
 	  }
-	  	  echo '<script>alert("'.$type.' effectué.");</script>';
+	  	  echo '<script>alert("'.$type.' effectuée.");</script>';
   }
   unset($_SESSION['acces']);
    unset($_SESSION['type']);
