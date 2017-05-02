@@ -254,7 +254,6 @@ color:black;
 							echo '<th>Entrepôt</th>';
 							echo '</tr>';
 						  }
-						  $infoEmpruntOff->closeCursor();
 						  $infoProchaineReservation = $Cnn->prepare('Select * from reservation where effectif = 1 and idOeuvre NOT IN (select idOeuvre from emprunt where confirme = 1) order by idOeuvre,date');
 						  $infoProchaineReservation->execute();
 						  $nb;
@@ -759,6 +758,13 @@ color:black;
 						<script type="text/javascript">
                         $('#divEmprunt').slideToggle("slow", function () {});
 						$('#formEmprunt').slideToggle("slow", function () {});
+                        </script>
+					<?PHP }
+					else if (isset($_GET['fin']) && $_GET['fin'] == 'true')
+					{?>
+						<script type="text/javascript">
+                        $('#divEmprunt').slideToggle("slow", function () {});
+						$('#formDeplacementFin').slideToggle("slow", function () {});
                         </script>
 					<?PHP }
 			
