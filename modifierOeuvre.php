@@ -27,7 +27,7 @@ if (isset($_POST['auteurM']) && htmlentities($_POST['auteurM']))
 		 $ajouterGestionnaire = $Cnn->prepare($sql);
 		 $ajouterGestionnaire->execute();
 		 	
-		$_SESSION['Uploader'] = 'Modification d\'oeuvre effectué';	
+		$_SESSION['Uploader'] = 'Modification d\'oeuvre effectuée';	
 		
 		header('location:Gestionnaire.php');
 		 

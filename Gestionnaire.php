@@ -366,29 +366,10 @@ color:black;
 							echo '</tr>';
 						  }
 						  $infoEmpruntOff->closeCursor();
-						  $infoProchaineReservation = $Cnn->prepare('Select * from reservation where effectif = 1 and idOeuvre NOT IN (select idOeuvre from emprunt where confirme = 1) order by idOeuvre,date');
+						   $infoProchaineReservation = $Cnn->prepare('SELECT * FROM(Select * FROM reservation WHERE reservation.effectif = 1  Order By reservation.Date ASC) as tmp_table GROUP BY IdOeuvre;');
 						  $infoProchaineReservation->execute();
-						  $nb;
-						  $found = false;
-						  $idOeuvre = "";
 						  while($Deplacement = $infoProchaineReservation->fetch())
 						  {
-							  if ($idOeuvre != $Deplacement['idOeuvre'])
-							  {
-							 	 $idOeuvre = $Deplacement['idOeuvre'];
-								 $found = false;
-							  }
-							  $sql3 = 'select count(*) as nb from emprunt where MailPersonneEmprunt = "'.$Deplacement["MailPersonneReserve"].'" and confirme = 1;';
-							  $infoCount = $Cnn->prepare($sql3);
-							  $infoCount->execute();
-							  if ($nombre = $infoCount->fetch())
-							  {
-								  $nb = $nombre['nb'];
-							  }
-							  
-							  if ($nb < 2 && $found == false)
-							  {
-								  $found = true;
 								  $sql2 = 'select * from Oeuvres where idOeuvres = '.$Deplacement["idOeuvre"].';';
 								  $infoOeuvre = $Cnn->prepare($sql2);
 								  $infoOeuvre->execute();
@@ -415,16 +396,15 @@ color:black;
 										echo $Oeuvre['lieu'];
 									}
 									echo '</th>';
-								}
 								echo '<th>'.$Deplacement['Local'].'</th>';
 								echo '<th>'.$Deplacement['PrenomPersonneReserve'].' '.$Deplacement['NomPersonneReserve'].'</th>';
+								}
 										
 								echo '</th>';
 								echo '</tr>';
-							  }
 						  }		 
                     echo '</tbody></table></div>';
-					echo '</form>';//fermeture form*/
+					echo '</form>';
 				   	 /**************************************/	
 					/*FIN  FORM POUR VOIR DÉPLACEMENTS FIN*/
 				   /**************************************/
@@ -520,7 +500,7 @@ color:black;
 					/*********************************/
 					echo '<form id="formAjouterOeuvre" style="display:none;"  action="ajoutOeuvre.php?email='.$email.'" method="POST" enctype="multipart/form-data">';
 					?>
-                    <div align="center"> Auteur <input class="form-control-little" id="auteur" name="auteur" placeholder="Entrez le nom de l\'auteur"></input>
+                    <div align="center"> Auteur <input class="form-control-little" id="auteur" name="auteur" placeholder="Entrez le nom de l'auteur"></input>
 					 Titre <input class="form-control-little" id="titre" name="titre" placeholder="Entrez le titre"></input>
 					Hauteur <input class="form-control-little" id="hauteur" name="hauteur" placeholder="Entrez la hauteur en centimètre"></input>
 					Largeur	<input class="form-control-little" id="largeur" name="largeur" placeholder="Entrez la hauteur en centimètre"></input>
@@ -606,7 +586,7 @@ color:black;
 					</form>
 					<form id="formModifierOeuvre" style="display:none;"  action="modifierOeuvre.php?email=<?PHP echo $email;?>" method="POST" enctype="multipart/form-data">
 					<br> <a id ='oeuvreImage' data-lightbox='Oeuvre'><p class = 'color'><b><u>VOIR L'OEUVRE</u></b></p></a>
-                    <div align="center"> Auteur  <input class="form-control-little" id="auteurM" name="auteurM" placeholder="Entrez le nom de l\'auteur"></input>
+                    <div align="center"> Auteur  <input class="form-control-little" id="auteurM" name="auteurM" placeholder="Entrez le nom de l'auteur"></input>
 					 Titre <input class="form-control-little" id="titreM" name="titreM" placeholder="Entrez le titre"></input>
 					Hauteur <input class="form-control-little" id="hauteurM" name="hauteurM" placeholder="Entrez la hauteur en centimètre"></input>
 					Largeur <input class="form-control-little" id="largeurM" name="largeurM" placeholder="Entrez la hauteur en centimètre"></input>

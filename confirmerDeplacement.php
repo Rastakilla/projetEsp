@@ -43,7 +43,15 @@ if (isset($_POST['idOeuvre']) && isset($_POST['choice']))
 		$sql = 'delete from reservation where idReservation = '.$idReservation;
 		$delReservation = $Cnn->prepare($sql);
 		$delReservation->execute();
-		$sql = 'update Oeuvres set lieu = "'.$local.'",idEtat =4 where idOeuvres='.$_POST["idOeuvre"].';';
+		$sql1 = 'select idetat from etat where peuxEtreReserve = 1';
+		$infoEtat = $Cnn->prepare($sql1);
+		$infoEtat->execute();
+		$idEtat = 1;
+		if ($Etat = $infoEtat->fetch())
+		{
+			$idEtat = $Etat['idetat'];
+		}
+		$sql = 'update Oeuvres set lieu = "'.$local.'",idEtat ='.$idEtat.' where idOeuvres='.$_POST["idOeuvre"].';';
 		$majOeuvre = $Cnn->prepare($sql);
 		$majOeuvre->execute();
 	}

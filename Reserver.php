@@ -51,7 +51,7 @@ if (isset($_GET['mail']) && isset($_GET['idOeuvre'])&& isset($_GET['type'])&& is
 			$sql = 'delete from reservation where MailPersonneReserve ="'.$_GET['mail'].'" and idOeuvre ="'.$_GET['idOeuvre'].'" and effectif=0;';
 			$mettreCommanditaire = $Cnn->prepare($sql);
 			$mettreCommanditaire->execute();
-			$_SESSION['max'] = 'Limite de réservation atteite (2). Vous ne pouvez réserver plus d\'oeuvres';
+			$_SESSION['max'] = 'Limite de réservation atteinte (2). Vous ne pouvez réserver plus d\'oeuvres';
 			header('location:index.php');
 		}
 	}
