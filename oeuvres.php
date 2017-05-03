@@ -44,7 +44,7 @@
        <script src="lightbox2-master/dist/js/lightbox-plus-jquery.min.js"></script>
        
   </head>
-  <body onload ="menu();" style='height:100vh;'>
+  <body onload ="menu();" style='height:100vh; width:100%'>
    <?PHP
    		if (isset($_GET['etat']) && $_GET['etat']!=NULL)
 		{

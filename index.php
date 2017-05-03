@@ -120,7 +120,7 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body>
+  <body style="width:100%">
 	<?PHP include('includes/Header.php'); ?>
     <!-- Filtre Page
     ==========================================-->
