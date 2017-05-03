@@ -26,7 +26,7 @@ CREATE TABLE `categorie` (
   `idCategorie` int(11) NOT NULL AUTO_INCREMENT,
   `nomCategorie` varchar(50) NOT NULL,
   PRIMARY KEY (`idCategorie`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -79,9 +79,10 @@ CREATE TABLE `emprunt` (
   `MailPersonneEmprunt` varchar(100) NOT NULL,
   `Local` varchar(250) NOT NULL,
   `idOeuvre` int(11) NOT NULL,
+  `confirme` tinyint(1) NOT NULL,
   PRIMARY KEY (`idEmprunt`),
   UNIQUE KEY `idOeuvre_UNIQUE` (`idOeuvre`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -90,7 +91,7 @@ CREATE TABLE `emprunt` (
 
 LOCK TABLES `emprunt` WRITE;
 /*!40000 ALTER TABLE `emprunt` DISABLE KEYS */;
-INSERT INTO `emprunt` VALUES (7,'2017-04-06 14:04:53','sss','d','cednoel@cegepba.qc.ca','d-123',3),(8,'2017-04-06 14:08:26','d','d','cednoel@cegepba.qc.ca','s-123',8);
+INSERT INTO `emprunt` VALUES (7,'2017-05-03 13:11:30','Noel','Cederic','etu13@cegepba.qc.ca','d-123',1,1),(9,'2017-05-03 13:11:31','no','ced','etu14@cegepba.qc.ca','d-123',4,1),(10,'2017-05-03 13:41:19','Noel','Cederic','etu13@cegepba.qc.ca','d-123',2,1);
 /*!40000 ALTER TABLE `emprunt` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -104,9 +105,9 @@ DROP TABLE IF EXISTS `etat`;
 CREATE TABLE `etat` (
   `idetat` int(11) NOT NULL AUTO_INCREMENT,
   `NomEtat` varchar(25) NOT NULL,
-  `peuxEtreReserve` int(11) NOT NULL,
+  `peuxEtreReserve` tinyint(4) NOT NULL,
   PRIMARY KEY (`idetat`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -115,7 +116,7 @@ CREATE TABLE `etat` (
 
 LOCK TABLES `etat` WRITE;
 /*!40000 ALTER TABLE `etat` DISABLE KEYS */;
-INSERT INTO `etat` VALUES (1,'En réparation',0),(2,'Installation permanente',0),(3,'Disponible',1),(4,'Non Disponible',2),(5,'Oeuvre retirée',0);
+INSERT INTO `etat` VALUES (1,'En réparation',0),(2,'Installation permanente',0),(3,'Disponible',1),(4,'Non Disponible',1),(5,'Oeuvre retirée',0);
 /*!40000 ALTER TABLE `etat` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -178,7 +179,7 @@ CREATE TABLE `oeuvres` (
 
 LOCK TABLES `oeuvres` WRITE;
 /*!40000 ALTER TABLE `oeuvres` DISABLE KEYS */;
-INSERT INTO `oeuvres` VALUES (1,'DG_Collection_CBA_09-10.jpg','Daisy Grenier',83,53,NULL,' L\'éveil',2010,3,3,NULL,NULL),(2,'JF_Collection_CBA_09-10.jpg','Jessica Fecteau',102,64,NULL,'OGM',2010,1,3,NULL,NULL),(3,'MCP_Collection_CBA_09-10.jpg','Marie-Claude Poulin',127,89,NULL,'Ce qu\'il lui reste?',2010,8,2,NULL,NULL),(4,'PHV_Collection_CBA_09-10.jpg','Pierre-Hugues Vachon',75,101,NULL,'Citation de Serge Lemoyne',2010,1,4,'',''),(5,'ANC_Collection_CBA_10-11.jpg','Amelie Nadeau-Caron',61,45,NULL,'Payage abstrait',2011,1,3,'',''),(6,'CMP_Collection_CBA_10-11.jpg','Catherine Messier-Poulin',45,185,NULL,'Light',2011,6,3,'',''),(7,'SC_Collection_CBA_10-11.jpg','Stephanie Cloutier',50,76,NULL,'Sans Titre',2011,8,3,'',''),(8,'FG_Collection_CBA_10-11.jpg','Fanny Gaboury',31,92,NULL,'Dans les lignes de la main',2011,6,3,'',''),(9,'JML_Collection_CBA_10-11.jpg','Jean-Mathieu Lachapelle',153,132,NULL,'Intercoulouré',2011,1,3,'',''),(10,'DD_Collection_CBA_09-10.jpg','David Dulac',216,106,NULL,'Explosion orgasmique du XXIe siècle',2010,8,2,'','');
+INSERT INTO `oeuvres` VALUES (1,'DG_Collection_CBA_09-10.jpg','Daisy Grenier',83,53,NULL,' L\'éveil',2010,3,3,'d-123',NULL),(2,'JF_Collection_CBA_09-10.jpg','Jessica Fecteau',102,64,NULL,'OGM',2010,1,3,'d-123',NULL),(3,'MCP_Collection_CBA_09-10.jpg','Marie-Claude Poulin',127,89,NULL,'Ce qu\'il lui reste?',2010,8,2,NULL,NULL),(4,'PHV_Collection_CBA_09-10.jpg','Pierre-Hugues Vachon',75,101,NULL,'Citation de Serge Lemoyne',2010,1,3,'Entrepôt',''),(5,'ANC_Collection_CBA_10-11.jpg','Amelie Nadeau-Caron',61,45,NULL,'Payage abstrait',2011,1,3,'',''),(6,'CMP_Collection_CBA_10-11.jpg','Catherine Messier-Poulin',45,185,NULL,'Light',2011,6,3,'Entrepôt',''),(7,'SC_Collection_CBA_10-11.jpg','Stephanie Cloutier',50,76,NULL,'Sans Titre',2011,8,3,'Entrepôt',''),(8,'FG_Collection_CBA_10-11.jpg','Fanny Gaboury',31,92,NULL,'Dans les lignes de la main',2011,6,3,'',''),(9,'JML_Collection_CBA_10-11.jpg','Jean-Mathieu Lachapelle',153,132,NULL,'Intercoulouré',2011,1,3,'',''),(10,'DD_Collection_CBA_09-10.jpg','David Dulac',216,106,NULL,'Explosion orgasmique du XXIe siècle',2010,8,2,'','');
 /*!40000 ALTER TABLE `oeuvres` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -201,7 +202,7 @@ CREATE TABLE `reservation` (
   PRIMARY KEY (`idReservation`),
   KEY `Oeuvres_idOeuvre_fk` (`idOeuvre`),
   CONSTRAINT `Oeuvres_idOeuvre_fk` FOREIGN KEY (`idOeuvre`) REFERENCES `oeuvres` (`idOeuvres`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -210,7 +211,7 @@ CREATE TABLE `reservation` (
 
 LOCK TABLES `reservation` WRITE;
 /*!40000 ALTER TABLE `reservation` DISABLE KEYS */;
-INSERT INTO `reservation` VALUES (25,'2017-04-10 14:36:09','Bernard','Claude','cbernard@cegepba.qc.ca','407-4',4,0),(26,'2017-04-18 14:36:34','Bernard','Claude','cbernard@cegepba.qc.ca','407-4',4,1),(27,'2017-04-19 14:37:51','Goulet','Marthe','mgoulet@cegepba.qc.ca','407-5',4,0),(28,'2017-04-19 14:38:27','Paquin','Yvan','ypaquin@cegepba.qc.ca','407-1',4,0),(29,'2017-04-19 14:38:57','Dubois','Martin','madubois@cegepba.qc.ca','407-2',4,0);
+INSERT INTO `reservation` VALUES (8,'2017-05-03 13:11:31','Noel','Cederic','etu13@cegepba.qc.ca','d-123',3,1),(9,'2017-05-03 13:11:31','no','ced','etu14@cegepba.qc.ca','d-123',3,1),(10,'2017-05-03 13:11:31','no','ced','etu14@cegepba.qc.ca','d-123',5,1),(11,'2017-05-03 13:11:31','levasseur','Mathieu','etu15@cegepba.qc.ca','d-123',5,1);
 /*!40000 ALTER TABLE `reservation` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -223,4 +224,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-04-20 14:46:27
+-- Dump completed on 2017-05-03 15:47:25
