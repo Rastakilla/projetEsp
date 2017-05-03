@@ -23,27 +23,6 @@ if (isset($_POST['idEmprunt']) && isset($_POST['idOeuvre']))
 			$updateOeuvre->execute();
 		}
 	}
-	/*if ($ReservationBonne = $infoReserv->fetch())
-	{
-		$sql = 'insert into emprunt (Date,NomPersonneEmprunt,PrenomPersonneEmprunt,MailPersonneEmprunt,Local,idOeuvre,confirme) VALUES(NOW(),"'.$ReservationBonne["NomPersonneReserve"].'","'.$ReservationBonne["PrenomPersonneReserve"].'","'.$ReservationBonne["MailPersonneReserve"].'","'.$ReservationBonne["Local"].'",'.$ReservationBonne["idOeuvre"].',0);';
-		$changementEmprunt = $Cnn->prepare($sql);
-		$changementEmprunt->execute();
-		$sql = 'delete from reservation where idReservation = '.$ReservationBonne['idReservation'];
-		$deleteReserv = $Cnn->prepare($sql);
-		$deleteReserv->execute();
-	}
-	else
-	{
-		$sql = 'select idetat from etat where peuxEtreReserve = 1;';
-		$infoEtat = $Cnn->prepare($sql);
-		$infoEtat->execute();
-		if ($Etat = $infoEtat->fetch())
-		{
-		$sql = 'update oeuvres set idEtat = '.$Etat["idetat"].' where idOeuvres = '.$_POST['idOeuvre'];
-		$updateOeuvre = $Cnn->prepare($sql);
-		$updateOeuvre->execute();
-		}
-	}*/
 }
 else
 {
