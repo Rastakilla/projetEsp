@@ -35,7 +35,6 @@ color:black;
 
     <!-- Slider
     ================================================== -->
-    <link href="css/owl.carousel.css" rel="stylesheet" media="screen">
     <link href="css/owl.theme.css" rel="stylesheet" media="screen">
 
     <!-- Stylesheet
@@ -259,12 +258,19 @@ color:black;
 						  $nb;
 						  $found = false;
 						  $idOeuvre = "";
+						  $verif = false;
+						  $email = '';
 						  while($Deplacement = $infoProchaineReservation->fetch())
 						  {
 							  if ($idOeuvre != $Deplacement['idOeuvre'])
 							  {
 							 	 $idOeuvre = $Deplacement['idOeuvre'];
 								 $found = false;
+								 $email = $Deplacement['MailPersonneReserve'];
+							  }
+							  if ($email != $Deplacement['MailPersonneReserve'])
+							  {
+								  $verif = false;
 							  }
 							  $sql3 = 'select count(*) as nb from emprunt where MailPersonneEmprunt = "'.$Deplacement["MailPersonneReserve"].'" and confirme = 1;';
 							  $infoCount = $Cnn->prepare($sql3);
@@ -273,8 +279,50 @@ color:black;
 							  {
 								  $nb = $nombre['nb'];
 							  }
-							  
-							  if ($nb < 2 && $found == false)
+							  if ($nb == 1 && $found == false && $verif == false)
+							  {
+								  $verif = true;
+								  $found = true;
+								  $sql4 = 'select * from reservation where MailPersonneReserve = "'.$Deplacement["MailPersonneReserve"].'" and idOeuvre = '.$Deplacement['idOeuvre'].' limit 1';
+								  $infoUneReservation = $Cnn->prepare($sql4);
+								  $infoUneReservation->execute();
+								  if($UneReservation = $infoUneReservation->fetch())
+								  {
+								  $sql2 = 'select * from Oeuvres where idOeuvres = '.$UneReservation["idOeuvre"].';';
+								  $infoOeuvre = $Cnn->prepare($sql2);
+								  $infoOeuvre->execute();
+								  echo '<tr style="background-color:#2E3033;">';
+							 echo '<th> <input type="checkbox" id="checkbox'.$UneReservation["idOeuvre"].'false" name="chekbox"  onclick="onCheck('.$Deplacement["idOeuvre"].',false)"></th>';
+								  echo '<th>';
+								 if ($Oeuvre = $infoOeuvre->fetch())
+								{
+									echo '<img src="img/categorie/'.$Oeuvre['nomOeuvre'].'"style="width:125px; height:auto;">';
+								    echo'</th>';
+								    echo'<th>';
+								    echo $Oeuvre['Titre'];
+								    echo'</th>';
+									$sql = 'select idOeuvre from Emprunt where confirme = 0 and idOeuvre ='.$Oeuvre["idOeuvres"];
+									echo '<th>';
+									$infoEntrepot = $Cnn->prepare($sql);
+									$infoEntrepot ->execute();
+									if ($infoEntrepot->fetch() == true)
+									{
+										echo 'Entrepôt';
+									}
+									else
+									{
+										echo $Oeuvre['lieu'];
+									}
+									echo '</th>';
+								}
+								echo '<th>'.$UneReservation['Local'].'</th>';
+								echo '<th>'.$UneReservation['PrenomPersonneReserve'].' '.$UneReservation['NomPersonneReserve'].'</th>';
+										
+								echo '</th>';
+								echo '</tr>';   
+								  }
+							  }
+							  else if ($nb == 0 && $found == false)
 							  {
 								  $found = true;
 								  $sql2 = 'select * from Oeuvres where idOeuvres = '.$Deplacement["idOeuvre"].';';
@@ -780,7 +828,6 @@ color:black;
     <script type="text/javascript" src="js/bootstrap.js"></script>
     <script type="text/javascript" src="js/SmoothScroll.js"></script>
     <script type="text/javascript" src="js/jquery.isotope.js"></script>
-    <script src="js/owl.carousel.js"></script>
     
 
     <!-- Javascripts
