@@ -8,6 +8,38 @@ if(!isset($_GET['type']) || !isset($_POST['emailClient']) )
 }
 else if(isset($_POST['emailClient']) && isset($_POST['nomClient']) && isset($_POST['prenomClient']) && isset($_POST['localClient']))
 {
+		$Host;
+		$Username;
+		$Password;
+		$Port;
+		$maxReservation;
+		$sql = 'select nomVariable,value from variable';
+		$infoHost = $Cnn->prepare($sql);
+		$infoHost->execute();
+		while ($info = $infoHost->fetch())
+		{
+			if ($info['nomVariable'] == 'Host')
+			{
+				$Host = $info['value'];
+			}
+			else if ($info['nomVariable'] == 'Username')
+			{
+				$Username = $info['value'];
+			}
+			else if ($info['nomVariable'] == 'Password')
+			{
+				$Password = $info['value'];
+			}
+			else if ($info['nomVariable'] == 'Port')
+			{
+				$Port = $info['value'];
+			}
+			else if ($info['nomVariable'] == 'maxReservation')
+			{
+				$maxReservation = $info['value'];
+			}
+		}
+		
 	$email = $_POST['emailClient'];
 	$nom = $_POST['nomClient'];
 	$prenom = $_POST['prenomClient'];
@@ -33,7 +65,7 @@ else if(isset($_POST['emailClient']) && isset($_POST['nomClient']) && isset($_PO
 		{
 			$nombre = $nb['nombre'];
 		}
-		if ($nombre <2)
+		if ($nombre <$maxReservation)
 		{
 			
 			$sql = 'select idReservation from reservation where idOeuvre ='.$idOeuvre.' and effectif=1 and MailPersonneReserve = "'.$email.'";';
@@ -62,17 +94,18 @@ else if(isset($_POST['emailClient']) && isset($_POST['nomClient']) && isset($_PO
 				
 				
 				$message = 'Cliquez sur le lien pour finaliser la réservation de l\'oeuvre "'.$titreOeuvre.' ". Prendre note que vous serez la personne numéro '.$nb.' dans la liste d\'attente Si vous ne voulez plus celle-ci, ignorez ce message :<a href="http://localhost/'.$type.'.php?mail='.$email.'&idOeuvre='.$idOeuvre.'&type='.$type.'&date='.$now.'">'.$type.'</a>' ;
+				/*$message = 'Cliquez sur le lien pour finaliser la réservation de l\'oeuvre "'.$titreOeuvre.' ". Prendre note que vous serez la personne numéro '.$nb.' dans la liste d\'attente Si vous ne voulez plus celle-ci, ignorez ce message :<a href="http://10.4.1.21/etu13/'.$type.'.php?mail='.$email.'&idOeuvre='.$idOeuvre.'&type='.$type.'&date='.$now.'">'.$type.'</a>' ;*/
 					/*ENVOIE DU MAIL*/
-			
+					
 				$mail = new PHPMailer;
 					
 				$mail->isSMTP();
-				$mail->Host = 'mail.kms-quebec.com';
+				$mail->Host = $Host;
 				$mail->SMTPAuth = true;
-				$mail->Username = 'cba@kms-quebec.com';
-				$mail->Password = 'Test1234';
-				$mail->Port = 587;
-				$mail->setFrom('infogalerievirtuellecba@gmail.com', 'Réservation GV');
+				$mail->Username = $Username;
+				$mail->Password = $Password;
+				$mail->Port = $Port;
+				$mail->setFrom($Username, $Username);
 				$mail->addAddress($email);	
 				$mail->isHTML(true);
 				$mail->CharSet = 'UTF-8';
@@ -93,7 +126,7 @@ else if(isset($_POST['emailClient']) && isset($_POST['nomClient']) && isset($_PO
 		}
 		else
 		{
-			$_SESSION['max'] = 'Limite de réservation atteite (2). Vous ne pouvez réserver plus d\'oeuvres';
+			$_SESSION['max'] = 'Limite de réservation atteinte ('.$maxReservation.'). Vous ne pouvez réserver plus d\'oeuvres';
 		}
 	}
 }

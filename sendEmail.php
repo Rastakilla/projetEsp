@@ -1,24 +1,57 @@
 <?php 
 include ('/PHPMailer/PHPMailerAutoload.php');
+include ('connexionBd.php');
 echo $_POST['vMail'];
 echo $_POST['vMessage'];
 if (isset($_POST['vMail']) && isset($_POST['vMessage'])) 
 {
+	$Host;
+	$Username;
+	$Password;
+	$Port;
+	$Admin;
+	$sql = 'select nomVariable,value from variable';
+	$infoHost = $Cnn->prepare($sql);
+	$infoHost->execute();
+	while ($info = $infoHost->fetch())
+	{
+		if ($info['nomVariable'] == 'Host')
+		{
+			$Host = $info['value'];
+		}
+		else if ($info['nomVariable'] == 'Username')
+		{
+			$Username = $info['value'];
+		}
+		else if ($info['nomVariable'] == 'Password')
+		{
+			$Password = $info['value'];
+		}
+		else if ($info['nomVariable'] == 'Port')
+		{
+			$Port = $info['value'];
+		}
+		else if ($info['nomVariable'] == 'Admin')
+		{
+			$Admin = $info['value'];
+		}
+	}
+	
+	
 	$email = $_POST['vMail']; 
 	$message = $_POST['vMessage'].' de '.$email; 
 	
 	$mail = new PHPMailer;
 		
 	$mail->isSMTP();
-	$mail->Host = 'smtp.gmail.com';
+	$mail->Host = $Host;
 	$mail->SMTPAuth = true;
-	$mail->Username = 'infogalerievirtuellecba@gmail.com';
-	$mail->Password = '$CBA436$';
-	$mail->SMTPSecure = 'ssl';
-	$mail->Port = 465;
+	$mail->Username = $Username;
+	$mail->Password = $Password;
+	$mail->Port = $Port;
 	$mail->setFrom($email, $email);
 	//$mail->setFrom(cpepin@cegepba.qc.ca, cpepin@cegepba.qc.ca);
-	$mail->addAddress('ypaquin@cegepba.qc.ca','ypaquin@cegepba.qc.ca');	
+	$mail->addAddress($Admin,$Admin);	
 	$mail->isHTML(true);
 	$mail->CharSet = 'UTF-8';
 	$mail->Subject = 'Question section contactez-nous - Galerie des Arts Visuels';
