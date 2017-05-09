@@ -31,12 +31,15 @@ if (isset($_POST['vMail']) && isset($_POST['vMessage']))
 		{
 			$Port = $info['value'];
 		}
-		else if ($info['nomVariable'] == 'Admin')
-		{
-			$Admin = $info['value'];
-		}
 	}
 	
+	$sql = 'select email from gestionnaire';
+	$infoGestionnaire = $Cnn->prepare($sql);
+	$infoGestionnaire->execute();
+	if ($info = $infoGestionnaire->fetch())
+	{
+		$Admin = $info['email'];
+	}
 	
 	$email = $_POST['vMail']; 
 	$message = $_POST['vMessage'].' de '.$email; 
@@ -50,7 +53,6 @@ if (isset($_POST['vMail']) && isset($_POST['vMessage']))
 	$mail->Password = $Password;
 	$mail->Port = $Port;
 	$mail->setFrom($email, $email);
-	//$mail->setFrom(cpepin@cegepba.qc.ca, cpepin@cegepba.qc.ca);
 	$mail->addAddress($Admin,$Admin);	
 	$mail->isHTML(true);
 	$mail->CharSet = 'UTF-8';

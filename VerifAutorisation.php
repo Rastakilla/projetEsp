@@ -87,7 +87,18 @@
 <script type="text/javascript" src="jquery-validation-1.15.0/lib/jquery-1.11.1.js"></script>
 <script type="text/javascript" src="jquery-validation-1.15.0/dist/jquery.validate.min.js"></script>
 <script type="text/javascript" src="jquery-validation-1.15.0/dist/localization/messages_fr.js"></script>
+	<?PHP
+	$sql = 'select value from variable where nomVariable = "extensionCourriel"';
+	$infoCourriel = $Cnn->prepare($sql);
+	$infoCourriel->execute();
+	$Courriel;
+	if ($info = $infoCourriel->fetch())
+	{
+		$Courriel = $info['value'];
+	}
+	?>
     <script>
+	var extensionMail = <?PHP echo $Courriel; ?>;
 $("#gestionnaire").validate(
 	{	rules:
 		{	email: {	required:true,
@@ -97,7 +108,7 @@ $("#gestionnaire").validate(
 					}
 		},
 		messages : { 			 email : {required : 'Le email est obligatoire',
-										regex_E :'Doit etre de format @cegepba.qc.ca',
+										regex_E :'Doit etre de format @'+extensionMail,
 								},
 								mdp:{required:'Le mot de passe est obligatoire'}
 					}
@@ -106,7 +117,8 @@ $("#gestionnaire").validate(
 
 $.validator.addMethod("regex_E", 
 		function (value, element){
-				return this.optional(element) || /^[a-zA-Z0-9]+@cegepba\.qc\.ca$/.test(value);
+				var patt = new RegExp("^[a-zA-Z0-9]+@"+extensionMail+"$","g");
+				return this.optional(element) || patt.test(value);
 			});
 </script>
 

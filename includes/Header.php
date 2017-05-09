@@ -16,7 +16,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#tf-pic" class="page-scroll">Emprunter</a></li>
+            <li><a href="#tf-pic" class="page-scroll">Réserver</a></li>
             <li><a href="#tf-commanditaire" class="page-scroll">Commanditaires</a></li>
             <li><a href="#tf-contact" class="page-scroll">Contactez-nous</a></li>
           </ul>

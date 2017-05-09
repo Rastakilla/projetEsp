@@ -44,7 +44,16 @@ if (isset($_POST['idOeuvre']) && isset($_POST['choice']))
 			{
 				$nb = $nombre['nb'];
 			}
-			if ($nb >= 2)
+			$maxEmprunt;
+			$sql = 'select value from variable where nomVariable = "maxEmprunt";';
+			$infoVariable = $Cnn->prepare($sql);
+			$infoVariable->execute();
+			if ($info = $infoVariable->fetch())
+			{
+				$maxEmprunt = $info['value'];
+			}
+			
+			if ($nb >= $maxEmprunt)
 			{
 				$sql4 = 'update  emprunt set confirme = 0 where MailPersonneEmprunt = "'.$Reservation["MailPersonneReserve"].'" and Date = ( select date from (select date from emprunt where MailPersonneEmprunt = "'.$Reservation["MailPersonneReserve"].'" order by date asc limit 1) as c)';
 				$updateEmprunt = $Cnn->prepare($sql4);

@@ -113,42 +113,7 @@
 				{
 					$Medium = true;
 					$whereGlobal = ' where oeuvres.idOeuvres ="'.$idOeuvre.'";';	
-					/*if (isset($emprunter))
-					{
-						$sql = 'select idetat from etat where peuxEtreReserve = 1';
-						$infoEtat = $Cnn->prepare($sql);
-						$infoEtat->execute();
-						$cpt = 0;
-						$whereEtat = ' idEtat=';
-						while ($Etats = $infoEtat->fetch())
-						{
-							if ($cpt == 0)
-							{
-								$whereEtat = $whereEtat.$Etats['idetat'];
-							}
-							else
-							{
-								$whereEtat= $whereEtat.' or idEtat='.$Etats['idetat'];
-							}
-							$cpt++;
-						}
-						
-						
-						$sql = 'select nomOeuvre from oeuvres where idOeuvres = '.$idOeuvre.' and ('.$whereEtat.');';
-						$infoBonneOeuvre = $Cnn->prepare($sql);
-						$infoBonneOeuvre->execute();
-						if ($infoBonneOeuvre->fetch() == false)
-						{
-							$_SESSION['acces'] = 'non';
-							header('location:index.php');
-						}
-						else
-						{
-							$Medium = true;
-							echo '<h2><strong>'.$emprunter.' une oeuvre</strong></h2><br><i>Cliquez sur l\'oeuvre pour l\'agrendir!</i><br><br>';
-						}
-					}
-					else*/ if (isset($reserver))
+					if (isset($reserver))
 					{
 						$sql = 'select idetat from etat where peuxEtreReserve = 1';
 						$infoEtat = $Cnn->prepare($sql);
@@ -343,11 +308,7 @@
 					else
 					{
 						$bouton = NULL;
-						/*if (isset($emprunter))
-						{
-							$bouton = $emprunter;
-						}
-						else*/ if(isset($reserver))
+						if(isset($reserver))
 						{
 							$bouton = $reserver;
 						}
@@ -383,7 +344,19 @@
 	<script type="text/javascript" src="jquery-validation-1.15.0/dist/localization/messages_fr.js"></script>
     <!-- Javascripts
     ================================================== -->
+    
+    <?PHP
+	$sql = 'select value from variable where nomVariable = "extensionCourriel"';
+	$infoCourriel = $Cnn->prepare($sql);
+	$infoCourriel->execute();
+	$Courriel;
+	if ($info = $infoCourriel->fetch())
+	{
+		$Courriel = $info['value'];
+	}
+	?>
     <script>
+	var extensionMail = "<?PHP echo $Courriel; ?>";
 	function menu(){
 	 $('.navbar-default').addClass('on');
 	}
@@ -406,7 +379,7 @@
 					}
 		},
 		messages : { 			 emailClient : {required : 'Le email est obligatoire',
-										regex_E :'Doit etre de format @cegepba.qc.ca',
+										regex_E :'Doit etre de format @'+extensionMail
 								},
 								nomClient :{ required : 'Le nom est obligatoire'},
 								prenomClient :{ required : 'Le prenom est obligatoire'},
@@ -418,12 +391,9 @@
 
 $.validator.addMethod("regex_E", 
 		function (value, element){
-				return this.optional(element) || /^[a-zA-Z0-9]+@cegepba\.qc\.ca$/.test(value);
+				var patt = new RegExp("^[a-zA-Z0-9]+@"+extensionMail+"$","g");
+				return this.optional(element) || patt.test(value);
 			});
-/*$.validator.addMethod("regex_L", 
-		function (value, element){
-				return this.optional(element) || /^[A-Z,a-z]-[0-9]{3}$/.test(value);
-			});*/
 			$.validator.addMethod("regex_N", 
 		function (value, element){
 				return this.optional(element) || /^[0-9]$/.test(value);
