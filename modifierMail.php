@@ -15,6 +15,7 @@ if (isset($_POST['ancienMail']) && isset($_POST['nouveauMail']) && isset($_SESSI
 			$reponseNouveauMail = $Cnn->prepare('Update gestionnaire set email  ="'.$NouveauMail.'"');
 			$reponseNouveauMail ->execute();
 			$_SESSION['Uploader'] = 'Mail Admin modifié avec succès';
+			$_SESSION['email'] = $NouveauMail;
 		}
 		else
 		{

@@ -13,11 +13,18 @@
 	    echo '<script>alert("'.$_SESSION['temps'].'");</script>';
 		unset($_SESSION['temps']);
   }
-  if(isset($_SESSION['email']) && isset($_SESSION['mdp']) && isset($_SESSION['gestionnaire'])&& $_SESSION['gestionnaire'] = 'ok')
+  if(isset($_SESSION['email']) && isset($_SESSION['mdp']) && isset($_SESSION['gestionnaire'])&& $_SESSION['gestionnaire'] =='ok')
   {?>
 	   <script type="text/javascript">
 		  // window.open("http://10.4.1.21/etu13/Gestionnaire.php",'_blank');
 		  window.open("http://localhost/Gestionnaire.php",'_blank');
+	</script>
+ <?PHP }
+   if(isset($_SESSION['email']) && isset($_SESSION['mdp']) && isset($_SESSION['gestionnaire'])&& $_SESSION['gestionnaire'] == 'okTech')
+  {?>
+	   <script type="text/javascript">
+		  // window.open("http://10.4.1.21/etu13/Technicien.php",'_blank');
+		  window.open("http://localhost/Technicien.php",'_blank');
 	</script>
  <?PHP }
   if (isset($_SESSION['acces']) && $_SESSION['acces'] == 'non')

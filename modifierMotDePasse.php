@@ -18,6 +18,7 @@ if (isset($_POST['ancienMdp']) && isset($_POST['nouveauMdp']) && isset($_POST['c
 				$reponseNouveauMotDePasse = $Cnn->prepare('Update gestionnaire set mdp  ="'.$MotDePasseConfirmer.'"');
 				$reponseNouveauMotDePasse ->execute();
 				$_SESSION['Uploader'] = 'Mot de passe modifié avec succès';
+				$_SESSION['mdp'] = $MotDePasseConfirmer;
 			}
 			else
 			{
