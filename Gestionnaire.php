@@ -359,7 +359,7 @@ color:black;
 							  {
 								  $nb = $nombre['nb'];
 							  }
-							  if ($nb == ($maxEmprunt-1) && $found == false && $verif == false)
+							  if ($nb < ($maxEmprunt-1) && $nb > 1 && $found == false && $verif == false)
 							  {
 								  $verif = true;
 								  $found = true;

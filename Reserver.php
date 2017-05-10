@@ -16,7 +16,17 @@ if (isset($_GET['mail']) && isset($_GET['idOeuvre'])&& isset($_GET['type'])&& is
 		{
 			$nombre = $nb['nombre'];
 		}
-		if ($nombre <2)
+		
+		$maxReservation;
+		$sql = 'select value from variable where nomVariable = "maxReservation"';
+		$infoReserv = $Cnn->prepare($sql);
+		$infoReserv->execute();
+		if ($info = $infoReserv->fetch())
+		{
+			$maxReservation = $infoReserv['value'];
+		}
+					
+		if ($nombre <$maxReservation)
 		{
 			$mail = $_GET['mail'];
 			$idOeuvre = $_GET['idOeuvre'];
@@ -40,8 +50,8 @@ if (isset($_GET['mail']) && isset($_GET['idOeuvre'])&& isset($_GET['type'])&& is
 			else if ($difference >=1)
 			{
 				$sql = 'delete from reservation where MailPersonneReserve ="'.$_GET['mail'].'" and idOeuvre ="'.$_GET['idOeuvre'].'" and effectif=0 and Date="'.$_GET['date'].'";';
-				$mettreCommanditaire = $Cnn->prepare($sql);
-				$mettreCommanditaire->execute();
+				$deleteReserv = $Cnn->prepare($sql);
+				$deleteReserv->execute();
 				$_SESSION['temps'] = 'Le delai de 24 heures a été dépassé. Une nouvelle demande est nécessaire pour pouvoir réserver l\'oeuvre.';
 				header('location:index.php');
 			}
@@ -49,9 +59,9 @@ if (isset($_GET['mail']) && isset($_GET['idOeuvre'])&& isset($_GET['type'])&& is
 		else
 		{
 			$sql = 'delete from reservation where MailPersonneReserve ="'.$_GET['mail'].'" and idOeuvre ="'.$_GET['idOeuvre'].'" and effectif=0;';
-			$mettreCommanditaire = $Cnn->prepare($sql);
-			$mettreCommanditaire->execute();
-			$_SESSION['max'] = 'Limite de réservation atteinte (2). Vous ne pouvez réserver plus d\'oeuvres';
+			$deleteReserv = $Cnn->prepare($sql);
+			$deleteReserv->execute();
+			$_SESSION['max'] = 'Limite de réservation atteinte ('.$maxReservation.'). Vous ne pouvez réserver plus d\'oeuvres';
 			header('location:index.php');
 		}
 	}
