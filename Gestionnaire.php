@@ -173,11 +173,11 @@ color:black;
 					 /**************************/	
 					/*DEBUT FORM POUR VOIR MDP*/
 				   /**************************/
-				  ?> 
-                <form id="formMotDePasse" style="display:none;" enctype="multipart/form-data" action="ajoutOeuvre.php?email='.$email.'" method="POST"> <div align="center">
-                Ancien mot de passe <input class="form-control-little" id="ancienMdp" name="ancienMdp" placeholder="Entrez l'ancien mot de passe"></input>
-                Nouveau mot de passe <input class="form-control-little" id="nouveauMdp" name="nouveauMdp" placeholder="Entrez le nouveau mot de passe"></input>
-                Confirmation mot de passe  <input class="form-control-little" id="confirmationMdp" name="confirmationMdp" placeholder="Entrez le mot de passe de nouveau"></input><br>
+				 ?> 
+               <form id="formMotDePasse" style="display:none;" enctype="multipart/form-data" action="modifierMotDePasse.php" method="POST"> <div align="center"> 
+                Ancien mot de passe <input type="password"class="form-control-little" id="ancienMdp" name="ancienMdp" placeholder="Entrez l'ancien mot de passe"></input>
+                Nouveau mot de passe <input type="password"class="form-control-little" id="nouveauMdp" name="nouveauMdp" placeholder="Entrez le nouveau mot de passe"></input>
+                Confirmation mot de passe  <input type="password"class="form-control-little" id="confirmationMdp" name="confirmationMdp" placeholder="Entrez le nouveau mot de passe de nouveau"></input><br>
                 <button type="submit" class="btn tf-btn btn-notdefault">Modifier</button></div>
                 </input>
 				<?PHP echo '</form>';//fermeture form
@@ -190,7 +190,7 @@ color:black;
 					/*DEBUT FORM POUR VOIR MAIL*/
 				   /***************************/
 				  ?> 
-                <form id="formMail" style="display:none;" enctype="multipart/form-data" action="ajoutOeuvre.php?email='.$email.'" method="POST"> <div align="center">
+                <form id="formMail" style="display:none;" enctype="multipart/form-data" action="modifierMail.php" method="POST"> <div align="center">
                 Ancien mail <input class="form-control-little" id="ancienMail" name="ancienMail" placeholder="Entrez l'ancien Mail"></input>
                 Nouveau mail <input class="form-control-little" id="nouveauMail" name="nouveauMail" placeholder="Entrez le nouveau Mail"></input><br>
                 <button type="submit" class="btn tf-btn btn-notdefault">Modifier</button></div>
@@ -206,10 +206,9 @@ color:black;
 					/*DEBUT FORM POUR VOIR EXTENSION*/
 				   /********************************/
 				  ?> 
-				<form id="formExtension" style="display:none;" enctype="multipart/form-data" action="ajoutOeuvre.php?email='.$email.'" method="POST"> <div align="center">
-                Ancien mot de passe <input class="form-control-little" id="ancienMdp" name="ancienMdp" placeholder="Entrez l'ancien mot de passe"></input>
-                Nouveau mot de passe <input class="form-control-little" id="nouveauMdp" name="nouveauMdp" placeholder="Entrez le nouveau mot de passe"></input>
-                Confirmation mot de passe  <input class="form-control-little" id="confirmationMdp" name="confirmationMdp" placeholder="Entrez le mot de passe de nouveau"></input><br>
+				<form id="formExtension" style="display:none;" enctype="multipart/form-data" action="modifierExtension.php" method="POST"> <div align="center">
+                Ancienne Extension <input class="form-control-little" id="ancienneExtension" name="ancienneExtension" placeholder="Entrez l'ancienne extension"></input>
+                Nouvelle Extension <input class="form-control-little" id="nouvelleExtension" name="nouvelleExtension" placeholder="Entrez la nouvelle extension"></input><br>
                 <button type="submit" class="btn tf-btn btn-notdefault">Modifier</button></div>
                 </input>
                     <?PHP echo '</form>';//fermeture form
@@ -221,8 +220,28 @@ color:black;
 					 /*******************************/	
 					/*DEBUT FORM POUR VOIR MAXIMUMS*/
 				   /*******************************/
+				  $sql = 'select nomVariable,value from variable';
+				  $infoMax = $Cnn->prepare($sql);
+				  $infoMax->execute();
+				  $maxEmprunt;
+				  $maxReservation;
+				  while ($Max = $infoMax->fetch())
+				  {										 
+					  if ($Max['nomVariable'] == 'maxReservation')
+					  {
+						  $maxReservation = $Max['value'];
+					  }
+					  else if ($Max['nomVariable'] == 'maxEmprunt')
+					  {
+						  $maxEmprunt = $Max['value'];
+					  }
+				  } 
 				  ?> 
-				<form id="formMaximum" style="display:none;" enctype="multipart/form-data">
+				<form id="formMaximum" style="display:none;" enctype="multipart/form-data" action="modifierMaximum.php" method="POST">
+                 <div align="center">
+                Maximum Réservation <input class="form-control-little" id="maxReservation" name="maxReservation" placeholder="Entrez le maximum de réservation" value="<?PHP echo $maxReservation;?>"></input>
+                 Maximum Emprunt <input class="form-control-little" id="maxEmprunt" name="maxEmprunt" placeholder="Entrez le maximum d'emprunt" value="<?PHP echo $maxEmprunt;?>"></input><br>
+                <button type="submit" class="btn tf-btn btn-notdefault">Modifier</button></div>
 					
                           <?PHP echo '</form>';//fermeture form
 				   	 /******************************/	
