@@ -48,6 +48,32 @@
 	include_once('includes/HeaderOeuvres.php'); 
 	if (isset($_SESSION['email']) && isset($_SESSION['mdp']))
 	{
+		$sql = 'select nomVariable,value from variable';
+		$infoVariable = $Cnn->prepare($sql);
+		$infoVariable->execute();
+		$from;
+		$mdp;
+		$host;
+		$port;
+		while($Variable = $infoVariable->fetch())
+		{
+			if($Variable['nomVariable'] == 'Username')
+			{
+				$from = $Variable['value'];
+			}
+			else if ($Variable['nomVariable'] == 'Port')
+			{
+				$port = $Variable['value'];
+			}
+			else if ($Variable['nomVariable'] == 'Host')
+			{
+				$host= $Variable['value'];
+			}
+			else if ($Variable['nomVariable'] == 'Password')
+			{
+				$mdp = $Variable['value'];
+			}
+		}
 	?>
 
     <!-- Oeuvres
@@ -55,15 +81,15 @@
     <div id="tf-verif" class="text-center">
         <div class="overlay">
             <div class="content">
-                              <form id="gestionnaire" action="modificationServeur.php" method="POST">
+                              <form id="gestionnaire" action="modifierServeur.php" method="POST">
                      <div align="center"> From
-                                    <input class="form-control-little" id="from" name="from" placeholder="Entrez le nouveau from"></input>
+                                    <input class="form-control-little" id="from" required name="from" placeholder="Entrez le nouveau from" value="<?PHP echo $from;?>"></input>
                                      Mot de Passe
-                                    <input class="form-control-little" id="mdp" name="mdp" placeholder="Entrez le nouveau mot de passe"></input>
+                                    <input class="form-control-little" id="mdp" required name="mdp" placeholder="Entrez le nouveau mot de passe"  value="<?PHP echo $mdp;?>"></input>
                                       Host
-                                    <input class="form-control-little" id="host" name="host" placeholder="Entrez le nouveau host"></input>
+                                    <input class="form-control-little" id="host" required name="host" placeholder="Entrez le nouveau host"  value="<?PHP echo $host;?>"></input>
                                       Port
-                                    <input  class="form-control-little" id="port" name="port" placeholder="Entrez le nouveau port"></input><br>
+                                    <input  class="form-control-little" type="number" required id="port" name="port" placeholder="Entrez le nouveau port"  value="<?PHP echo $port;?>"></input><br>
                    		 <button type="submit" class="btn tf-btn btn-notdefault">Modifier</button>
                     </div>
                     </form>
@@ -71,6 +97,11 @@
         </div>
     </div>
                   	<?PHP 
+	}
+	else
+	{
+		$_SESSION['acces'] = 'non';
+		header('location:index.php');
 	}
 	include('includes/Footer.php'); ?>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

@@ -23,10 +23,18 @@ if (isset($_GET['mail']) && isset($_GET['idOeuvre'])&& isset($_GET['type'])&& is
 		$infoReserv->execute();
 		if ($info = $infoReserv->fetch())
 		{
-			$maxReservation = $infoReserv['value'];
+			$maxReservation = $info['value'];
 		}
-					
-		if ($nombre <$maxReservation)
+			$sql = 'select email from gestionnaire';
+			$infoGestionnaire = $Cnn->prepare($sql);
+			$infoGestionnaire->execute();
+			$mailGestionnaire;
+			if ($Gestionnaire = $infoGestionnaire->fetch())
+			{
+				$mailGestionnaire = $Gestionnaire['email'];
+			}
+				
+		if ($nombre <$maxReservation || $mailGestionnaire == $_GET['mail'])
 		{
 			$mail = $_GET['mail'];
 			$idOeuvre = $_GET['idOeuvre'];
@@ -68,8 +76,8 @@ if (isset($_GET['mail']) && isset($_GET['idOeuvre'])&& isset($_GET['type'])&& is
 	else
 	{
 			$sql = 'delete from reservation where MailPersonneReserve ="'.$_GET['mail'].'" and idOeuvre ="'.$_GET['idOeuvre'].'" and effectif=0;';
-			$mettreCommanditaire = $Cnn->prepare($sql);
-			$mettreCommanditaire->execute();
+			$deleteReserv = $Cnn->prepare($sql);
+			$deleteReserv->execute();
 		$_SESSION['max'] = 'Vous avez déjà réserver cette oeuvre';
 		header('location:index.php');
 	}

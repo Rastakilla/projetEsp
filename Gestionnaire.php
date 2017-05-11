@@ -427,7 +427,50 @@ color:black;
 							  {
 								  $nb = $nombre['nb'];
 							  }
-							  if ($nb < ($maxEmprunt-1) && $nb > 1 && $found == false && $verif == false)
+							  $sql = 'select email from gestionnaire';
+							  $infoGestionnaire = $Cnn->prepare($sql);
+							  $infoGestionnaire->execute();
+							  $mailGestionnaire;
+							  if ($Gestionnaire = $infoGestionnaire->fetch())
+							  {
+								  $mailGestionnaire = $Gestionnaire['email'];
+							  }
+							  if ($mailGestionnaire == $Deplacement["MailPersonneReserve"])
+							  {
+									$sql2 = 'select * from Oeuvres where idOeuvres = '.$Deplacement["idOeuvre"].';';
+								  $infoOeuvre = $Cnn->prepare($sql2);
+								  $infoOeuvre->execute();
+								  echo '<tr style="background-color:#2E3033;">';
+							 echo '<th> <input type="checkbox" id="checkbox'.$Deplacement["idOeuvre"].'false" name="chekbox"  onclick="onCheck('.$Deplacement["idOeuvre"].',false)"></th>';
+								  echo '<th>';
+								 if ($Oeuvre = $infoOeuvre->fetch())
+								{
+									echo '<img src="img/categorie/'.$Oeuvre['nomOeuvre'].'"style="width:125px; height:auto;">';
+								    echo'</th>';
+								    echo'<th>';
+								    echo $Oeuvre['Titre'];
+								    echo'</th>';
+									$sql = 'select idOeuvre from Emprunt where confirme = 0 and idOeuvre ='.$Oeuvre["idOeuvres"];
+									echo '<th>';
+									$infoEntrepot = $Cnn->prepare($sql);
+									$infoEntrepot ->execute();
+									if ($infoEntrepot->fetch() == true)
+									{
+										echo 'Entrepôt';
+									}
+									else
+									{
+										echo $Oeuvre['lieu'];
+									}
+									echo '</th>';
+								}
+								echo '<th>'.$Deplacement['Local'].'</th>';
+								echo '<th>'.$Deplacement['PrenomPersonneReserve'].' '.$Deplacement['NomPersonneReserve'].'</th>';
+										
+								echo '</th>';
+								echo '</tr>';
+							  }
+							  else if ($nb < ($maxEmprunt-1) && $nb > 1 && $found == false && $verif == false)
 							  {
 								  $verif = true;
 								  $found = true;
