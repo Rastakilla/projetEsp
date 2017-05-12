@@ -63,7 +63,7 @@ color:black;
         <div class="overlay">
             <div class="content" style='top:-150px;' >
             <?PHP
-			$sql = 'select idReservation,Date from reservation';
+			$sql = 'select idReservation,Date from reservation where effectif = 0';
 			$delReservation = $Cnn->prepare($sql);
 			$delReservation->execute();
 			while ($Reservation = $delReservation->fetch())

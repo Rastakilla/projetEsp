@@ -48,10 +48,13 @@
 	include_once('includes/HeaderOeuvres.php'); 
 	if (isset($_SESSION['email']) && isset($_SESSION['mdp']))
 	{
+		unset($_SESSION['email']);
+		unset($_SESSION['mdp']);
 		$sql = 'select nomVariable,value from variable';
 		$infoVariable = $Cnn->prepare($sql);
 		$infoVariable->execute();
 		$from;
+		$utilisateur;
 		$mdp;
 		$host;
 		$port;
@@ -59,7 +62,7 @@
 		{
 			if($Variable['nomVariable'] == 'Username')
 			{
-				$from = $Variable['value'];
+				$utilisateur = $Variable['value'];
 			}
 			else if ($Variable['nomVariable'] == 'Port')
 			{
@@ -73,6 +76,10 @@
 			{
 				$mdp = $Variable['value'];
 			}
+			else if($Variable['nomVariable'] == 'From')
+			{
+				$from = $Variable['value'];
+			}
 		}
 	?>
 
@@ -82,12 +89,14 @@
         <div class="overlay">
             <div class="content">
                               <form id="gestionnaire" action="modifierServeur.php" method="POST">
-                     <div align="center"> From
-                                    <input class="form-control-little" id="from" required name="from" placeholder="Entrez le nouveau from" value="<?PHP echo $from;?>"></input>
+                     <div align="center"> Nom d'utilisateur
+                                    <input class="form-control-little" id="username" required name="username" placeholder="Entrez le nouveau nom d'utilisateur" value="<?PHP echo $utilisateur;?>"></input>
+                     				Adresse de l'expéditeur
+                                    <input class="form-control-little" id="from" required name="from" placeholder="Entrez la nouvelle adresse de l'expéditeur" value="<?PHP echo $from;?>"></input>
                                      Mot de Passe
                                     <input class="form-control-little" id="mdp" required name="mdp" placeholder="Entrez le nouveau mot de passe"  value="<?PHP echo $mdp;?>"></input>
-                                      Host
-                                    <input class="form-control-little" id="host" required name="host" placeholder="Entrez le nouveau host"  value="<?PHP echo $host;?>"></input>
+                                      Hôte
+                                    <input class="form-control-little" id="host" required name="host" placeholder="Entrez le nouveau hôte"  value="<?PHP echo $host;?>"></input>
                                       Port
                                     <input  class="form-control-little" type="number" required id="port" name="port" placeholder="Entrez le nouveau port"  value="<?PHP echo $port;?>"></input><br>
                    		 <button type="submit" class="btn tf-btn btn-notdefault">Modifier</button>

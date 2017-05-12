@@ -57,7 +57,7 @@
                                     <input class="form-control-little" id="email" name="email" placeholder="Entrez votre adresse Email"></input><br>
                                      Mot de Passe
                                     <input type="password" class="form-control-little" id="mdp" name="mdp" placeholder="Entrez votre mot de passe"></input><br>
-                   		 <button type="submit" class="btn tf-btn btn-notdefault">Envoyer</button>
+                   		 <button type="submit" class="btn tf-btn btn-notdefault">Connexion</button>
                     </div>
                     </form>
             </div>

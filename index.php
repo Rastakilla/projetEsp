@@ -21,7 +21,9 @@
 	</script>
  <?PHP }
    if(isset($_SESSION['email']) && isset($_SESSION['mdp']) && isset($_SESSION['gestionnaire'])&& $_SESSION['gestionnaire'] == 'okTech')
-  {?>
+  {
+	  unset($_SESSION['gestionnaire']);
+	  ?>
 	   <script type="text/javascript">
 		  // window.open("http://10.4.1.21/etu13/Technicien.php",'_blank');
 		  window.open("http://localhost/Technicien.php",'_blank');
