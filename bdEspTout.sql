@@ -82,7 +82,7 @@ CREATE TABLE `emprunt` (
   `confirme` tinyint(1) NOT NULL,
   PRIMARY KEY (`idEmprunt`),
   UNIQUE KEY `idOeuvre_UNIQUE` (`idOeuvre`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,7 +91,7 @@ CREATE TABLE `emprunt` (
 
 LOCK TABLES `emprunt` WRITE;
 /*!40000 ALTER TABLE `emprunt` DISABLE KEYS */;
-INSERT INTO `emprunt` VALUES (7,'2017-05-03 13:11:30','Noel','Cederic','etu13@cegepba.qc.ca','d-123',1,1),(9,'2017-05-03 13:11:31','no','ced','etu14@cegepba.qc.ca','d-123',4,1),(10,'2017-05-03 13:41:19','Noel','Cederic','etu13@cegepba.qc.ca','d-123',2,1);
+INSERT INTO `emprunt` VALUES (1,'2016-04-01 00:00:00','Dubois','Martin','madubois@cegepba.qc.ca','407-2',6,1),(2,'2016-04-01 00:00:00','Dubois','Martin','madubois@cegepba.qc.ca','407-2',4,1),(3,'2016-04-01 00:00:00','Thibaudeau','Luce','lthibaudeau@cegepba.qc.ca','407-3',7,1),(4,'2016-05-01 00:00:00','Thibaudeau','Luce','lthibaudeau@cegepba.qc.ca','407-3',9,1);
 /*!40000 ALTER TABLE `emprunt` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -141,7 +141,7 @@ CREATE TABLE `gestionnaire` (
 
 LOCK TABLES `gestionnaire` WRITE;
 /*!40000 ALTER TABLE `gestionnaire` DISABLE KEYS */;
-INSERT INTO `gestionnaire` VALUES (4,'ypaquin@cegepba.qc.ca','1234');
+INSERT INTO `gestionnaire` VALUES (4,'ypaquin@cegepba.qc.ca','admin');
 /*!40000 ALTER TABLE `gestionnaire` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -179,7 +179,7 @@ CREATE TABLE `oeuvres` (
 
 LOCK TABLES `oeuvres` WRITE;
 /*!40000 ALTER TABLE `oeuvres` DISABLE KEYS */;
-INSERT INTO `oeuvres` VALUES (1,'DG_Collection_CBA_09-10.jpg','Daisy Grenier',83,53,NULL,' L\'éveil',2010,3,3,'d-123',NULL),(2,'JF_Collection_CBA_09-10.jpg','Jessica Fecteau',102,64,NULL,'OGM',2010,1,3,'d-123',NULL),(3,'MCP_Collection_CBA_09-10.jpg','Marie-Claude Poulin',127,89,NULL,'Ce qu\'il lui reste?',2010,8,2,NULL,NULL),(4,'PHV_Collection_CBA_09-10.jpg','Pierre-Hugues Vachon',75,101,NULL,'Citation de Serge Lemoyne',2010,1,3,'Entrepôt',''),(5,'ANC_Collection_CBA_10-11.jpg','Amelie Nadeau-Caron',61,45,NULL,'Payage abstrait',2011,1,3,'',''),(6,'CMP_Collection_CBA_10-11.jpg','Catherine Messier-Poulin',45,185,NULL,'Light',2011,6,3,'Entrepôt',''),(7,'SC_Collection_CBA_10-11.jpg','Stephanie Cloutier',50,76,NULL,'Sans Titre',2011,8,3,'Entrepôt',''),(8,'FG_Collection_CBA_10-11.jpg','Fanny Gaboury',31,92,NULL,'Dans les lignes de la main',2011,6,3,'',''),(9,'JML_Collection_CBA_10-11.jpg','Jean-Mathieu Lachapelle',153,132,NULL,'Intercoulouré',2011,1,3,'',''),(10,'DD_Collection_CBA_09-10.jpg','David Dulac',216,106,NULL,'Explosion orgasmique du XXIe siècle',2010,8,2,'','');
+INSERT INTO `oeuvres` VALUES (1,'DG_Collection_CBA_09-10.jpg','Daisy Grenier',83,53,NULL,' L\'éveil',2010,3,3,'Entrepôt',NULL),(2,'JF_Collection_CBA_09-10.jpg','Jessica Fecteau',102,64,NULL,'OGM',2010,1,3,'Entrepôt',NULL),(3,'MCP_Collection_CBA_09-10.jpg','Marie-Claude Poulin',127,89,NULL,'Ce qu\'il lui reste?',2010,8,2,'Entrepôt',NULL),(4,'PHV_Collection_CBA_09-10.jpg','Pierre-Hugues Vachon',75,101,NULL,'Citation de Serge Lemoyne',2010,1,3,'407-2',''),(5,'ANC_Collection_CBA_10-11.jpg','Amelie Nadeau-Caron',61,45,NULL,'Payage abstrait',2011,1,3,'Entrepôt',''),(6,'CMP_Collection_CBA_10-11.jpg','Catherine Messier-Poulin',45,185,3,'Light',2011,6,3,'407-2',''),(7,'SC_Collection_CBA_10-11.jpg','Stephanie Cloutier',50,76,NULL,'Sans Titre',2011,8,3,'407-3',''),(8,'FG_Collection_CBA_10-11.jpg','Fanny Gaboury',31,92,NULL,'Dans les lignes de la main',2011,6,3,'Entrepôt',''),(9,'JML_Collection_CBA_10-11.jpg','Jean-Mathieu Lachapelle',153,132,NULL,'Intercoulouré',2011,1,3,'407-3',''),(10,'DD_Collection_CBA_09-10.jpg','David Dulac',216,106,NULL,'Explosion orgasmique du XXIe siècle',2010,8,2,'Entrepôt','');
 /*!40000 ALTER TABLE `oeuvres` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -202,7 +202,7 @@ CREATE TABLE `reservation` (
   PRIMARY KEY (`idReservation`),
   KEY `Oeuvres_idOeuvre_fk` (`idOeuvre`),
   CONSTRAINT `Oeuvres_idOeuvre_fk` FOREIGN KEY (`idOeuvre`) REFERENCES `oeuvres` (`idOeuvres`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -211,8 +211,33 @@ CREATE TABLE `reservation` (
 
 LOCK TABLES `reservation` WRITE;
 /*!40000 ALTER TABLE `reservation` DISABLE KEYS */;
-INSERT INTO `reservation` VALUES (8,'2017-05-03 13:11:31','Noel','Cederic','etu13@cegepba.qc.ca','d-123',3,1),(9,'2017-05-03 13:11:31','no','ced','etu14@cegepba.qc.ca','d-123',3,1),(10,'2017-05-03 13:11:31','no','ced','etu14@cegepba.qc.ca','d-123',5,1),(11,'2017-05-03 13:11:31','levasseur','Mathieu','etu15@cegepba.qc.ca','d-123',5,1);
+INSERT INTO `reservation` VALUES (12,'2016-10-01 00:00:00','Bernard','Claude','cbernard@cegepba.qc.ca','407-4',1,1),(13,'2016-10-01 00:00:00','Dubois','Martin','madubois@cegepba.qc.ca','407-2',2,1),(14,'2016-10-01 00:00:00','Thibaudeau','Luce','lthibaudeau@cegepba.qc.ca','407-3',8,1),(15,'2016-11-01 00:00:00','Paquin','Yvan','ypaquin@cegepba.qc.ca','407-1',1,1),(16,'2016-11-01 00:00:00','Poulin','Devis','dpoulin@cegepba.qc.ca','407-8',2,1),(17,'2016-12-01 00:00:00','Goulet','Marthe','mgoulet@cegepba.qc.ca','407-5',6,1),(18,'2017-02-01 00:00:00','Poulin','Denis','dpoulin@cegepba.qc.ca','407-8',1,1);
 /*!40000 ALTER TABLE `reservation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `variable`
+--
+
+DROP TABLE IF EXISTS `variable`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `variable` (
+  `idVariable` int(11) NOT NULL AUTO_INCREMENT,
+  `nomVariable` varchar(200) NOT NULL,
+  `value` varchar(200) NOT NULL,
+  PRIMARY KEY (`idVariable`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `variable`
+--
+
+LOCK TABLES `variable` WRITE;
+/*!40000 ALTER TABLE `variable` DISABLE KEYS */;
+INSERT INTO `variable` VALUES (1,'Host','mail.kms-quebec.com'),(2,'Username','cba@kms-quebec.com'),(3,'Password','Test1234'),(4,'Port','587'),(7,'maxReservation','2'),(8,'maxEmprunt','2'),(9,'extensionCourriel','cegepba.qc.ca'),(10,'From','cba@kms-quebec.com');
+/*!40000 ALTER TABLE `variable` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -224,4 +249,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-03 15:47:25
+-- Dump completed on 2017-05-12 14:49:47
