@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (isset($_POST['from']) && isset($_POST['mdp']) && isset($_POST['host']) && isset($_POST['username']) && isset($_POST['port']) && isset($_SESSION['email']))
+if (isset($_POST['from']) && isset($_POST['mdp']) && isset($_POST['host']) && isset($_POST['username']) && isset($_POST['port']))
 {
 	$utilisateur = htmlentities($_POST['username']);
 	$from = htmlentities($_POST['from']);
