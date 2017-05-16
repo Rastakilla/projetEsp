@@ -26,40 +26,27 @@ if (isset($_POST['idOeuvre']) && isset($_POST['choice']))
 		$sql = 'Delete from emprunt where idOeuvre = '.$_POST["idOeuvre"];
 		$majEmprunt = $Cnn->prepare($sql);
 		$majEmprunt->execute();
-		$sql = 'select * from reservation where idOeuvre='.$_POST["idOeuvre"].' and effectif = 1 order by date limit 1';
+		$sql = 'select * from reservation where idOeuvre='.$_POST["idOeuvre"].' and effectif = 1 and MailPersonneReserve = "'.$_POST['mail'].'"';
 		$infoReservation = $Cnn->prepare($sql);
 		$infoReservation->execute();
 		$idReservation=0;
 		$sql2 = '';
 		$local = '';
 		$nb = 0;
+		$choix;
+		if ($_POST['deplacement'] == 'true')
+		{
+			$choix = '0';
+		}
+		else if ($_POST['deplacement'] == 'false')
+		{
+			$choix = '1';
+		}
 		if ($Reservation = $infoReservation->fetch())
 		{
 			$idReservation = $Reservation['idReservation'];
 			$local = $Reservation["Local"];
-			$sql3 = 'Select count(*) as nb from emprunt where MailPersonneEmprunt = "'.$Reservation["MailPersonneReserve"].'"';
-			$infoNb = $Cnn->prepare($sql3);
-			$infoNb->execute();
-			if ($nombre = $infoNb->fetch())
-			{
-				$nb = $nombre['nb'];
-			}
-			$maxEmprunt;
-			$sql = 'select value from variable where nomVariable = "maxEmprunt";';
-			$infoVariable = $Cnn->prepare($sql);
-			$infoVariable->execute();
-			if ($info = $infoVariable->fetch())
-			{
-				$maxEmprunt = $info['value'];
-			}
-			
-			if ($nb >= $maxEmprunt)
-			{
-				$sql4 = 'update  emprunt set confirme = 0 where MailPersonneEmprunt = "'.$Reservation["MailPersonneReserve"].'" and Date = ( select date from (select date from emprunt where MailPersonneEmprunt = "'.$Reservation["MailPersonneReserve"].'" order by date asc limit 1) as c)';
-				$updateEmprunt = $Cnn->prepare($sql4);
-				$updateEmprunt->execute();
-			}
-			$sql2 = 'insert into emprunt (Date,NomPersonneEmprunt,PrenomPersonneEmprunt,MailPersonneEmprunt,Local,idOeuvre,confirme) VALUES(NOW(),"'.$Reservation["NomPersonneReserve"].'","'.$Reservation["PrenomPersonneReserve"].'","'.$Reservation["MailPersonneReserve"].'","'.$Reservation["Local"].'",'.$_POST["idOeuvre"].',1)';
+			$sql2 = 'insert into emprunt (Date,NomPersonneEmprunt,PrenomPersonneEmprunt,MailPersonneEmprunt,Local,idOeuvre,confirme,FinAnnee) VALUES(NOW(),"'.$Reservation["NomPersonneReserve"].'","'.$Reservation["PrenomPersonneReserve"].'","'.$Reservation["MailPersonneReserve"].'","'.$Reservation["Local"].'",'.$_POST["idOeuvre"].',1,'.$choix.')';
 		}
 		$ajoutEmprunt = $Cnn->prepare($sql2);
 		$ajoutEmprunt->execute();

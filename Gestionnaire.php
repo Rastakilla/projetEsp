@@ -118,9 +118,16 @@ color:black;
 					 <button type="button" class="btn tf-btn btn-notdefault" onclick="emprunt();">Emprunt</button>&nbsp;&nbsp;&nbsp;
 					<button type="button" class="btn tf-btn btn-notdefault" onclick="commanditaire();">Commanditaire</button>&nbsp;&nbsp;&nbsp;
                     <button type="button" class="btn tf-btn btn-notdefault" onclick="gestionnaire();">Gestionnaire</button>&nbsp;&nbsp;&nbsp;
+                     <button type="button" class="btn tf-btn btn-notdefault" onclick="deplacements();">Déplacement</button>&nbsp;&nbsp;&nbsp;
 
 					</div>
-						
+					
+                    
+                     <div id="divDeplacements" style="display:none"><br>
+                    <button type="button" class="btn tf-btn btn-notdefault" onclick="voirDeplacementsAnnee();">Déplacements en cours d'année</button>&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="btn tf-btn btn-notdefault" onclick="voirDeplacementsFin();">Déplacements de fin d'année</button>&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="btn tf-btn btn-notdefault" onclick="finAnnee();">Réinitialiser processus fin d'année</button>&nbsp;&nbsp;&nbsp;
+					 </div>	
 						
 						
                     <div id="divGes" style="display:none"><br>
@@ -141,7 +148,6 @@ color:black;
 					  				
 					  <div id="divEmprunt" style="display:none"><br>
 					<button type="button" class="btn tf-btn btn-notdefault" onclick="voirEmprunt();">Voir Emprunts</button>&nbsp;&nbsp;&nbsp;
-                    <button type="button" class="btn tf-btn btn-notdefault" onclick="voirDeplacementsFin();">Déplacements de fin d'année</button>&nbsp;&nbsp;&nbsp;
 					 </div>
 					 
 					 <div id="divOv" style="display:none"><br>
@@ -162,7 +168,6 @@ color:black;
                     
                     	<div id="divRes" style="display:none"><br>
 					<button type="button" class="btn tf-btn btn-notdefault" onclick="voirReservation();">Voir Réservations</button>&nbsp;&nbsp;&nbsp;
-                    <button type="button" class="btn tf-btn btn-notdefault" onclick="voirDeplacementsAnnee();">Déplacements en cours d'année</button>&nbsp;&nbsp;&nbsp;
 					</div>
                     <style>
                     table, th, td {
@@ -357,7 +362,7 @@ color:black;
 						<table id='TablePendant' style="width:95%;">
                         <thead>
 						  <tr>
-                          	<th>Case à cocher</th>
+                          	<th>Confirmation déplacement</th>
 						  	<th>Oeuvre</th>
                             <th>Titre</th>
 							<th>Local de provenance</th> 
@@ -384,7 +389,7 @@ color:black;
 							$sql2 = 'select * from Oeuvres where idOeuvres = '.$EmpruntOff["idOeuvre"].';';
 							$infoOeuvre = $Cnn->prepare($sql2);
 							$infoOeuvre->execute();	
-							echo '<th> <input type="checkbox" id="checkbox'.$EmpruntOff["idOeuvre"].'true" name="checkbox" onclick="onCheck('.$EmpruntOff["idOeuvre"].',true)"></th>';
+							echo '<th> <input type="checkbox" id="checkbox'.$EmpruntOff["idOeuvre"].'true" name="checkbox" onclick="onCheck('.$EmpruntOff["idOeuvre"].',true,true)"></th>';
 							echo '<th>';
 							if ($Oeuvre = $infoOeuvre->fetch())
 							{
@@ -435,13 +440,13 @@ color:black;
 							  {
 								  $mailGestionnaire = $Gestionnaire['email'];
 							  }
-							  if ($mailGestionnaire == $Deplacement["MailPersonneReserve"])
+							  if ($mailGestionnaire == $Deplacement["MailPersonneReserve"] && $found == false && $verif == false)
 							  {
 									$sql2 = 'select * from Oeuvres where idOeuvres = '.$Deplacement["idOeuvre"].';';
 								  $infoOeuvre = $Cnn->prepare($sql2);
 								  $infoOeuvre->execute();
 								  echo '<tr style="background-color:#2E3033;">';
-							 echo '<th> <input type="checkbox" id="checkbox'.$Deplacement["idOeuvre"].'false" name="chekbox"  onclick="onCheck('.$Deplacement["idOeuvre"].',false)"></th>';
+							 echo '<th> <input type="checkbox" id="checkbox'.$Deplacement["idOeuvre"].'false" name="chekbox"  onclick="onCheck('.$Deplacement["idOeuvre"].',false,true,\''.$Deplacement["MailPersonneReserve"].'\')"></th>';
 								  echo '<th>';
 								 if ($Oeuvre = $infoOeuvre->fetch())
 								{
@@ -483,7 +488,7 @@ color:black;
 								  $infoOeuvre = $Cnn->prepare($sql2);
 								  $infoOeuvre->execute();
 								  echo '<tr style="background-color:#2E3033;">';
-							 echo '<th> <input type="checkbox" id="checkbox'.$UneReservation["idOeuvre"].'false" name="chekbox"  onclick="onCheck('.$Deplacement["idOeuvre"].',false)"></th>';
+							 echo '<th> <input type="checkbox" id="checkbox'.$UneReservation["idOeuvre"].'false" name="chekbox"  onclick="onCheck('.$Deplacement["idOeuvre"].',false,true,\''.$Deplacement["MailPersonneReserve"].'\')"></th>';
 								  echo '<th>';
 								 if ($Oeuvre = $infoOeuvre->fetch())
 								{
@@ -520,7 +525,7 @@ color:black;
 								  $infoOeuvre = $Cnn->prepare($sql2);
 								  $infoOeuvre->execute();
 								  echo '<tr style="background-color:#2E3033;">';
-							 echo '<th> <input type="checkbox" id="checkbox'.$Deplacement["idOeuvre"].'false" name="chekbox"  onclick="onCheck('.$Deplacement["idOeuvre"].',false)"></th>';
+							 echo '<th> <input type="checkbox" id="checkbox'.$Deplacement["idOeuvre"].'false" name="chekbox"  onclick="onCheck('.$Deplacement["idOeuvre"].',false,true,\''.$Deplacement["MailPersonneReserve"].'\')"></th>';
 								  echo '<th>';
 								 if ($Oeuvre = $infoOeuvre->fetch())
 								{
@@ -567,7 +572,7 @@ color:black;
 						<table id='TableFin' style="width:95%;">
                         <thead>
 						  <tr>
-                          	<th>Case à cocher</th>
+                          	<th>Confirmation déplacement</th>
 						  	<th>Oeuvre</th>
                             <th>Titre</th>
 							<th>Local de provenance</th> 
@@ -577,70 +582,117 @@ color:black;
                           </thead>
                           <tbody style="background-color:#2E3033;">
                           <?PHP
-						   $sql = 'select * from emprunt where confirme = 0';
-						  $infoEmpruntOff = $Cnn->prepare($sql);
-						  $infoEmpruntOff->execute();
-						  while($EmpruntOff = $infoEmpruntOff->fetch())
-						  {
-							echo '<tr style="background-color:#2E3033;">';  
-							$sql2 = 'select * from Oeuvres where idOeuvres = '.$EmpruntOff["idOeuvre"].';';
-							$infoOeuvre = $Cnn->prepare($sql2);
-							$infoOeuvre->execute();	
-							echo '<th> <input type="checkbox" id="checkbox'.$EmpruntOff["idOeuvre"].'true" name="checkbox" onclick="onCheck('.$EmpruntOff["idOeuvre"].',true)"></th>';
-							echo '<th>';
-							if ($Oeuvre = $infoOeuvre->fetch())
-							{
-								echo '<img src="img/categorie/'.$Oeuvre['nomOeuvre'].'"style="width:125px; height:auto;">';
-								echo'</th>';
-							    echo'<th>';
-							    echo $Oeuvre['Titre'];
-							    echo'</th>';
-								echo '<th>';
-								echo $Oeuvre['lieu'];
-								echo '</th>';
-							}
-							echo '<th>Entrepôt</th>';
-							echo '<th>Entrepôt</th>';
-							echo '</tr>';
-						  }
-						  $infoEmpruntOff->closeCursor();
+						   $mailPersonne= "";
 						   $infoProchaineReservation = $Cnn->prepare('SELECT * FROM(Select * FROM reservation WHERE reservation.effectif = 1  Order By reservation.Date ASC) as tmp_table GROUP BY IdOeuvre;');
 						  $infoProchaineReservation->execute();
 						  while($Deplacement = $infoProchaineReservation->fetch())
 						  {
+							  $sql = 'select * from emprunt where idOeuvre ='.$Deplacement["idOeuvre"].' and FinAnnee = 1;';
+							  $infoEmpruntFait = $Cnn->prepare($sql);
+							  $infoEmpruntFait->execute();
+							  if (!($infoFait = $infoEmpruntFait->fetch()))
+							  {
+							  $mailPersonne = $Deplacement['MailPersonneReserve'];
 								  $sql2 = 'select * from Oeuvres where idOeuvres = '.$Deplacement["idOeuvre"].';';
 								  $infoOeuvre = $Cnn->prepare($sql2);
 								  $infoOeuvre->execute();
-								  echo '<tr style="background-color:#2E3033;">';
-							 echo '<th> <input type="checkbox" id="checkbox'.$Deplacement["idOeuvre"].'false" name="chekbox"  onclick="onCheck('.$Deplacement["idOeuvre"].',false)"></th>';
-								  echo '<th>';
 								 if ($Oeuvre = $infoOeuvre->fetch())
 								{
+									echo '<tr style="background-color:#2E3033;">';
+							 		echo '<th> <input type="checkbox" id="checkbox'.$Deplacement["idOeuvre"].'false" name="chekbox"  onclick="onCheck('.$Deplacement["idOeuvre"].',false,false,\''.$mailPersonne.'\')"></th>';
+								    echo '<th>';
 									echo '<img src="img/categorie/'.$Oeuvre['nomOeuvre'].'"style="width:125px; height:auto;">';
 								    echo'</th>';
 								    echo'<th>';
 								    echo $Oeuvre['Titre'];
 								    echo'</th>';
-									$sql = 'select idOeuvre from Emprunt where confirme = 0 and idOeuvre ='.$Oeuvre["idOeuvres"];
 									echo '<th>';
-									$infoEntrepot = $Cnn->prepare($sql);
-									$infoEntrepot ->execute();
-									if ($infoEntrepot->fetch() == true)
-									{
-										echo 'Entrepôt';
-									}
-									else
-									{
-										echo $Oeuvre['lieu'];
-									}
+									echo $Oeuvre['lieu'];
 									echo '</th>';
 								echo '<th>'.$Deplacement['Local'].'</th>';
 								echo '<th>'.$Deplacement['PrenomPersonneReserve'].' '.$Deplacement['NomPersonneReserve'].'</th>';
-								}
-										
 								echo '</th>';
 								echo '</tr>';
+								}
+							  }
+								
+							$sql3 = 'Select count(*) as nb from emprunt where MailPersonneEmprunt = "'.$Deplacement["MailPersonneReserve"].'"';
+							$infoNb = $Cnn->prepare($sql3);
+							$infoNb->execute();
+							if ($nombre = $infoNb->fetch())
+							{
+								$nb = $nombre['nb'];
+							}
+							$maxEmprunt;
+							$sql = 'select value from variable where nomVariable = "maxEmprunt";';
+							$infoVariable = $Cnn->prepare($sql);
+							$infoVariable->execute();
+							if ($info = $infoVariable->fetch())
+							{
+								$maxEmprunt = $info['value'];
+							}
+							
+							if ($nb >= $maxEmprunt)
+							{
+								$trouver = false;
+								$sql4 = 'select * from emprunt where MailPersonneEmprunt = "'.$Deplacement["MailPersonneReserve"].'" and Date = ( select date from (select date from emprunt where MailPersonneEmprunt = "'.$Deplacement["MailPersonneReserve"].'" order by date asc limit 1) as c)';
+								$updateEmprunt = $Cnn->prepare($sql4);
+								$updateEmprunt->execute();
+								while ($infoEmpruntMax = $updateEmprunt->fetch())
+								{
+									if ($trouver == false)
+									{
+									$sql6 = 'select * from reservation where idOeuvre ="'.$infoEmpruntMax['idOeuvre'].'";';
+									$infoMaxEmprunt = $Cnn->prepare($sql6);
+									$infoMaxEmprunt->execute();
+									if ($EmpruntMax = $infoMaxEmprunt->fetch())
+										{
+											$sql7 = 'update emprunt set confirme = 0 where idOeuvre = '.$infoEmpruntMax['idOeuvre'];
+											$trouver = true;
+										}
+									}
+								}
+								if ($trouver == false)
+								{
+								$sql4 = 'update emprunt set confirme = 0 where MailPersonneEmprunt = "'.$Deplacement["MailPersonneReserve"].'" and Date = ( select date from (select date from emprunt where MailPersonneEmprunt = "'.$Deplacement["MailPersonneReserve"].'" order by date asc limit 1) as c)';
+								$updateEmprunt = $Cnn->prepare($sql4);
+								$updateEmprunt->execute();
+								}
+							}
 						  }		 
+						   $sql = 'select * from emprunt where confirme = 0';
+						  $infoEmpruntOff = $Cnn->prepare($sql);
+						  $infoEmpruntOff->execute();
+						  while($EmpruntOff = $infoEmpruntOff->fetch())
+						  {
+							  $sql5 = 'select * from reservation where idOeuvre = "'.$EmpruntOff["idOeuvre"].'";';
+							  $infoReservationEffective = $Cnn->prepare($sql5);
+							  $infoReservationEffective->execute();
+							  if (!($infoRes = $infoReservationEffective->fetch()))
+							  {
+								echo '<tr style="background-color:#2E3033;">';  
+								$sql2 = 'select * from Oeuvres where idOeuvres = '.$EmpruntOff["idOeuvre"].';';
+								$infoOeuvre = $Cnn->prepare($sql2);
+								$infoOeuvre->execute();	
+								echo '<th> <input type="checkbox" id="checkbox'.$EmpruntOff["idOeuvre"].'true" name="checkbox" onclick="onCheck('.$EmpruntOff["idOeuvre"].',true,false)"></th>';
+								echo '<th>';
+								if ($Oeuvre = $infoOeuvre->fetch())
+								{
+									echo '<img src="img/categorie/'.$Oeuvre['nomOeuvre'].'"style="width:125px; height:auto;">';
+									echo'</th>';
+									echo'<th>';
+									echo $Oeuvre['Titre'];
+									echo'</th>';
+									echo '<th>';
+									echo $Oeuvre['lieu'];
+									echo '</th>';
+								}
+								echo '<th>Entrepôt</th>';
+								echo '<th>Entrepôt</th>';
+								echo '</tr>';
+							 }
+						  }
+						  $infoEmpruntOff->closeCursor();
                     echo '</tbody></table></div>';
 					echo '</form>';
 				   	 /**************************************/	
@@ -981,8 +1033,15 @@ color:black;
 					if (isset($_GET['deplacement']) && $_GET['deplacement'] == 'true')
 					{?>
 						<script type="text/javascript">
-              			 $('#divRes').slideToggle("slow", function () {});
+              			 $('#divDeplacements').slideToggle("slow", function () {});
            				 $('#formDeplacement').slideToggle("slow", function () {});
+                         </script>
+					<?PHP }
+					else if (isset($_GET['deplacement']) && $_GET['deplacement'] == 'false')
+					{?>
+						<script type="text/javascript">
+              			 $('#divDeplacements').slideToggle("slow", function () {});
+           				 $('#formDeplacementFin').slideToggle("slow", function () {});
                          </script>
 					<?PHP }
 					else if (isset($_GET['reservation']) && $_GET['reservation'] == 'true')
@@ -1207,6 +1266,7 @@ $("#formSprmCommanditaire").validate(
 	function commanditaire() {
 			$('#divCom').slideToggle("slow", function () {
 			});
+			$('#divDeplacements').css('display', 'none');
 			$('#divInfoGes').css('display', 'none');
 			$('#divGes').css('display', 'none');
 			$('#divEmprunt').css('display', 'none');
@@ -1237,6 +1297,7 @@ $("#formSprmCommanditaire").validate(
 			function gestionnaire() {
 			$('#divGes').slideToggle("slow", function () {
 			});
+			$('#divDeplacements').css('display', 'none');
 			$('#divCom').css('display', 'none');
 			$('#divEmprunt').css('display', 'none');
 			 $('#divOv').css('display', 'none');
@@ -1258,9 +1319,33 @@ $("#formSprmCommanditaire").validate(
 			$('#formDeplacement').css('display', 'none');
 			$('#formDeplacementFin').css('display', 'none');
 		}
+			function deplacements() {
+			$('#divDeplacements').slideToggle("slow", function () {
+			});
+			$('#divGes').css('display', 'none');
+			$('#divCom').css('display', 'none');
+			$('#divEmprunt').css('display', 'none');
+			 $('#divOv').css('display', 'none');
+			 $('#divEtat').css('display', 'none');
+			 $('#divCat').css('display', 'none');
+			 $('#formOeuvres').css('display', 'none');
+			 $('#formEmprunt').css('display', 'none');
+			 $('#formAjouterOeuvre').css('display', 'none');
+			 $('#formEtat').css('display', 'none');
+			 $('#formCategorie').css('display', 'none');
+			 $('#formModifierOeuvre').css('display', 'none');
+			 $('#formAllTitre').css('display', 'none');
+			 $('#formModifierEtat').css('display', 'none');
+			 $('#formModifierMedium').css('display', 'none');
+			$('#formAllEtat').css('display', 'none');
+			$('#formAllMedium').css('display', 'none');
+			$('#divRes').css('display', 'none');
+			$('#formReservation').css('display', 'none');
+		}
 		function reservation() {
 			$('#divRes').slideToggle("slow", function () {
 			});
+			$('#divDeplacements').css('display', 'none');
 			$('#divInfoGes').css('display', 'none');
 			$('#divGes').css('display', 'none');
 			$('#divCom').css('display', 'none');
@@ -1287,10 +1372,12 @@ $("#formSprmCommanditaire").validate(
 			$('#formDeplacementFin').css('display', 'none');
 			$('#formMail').css('display', 'none');
 			$('#formMotDePasse').css('display', 'none');
+			$('#formDeplacement').css('display', 'none');
 		}	
 		function emprunt() {
 			$('#divEmprunt').slideToggle("slow", function () {
 			});
+			$('#divDeplacements').css('display', 'none');
 			$('#divInfoGes').css('display', 'none');
 			$('#divGes').css('display', 'none');
 			$('#divCom').css('display', 'none');
@@ -1315,12 +1402,14 @@ $("#formSprmCommanditaire").validate(
 			 $('#divRes').css('display', 'none');
 			 $('#formReservation').css('display', 'none');
 			 $('#formDeplacement').css('display', 'none');
+			 $('#formDeplacementFin').css('display', 'none');
 			$('#formMail').css('display', 'none');
 			$('#formMotDePasse').css('display', 'none');
 		}
 			function oeuvre() {
 			$('#divOv').slideToggle("slow", function () {
 			});
+			$('#divDeplacements').css('display', 'none');
 			$('#divInfoGes').css('display', 'none');
 			$('#divGes').css('display', 'none');
 			$('#divEmprunt').css('display', 'none');
@@ -1350,6 +1439,7 @@ $("#formSprmCommanditaire").validate(
 		function etat() {
 			$('#divEtat').slideToggle("slow", function () {
 			});
+			$('#divDeplacements').css('display', 'none');
 			$('#divInfoGes').css('display', 'none');
 			$('#divGes').css('display', 'none');
 			$('#divEmprunt').css('display', 'none');
@@ -1379,6 +1469,7 @@ $("#formSprmCommanditaire").validate(
 		function categorie() {
 			$('#divCat').slideToggle("slow", function () {
 			});
+			$('#divDeplacements').css('display', 'none');
 			 $('#formOeuvres').css('display', 'none');
 			$('#divInfoGes').css('display', 'none');
 			$('#divGes').css('display', 'none');
@@ -1408,6 +1499,7 @@ $("#formSprmCommanditaire").validate(
 		function MotDePasse() {
 			$('#formMotDePasse').slideToggle("slow", function () {
 			});
+			$('#divDeplacements').css('display', 'none');
 			$('#formOeuvres').css('display', 'none');
 			$('#divEmprunt').css('display', 'none');
 			 $('#divOv').css('display', 'none');
@@ -1433,6 +1525,7 @@ $("#formSprmCommanditaire").validate(
 		function Mail() {
 			$('#formMail').slideToggle("slow", function () {
 			});
+			$('#divDeplacements').css('display', 'none');
 			$('#formOeuvres').css('display', 'none');
 			$('#formMotDePasse').css('display', 'none');
 			$('#divEmprunt').css('display', 'none');
@@ -1934,6 +2027,21 @@ function ajaxModifierEtat()
 			   }
 			});
 };
+function finAnnee()
+{
+	var security = 'ok';
+	$.ajax({
+			url: "majFinAnnee.php", 
+			type: 'POST',
+			dataType: 'html',
+			data:{security:security},
+			success : function(output)
+			   {
+				   alert('Réinitialisation effectuée');
+				   document.location.href="gestionnaire.php?deplacement=false";
+			   }
+			});
+};
 function ajaxModifierMedium()
 { 
 	var e = document.getElementById('AllMedium');
@@ -1988,17 +2096,17 @@ function supprimerEmprunt(idEmprunt,idOeuvre)
 	 $('.navbar-default').addClass('on');
 	}
 	
-	function onCheck(idOeuvre,choice){
+	function onCheck(idOeuvre,choice,deplacement,mail){
 		if (confirm('Voulez-vous vraiment confirmer ce déplacement?')) {
 			 $.ajax({
 			  url : "confirmerDeplacement.php",
 			  type : 'POST',
 			  dataType:'html',
-			  data : {idOeuvre:idOeuvre,choice:choice},
+			  data : {idOeuvre:idOeuvre,choice:choice,mail:mail,deplacement:deplacement},
 			  success: function(output)
 						{
 							alert("Confirmation effectuée!");
-							document.location.href="gestionnaire.php?deplacement=true";
+							document.location.href="gestionnaire.php?deplacement="+deplacement;
 						},
 			});
 		} else {
