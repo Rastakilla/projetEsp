@@ -524,11 +524,11 @@ color:black;
 								  $sql2 = 'select * from Oeuvres where idOeuvres = '.$Deplacement["idOeuvre"].';';
 								  $infoOeuvre = $Cnn->prepare($sql2);
 								  $infoOeuvre->execute();
-								  echo '<tr style="background-color:#2E3033;">';
-							 echo '<th> <input type="checkbox" id="checkbox'.$Deplacement["idOeuvre"].'false" name="chekbox"  onclick="onCheck('.$Deplacement["idOeuvre"].',false,true,\''.$Deplacement["MailPersonneReserve"].'\')"></th>';
-								  echo '<th>';
 								 if ($Oeuvre = $infoOeuvre->fetch())
 								{
+									echo '<tr style="background-color:#2E3033;">';
+								    echo '<th> <input type="checkbox" id="checkbox'.$Deplacement["idOeuvre"].'false" name="chekbox"  onclick="onCheck('.$Deplacement["idOeuvre"].',false,true,\''.$Deplacement["MailPersonneReserve"].'\')"></th>';
+								    echo '<th>';
 									echo '<img src="img/categorie/'.$Oeuvre['nomOeuvre'].'"style="width:125px; height:auto;">';
 								    echo'</th>';
 								    echo'<th>';
@@ -654,9 +654,32 @@ color:black;
 								}
 								if ($trouver == false)
 								{
-								$sql4 = 'update emprunt set confirme = 0 where MailPersonneEmprunt = "'.$Deplacement["MailPersonneReserve"].'" and Date = ( select date from (select date from emprunt where MailPersonneEmprunt = "'.$Deplacement["MailPersonneReserve"].'" order by date asc limit 1) as c)';
-								$updateEmprunt = $Cnn->prepare($sql4);
-								$updateEmprunt->execute();
+									$sql = 'select * from emprunt where MailPersonneEmprunt = "'.$Deplacement["MailPersonneReserve"].'" and Date = ( select date from (select date from emprunt where MailPersonneEmprunt = "'.$Deplacement["MailPersonneReserve"].'" order by date asc limit 1) as c)';
+									$infoEmpruntFini = $Cnn->prepare($sql);
+									$infoEmpruntFini->execute();
+									if ($infoFini = $infoEmpruntFini->fetch())
+									{
+										echo '<tr style="background-color:#2E3033;">';  
+										$sql2 = 'select * from Oeuvres where idOeuvres = '.$infoFini["idOeuvre"].';';
+										$infoOeuvre = $Cnn->prepare($sql2);
+										$infoOeuvre->execute();	
+										echo '<th> <input type="checkbox" id="checkbox'.$infoFini["idOeuvre"].'true" name="checkbox" onclick="onCheck('.$infoFini["idOeuvre"].',true,false)"></th>';
+										echo '<th>';
+										if ($Oeuvre = $infoOeuvre->fetch())
+										{
+											echo '<img src="img/categorie/'.$Oeuvre['nomOeuvre'].'"style="width:125px; height:auto;">';
+											echo'</th>';
+											echo'<th>';
+											echo $Oeuvre['Titre'];
+											echo'</th>';
+											echo '<th>';
+											echo $Oeuvre['lieu'];
+											echo '</th>';
+										}
+										echo '<th>Entrepôt</th>';
+										echo '<th>Entrepôt</th>';
+										echo '</tr>';
+									}
 								}
 							}
 						  }		 
